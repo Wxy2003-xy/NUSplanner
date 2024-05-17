@@ -1,0 +1,12 @@
+{
+  "extends": "./tsconfig",
+  "exclude": [
+    "**/*.test.ts",
+    "**/__mocks__"
+  ],
+  "compilerOptions": {
+    "sourceMap": true,
+    "inlineSources": true,
+    "sourceRoot": "/"
+  }
+}

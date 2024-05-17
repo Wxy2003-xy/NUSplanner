@@ -1,0 +1,76 @@
+.Header {
+  background-color: #282c34;
+  padding: 10px 20px;
+  color: white;
+  display: flex;
+  align-items: center;  /* Aligns children vertically center*/
+  justify-content: start;  /* Aligns children to start of the header*/
+}
+
+.App-logo {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  object-fit: cover;
+  min-width: 40px; /* Ensures the image does not become too small */
+  min-height: 40px;
+  max-width: 100px; /* Prevents the image from becoming overly large */
+  max-height: 100px;
+}
+
+
+
+.title-container {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  align-items: center;  
+  flex-grow: 1;  
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.title-container h1{
+  margin: 0; /* Removes default margin */
+  font-size: clamp(1rem, 2.5vw, 2rem); /* Adjusts size between 1rem and 2rem based on viewport width */
+}
+
+.title-container h3 {
+  margin: 0; /* Removes default margin */
+  font-size: clamp(1rem, 2.5vw, 0.5rem); /* Adjusts size between 1rem and 2rem based on viewport width */
+}
+
+.Header img {
+  height: 30vmin; /* Adjust according to your needs */
+  margin-right: auto; /* Pushes everything else to the opposite side */
+}
+
+/* Optional: If there's another element after h1, such as navigation links */
+.Header nav {
+  margin-left: auto; /* Pushes navigation to the far right */
+}
+
+
+
+/* Styles for the image container */
+.image-container {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 0; /* Remove padding */
+}
+
+.image-container img {
+  width: 100%;
+  height: auto;
+  display: block;
+  margin: 0; /* Remove margin */
+}
+
+
+
+
+
+  
