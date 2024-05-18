@@ -1,9 +1,9 @@
 # NUSplanner
-Proposed Level of Achievement:
+## Proposed Level of Achievement:
 
 Artemis
 
-Motivation
+## Motivation
 
 As we embark on the transition from high school to college, we are greeted by a multitude of courses, each presenting its own allure and potential pathways. As college freshmen, we often grapple with uncertainty, unsure of how to strategically chart our academic journey for the forthcoming four years. Despite acclimating to college life, the task of curating schedules that align with our aspirations remains a daunting challenge. Hence, We hope to provide insightful tips and guidance to current NUS students and incoming freshmen about course planning and course registration each semester. Course planning is a serious matter, and it is a regret many have not realised that before facing issues in their course of study, such as being choked by missing prerequisite courses and having their study plan disrupted. We have friends who faced unnecessary challenges due to poor course planning. In the second semester from her freshman year, she missed taking a foundational major course, which prevented her from taking several advanced major courses she had intended to take in her second year. Consequently, she found herself in a predicament, requiring urgent adjustments to her academic timetable. While our friend bears personal responsibility for this oversight, it underscores the potential benefits of implementing a recommendation system for freshmen. Such a system could mitigate similar issues by providing tailored guidance in course selection and scheduling.
 
@@ -11,13 +11,7 @@ Our project aims to help students navigate through the complicated process of co
 
 Besides course planning, timetable planning is a hefty task that requires students to carefully plan. With usually 20 or beyond MC each semester and multiple class sessions per course, timetable planning and bid for tutorials/recitations would require meticulous evaluation and many rounds of decision making to carry out optimally, especially given the fact that students are to make their choices from scratch. Our project aims to use the power of computing to consolidate necessary information and calculate optimal plans by ranking class slots based on a wide range of filters and rankers, to generate customised recommendation timetables for students to have a pivot to start working from and as a reference for course registration.
 
-
-
-
-
-
-
-Aim
+## Aim
 
 We endeavour to introduce a groundbreaking recommendation system designed to guide current and prospective NUS students in crafting their ideal course schedule tailored to their unique preferences and academic requirements. This innovative system will not only propose comprehensive course schedules but also offer insights into the optimal timing for each course within every semester.
 
@@ -25,14 +19,14 @@ The next core feature of our project would assist students in organising their t
 
 Beyond that, our project would also include relevant QoL features that make the life of new students who are not yet familiar with life on campus easier, such as class reminders, map for class locations and more.
 
-User Stories
+## User Stories
 
 1.As a university freshman who wants to navigate course selection smoothly based on my own preference, I want to know more information and have some guidance over my course planning, especially at the start of the university life, such that there will not be disrupting scheduling issues occurring afterwards.
 
 2.As a university student who wants to have a satisfactory timetable that suits my needs every semester, I want to be able to get a recommended timetable that suits my needs at the start of every semester. Nevertheless, I would like to retain the ultimate decision-making authority regarding the use of this recommended timetable, i.e, I can choose not to use the recommended timetable or make further adjustments from it.
 
 
-Features and Timeline
+## Features and Timeline
 
 Our final product is an online website that allows students to receive recommended course planning schedules over the semesters, as well as to receive recommended timings of courses during each semester, based on their own preference. We might also develop 
 
@@ -99,8 +93,7 @@ b. User Testing
 After integrating all the (foreshadowing, core, extension) features, carry out user testing by recruiting representative users from the target audience group. We plan to recruit a group of Year 1 freshmen to test out the course planning recommendation system (core feature 1), and recruit a group of Year 2 sophomore to test out the timetable planning recommendation system (core feature 2).
 
 
-
-Tech Stack
+## Tech Stack
 
 (Subject to change)
 Front end Development
@@ -120,8 +113,7 @@ IDE: Visual Studio Code, IntelliJ
 Project Management Tools: Git and Github
 
 
-
-Qualifications
+## Qualifications
 
 Zhang Yuhao:
 NUS Modules
@@ -147,7 +139,7 @@ BSP1702 Legal Environment in Singapore
 External Internship: data visualisation using scripts 
 Personal Project development: java mini games
 
-Software Engineering
+## Software Engineering
 [Please showcase the software engineering knowledge of your team by providing specific details about what software engineering related techniques / practices you plan to apply in the development process of your project. This is required only for teams targeting Apollo 11 or Artemis.]
 
 The software engineering related techniques that we plan to apply in this project have been listed under the section ‘Tech Stack’. For the front-end web development, we already have some past experience in using HTML and CSS in creating front end pages and plan to further improve our skills in the near future. 
