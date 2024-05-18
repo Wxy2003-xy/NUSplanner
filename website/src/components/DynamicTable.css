@@ -1,0 +1,20 @@
+/* DynamicTable.css */
+.table {
+    display: flex;
+    justify-content: space-around;
+    padding: 20px;
+  }
+  
+  .column {
+    border: 1px solid #ccc;
+    padding: 10px;
+    width: 150px;
+  }
+  
+  .card {
+    margin: 5px;
+    padding: 10px;
+    background-color: #f0f0f0;
+    border: 1px solid #ddd;
+  }
+  
