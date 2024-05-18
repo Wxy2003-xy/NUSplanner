@@ -140,7 +140,6 @@ External Internship: data visualisation using scripts
 Personal Project development: java mini games
 
 ## Software Engineering
-[Please showcase the software engineering knowledge of your team by providing specific details about what software engineering related techniques / practices you plan to apply in the development process of your project. This is required only for teams targeting Apollo 11 or Artemis.]
 
 The software engineering related techniques that we plan to apply in this project have been listed under the section ‘Tech Stack’. For the front-end web development, we already have some past experience in using HTML and CSS in creating front end pages and plan to further improve our skills in the near future. 
 
