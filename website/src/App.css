@@ -83,6 +83,36 @@
   max-height: 100%;
 }
 
+.appPage-container {
+  display: flex;
+  min-height: 100vh;
+}
+
+.sidebar {
+  width: 200px; /* Set the width of the sidebar */
+  background-color: #f4f4f4; /* Light grey background */
+  padding: 20px;
+  height: 100vh; /* Full-view height */
+}
+
+.content {
+  flex-grow: 1; /* Takes up the remaining space */
+  padding: 20px;
+}
+
+.sidebar h3 {
+  padding-bottom: 10px;
+}
+
+.sidebar ul {
+  list-style: none;
+  padding: 0;
+}
+
+.sidebar ul li {
+  padding: 8px 0;
+}
+
 
 
 
