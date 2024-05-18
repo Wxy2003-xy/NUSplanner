@@ -2,6 +2,7 @@
 import React from 'react';
 import './timetable.css';
 import { BrowserRouter as Router, Route, Routes, Link } from 'react-router-dom'; 
+import Footer from '../../Footer';
 
 const Timetable: React.FC = () => {
   return (
@@ -18,6 +19,7 @@ const Timetable: React.FC = () => {
         <h2>This is the timetable page</h2>
         <p>More content goes here...</p>
       </div>
+      <Footer/>
     </div>
   );
 }

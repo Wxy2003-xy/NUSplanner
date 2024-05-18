@@ -2,7 +2,7 @@
 import React from 'react';
 import './studyplan.css'; 
 import { BrowserRouter as Router, Route, Routes, Link } from 'react-router-dom';
-
+import Footer from '../../Footer';
 const StudyPlan: React.FC = () => {
   return (
     <div className="studyplan-container">
@@ -18,6 +18,7 @@ const StudyPlan: React.FC = () => {
         <h2>This is the study plan page</h2>
         <p>More content goes here...</p>
       </div>
+      <Footer/>
     </div>
   );
 }

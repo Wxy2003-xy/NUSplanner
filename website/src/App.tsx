@@ -5,6 +5,8 @@ import { BrowserRouter as Router, Route, Routes, Link } from 'react-router-dom';
 import Home from './pages/home';
 import StudyPlan from './pages/studyPlan';
 import Timetable from './pages/timetable';
+import Footer from './Footer';
+
 
 function App() {
   const [message, setMessage] = useState<string>('message');
@@ -31,6 +33,7 @@ function App() {
           <Route path="/page/timetable" element={<Timetable />} />
         </Routes>
       </div>
+      <Footer/>
     </Router>
   );
 }

@@ -1,8 +1,7 @@
 import React from 'react';
 import './home.css'; // Make sure to import the CSS file for styling
 import { Link } from 'react-router-dom'; // Import Link from react-router-dom
-import StudyPlan from '../studyPlan';
-import Timetable from '../timetable';
+import Footer from '../../Footer';
 const Home: React.FC = () => {
   return (
     <div className="home-container">
@@ -18,6 +17,7 @@ const Home: React.FC = () => {
         <h2>This is the homepage</h2>
         <p>More content goes here...</p>
       </div>
+      <Footer/>
     </div>
   );
 }
