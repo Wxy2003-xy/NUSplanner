@@ -1,0 +1,40 @@
+/* Home.css */
+.home-container {
+    display: flex;
+  }
+  
+  .sidebar {
+    width: 200px;
+    background-color: #f4f4f4;
+    padding: 20px;
+    height: 100vh;
+  }
+  
+  .content {
+    flex-grow: 1;
+    padding: 20px;
+  }
+  
+  .sidebar ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+  
+  .sidebar li {
+    margin-bottom: 10px;
+  }
+  
+  .nav-link {
+    display: block;
+    color: #007BFF; /* Blue color typical of hyperlinks */
+    text-decoration: none; /* Removes underline but can be styled as needed */
+    padding: 8px 0; /* Less padding than buttons */
+    transition: color 0.3s; /* Smooth transition for hover effect */
+  }
+  
+  .nav-link:hover {
+    color: #0056b3; /* Darker blue on hover */
+    text-decoration: underline; /* Adds underline on hover for a traditional hyperlink effect */
+  }
+  
