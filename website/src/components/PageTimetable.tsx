@@ -5,7 +5,7 @@ type Event = {
   id: string;
   title: string;
   location: string;
-};
+};  
 
 const initialEvents: Event[] = [
   { id: '1', title: 'Opening Ceremony', location: 'Main Hall' },
@@ -15,54 +15,46 @@ const initialEvents: Event[] = [
 const PageTimetable: React.FC = () => {
   const [events, setEvents] = useState<Event[]>(initialEvents);
 
-  function onDragEnd(result:any) {    //TODO 
+  function onDragEnd(result:any) {
     const { destination, source } = result;
-    if (!destination) {
-      return;
-    }
-
-    if (destination.index === source.index) {
+    if (!destination || destination.index === source.index) {
       return;
     }
 
     const newEvents = Array.from(events);
-    const [removed] = newEvents.splice(source.index, 1);
-    newEvents.splice(destination.index, 0, removed);
+    const [reorderedItem] = newEvents.splice(source.index, 1);
+    newEvents.splice(destination.index, 0, reorderedItem);
 
     setEvents(newEvents);
   }
 
   return (
-    <DragDropContext onDragEnd={onDragEnd}>
-      <Droppable droppableId="timetable">
-        {(provided) => (
-          <div {...provided.droppableProps} ref={provided.innerRef}>
-            {events.map((event, index) => (
-              <Draggable key={event.id} draggableId={event.id} index={index}>
-                {(provided) => (
-                  <div
-                    ref={provided.innerRef}
-                    {...provided.draggableProps}
-                    {...provided.dragHandleProps}
-                    style={{
-                      ...provided.draggableProps.style,
-                      marginBottom: '8px',
-                      padding: '10px',
-                      border: '1px solid #ccc',
-                      backgroundColor: '#f8f8f8',
-                      cursor: 'grab'
-                    }}
-                  >
-                    {event.title}
-                  </div>
-                )}
-              </Draggable>
-            ))}
-            {provided.placeholder}
-          </div>
-        )}
-      </Droppable>
-    </DragDropContext>
+    <div className="timetable">
+      <header className="table-header">
+        <h1>My Timetable</h1>
+        <DragDropContext onDragEnd={onDragEnd}>
+          <Droppable droppableId="events">
+            {(provided) => (
+              <ul {...provided.droppableProps} ref={provided.innerRef}>
+                {events.map((event, index) => (
+                  <Draggable key={event.id} draggableId={event.id} index={index}>
+                    {(provided) => (
+                      <li ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps}>
+                        <div>
+                          <h4>{event.title}</h4>
+                          <p>{event.location}</p>
+                        </div>
+                      </li>
+                    )}
+                  </Draggable>
+                ))}
+                {provided.placeholder}
+              </ul>
+            )}
+          </Droppable>
+        </DragDropContext>
+      </header>
+    </div>
   );
 };
 
