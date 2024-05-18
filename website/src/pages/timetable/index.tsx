@@ -1,7 +1,7 @@
 // src/pages/studyPlan/index.tsx
 import React from 'react';
 import './timetable.css';
-import PageTimetable from '../../components/PageTimetable';  // Component names should be PascalCase
+import PageTimetable from './components/PageTimetable';  // Component names should be PascalCase
 
 const Timetable: React.FC = () => {
   const events = [

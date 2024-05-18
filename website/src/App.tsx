@@ -5,7 +5,7 @@ import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
 import Home from './pages/home';
 import StudyPlan from './pages/studyPlan';
 import Timetable from './pages/timetable';
-import Footer from './Footer';
+import Footer from './components/Footer';
 
 function App() {
   const [message, setMessage] = useState<string>('message');

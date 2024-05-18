@@ -4,6 +4,10 @@ import './Header.css'; // Ensure this path is correct
 import logoImage from '../images/logoImage.jpeg'; // Adjust the path if necessary
 
 function Header() {
+  const month:number= new Date().getMonth();
+  const monthInLetter = new Intl.DateTimeFormat('en-US', { month: 'short' }).format(new Date());
+  const dayOfWeek = new Date().toLocaleString('en-US', { weekday: 'long' }); // "Monday", "Tuesday", etc.
+
   return (
     <header className="Header">
       <img src={logoImage} alt="Logo" className="App-logo" style={{ marginRight: 'auto' }} />
@@ -11,6 +15,7 @@ function Header() {
       <div className='title-container'>
         <h1>Welcome to NUSPlanner</h1>
         <h3>This is a simple React application with a Node.js backend.</h3>
+        <p>{new Date().getDate()} {monthInLetter} {new Date().getFullYear()},  {dayOfWeek}</p>
       </div>
     </header>
   );
