@@ -16,6 +16,7 @@
   min-height: 40px;
   max-width: 100px; /* Prevents the image from becoming overly large */
   max-height: 100px;
+  margin-top: auto;
 }
 
 
