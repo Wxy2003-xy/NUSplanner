@@ -1,36 +1,61 @@
-/* Card.css */
 .card {
-    width: 40px; /* Fixed width, you can also make it responsive */
-    height: 20px;
-    margin: 20px auto; /* Center the card and provide some margin around it */
-    box-shadow: 0 4px 8px rgba(0,0,0,0.1); /* Subtle shadow for depth */
-    border-radius: 10px; /* Rounded corners for a softer look */
-    overflow: hidden; /* Ensures nothing overflows the rounded corners */
+    position: relative; /* Needed for absolute positioning of children if needed */
+    width: 100%; /* Takes full width of the column */
     background-color: #ffffff; /* White background */
-    transition: transform 0.3s ease, box-shadow 0.3s ease; /* Smooth transition for hover effects */
+    border-radius: 10px; /* Rounded corners */
+    overflow: hidden; /* Keeps children within the rounded corners */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+    margin: 10px; /* Spacing around cards */
+    transition: transform 0.3s ease, box-shadow 0.3s ease; /* Smooth transitions */
+    
+    /* Maintain aspect ratio: Adjust the bottom padding % to control the card's height relative to its width */
+    padding-top: 56.25%; /* 16:9 Aspect Ratio - for other ratios adjust the percentage */
+    height: 0; /* Use padding to control height */
+  }
+.card.selected {
+    background-color: #e0e0e0; /* Light grey to indicate selection */
+    /* other styles to distinguish selected cards, e.g., border */
 }
 
+/* Enhanced hover effect */
 .card:hover {
-    transform: translateY(-5px); /* Slight lift on hover */
-    box-shadow: 0 6px 16px rgba(0,0,0,0.15); /* Enhanced shadow on hover for a "lifting" effect */
+    transform: translateY(-5px); /* Lift effect on hover */
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2); /* Stronger shadow to emphasize lift */
 }
 
+/* Styles for the image within the card */
 .card-image {
-    width: 100%; /* Make image take up the full container width */
-    height: 200px; /* Fixed height for the image */
-    object-fit: cover; /* Ensures the image covers the area nicely */
+    width: 100%; /* Ensures the image covers the full width of the card */
+    height: 150px; /* Consistent height for all images */
+    object-fit: cover; /* Cover fit to prevent distortion */
     border-top-left-radius: 10px; /* Rounded top corners */
     border-top-right-radius: 10px;
 }
 
+/* Title styles for better typography */
 .card-title {
-    font-size: 0.8em; /* Relatively larger text for the title */
-    margin: 10px; /* Space around the text */
-    color: #333; /* Darker text for better readability */
+    font-size: 1em; /* Appropriately sized text */
+    font-weight: bold; /* Bold for emphasis */
+    color: #333; /* Dark color for contrast */
+    margin: 10px; /* Adequate spacing around the title */
 }
 
+/* Text styles for better legibility */
 .card-text {
-    font-size: 0.4em; /* Standard text size */
-    margin: 0 10px 20px 10px; /* Margins to keep text from touching the edges */
-    color: #666; /* Lighter text for the description */
+    font-size: 0.8em; /* Smaller text size than title for hierarchy */
+    line-height: 1.5; /* Improved line spacing for readability */
+    color: #666; /* Soft color for descriptions */
+    margin: 10px; /* Consistent margin for spacing */
+    flex-grow: 1; /* Allows text to fill the space and push actions to the bottom */
+}
+
+/* Responsive design handling */
+@media (max-width: 600px) {
+    .card {
+        width: 90%; /* More width in smaller screens */
+        margin: 10px auto; /* Reduced margin in smaller screens */
+    }
+    .card-image {
+        height: 120px; /* Slightly smaller image in smaller screens */
+    }
 }

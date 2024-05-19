@@ -3,6 +3,7 @@
   justify-content: space-between;
   padding: 10px;
   gap: 20px; /* This adds space between your columns */
+  width: 100%;
 }
 
 .column {
@@ -18,3 +19,35 @@
   padding: 10px;
   box-shadow: 0 2px 5px rgba(0,0,0,0.1); /* Optional, for styling */
 }
+.counter-box {
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  background-color: blanchedalmond;
+  color: black;
+  padding: 5px;
+  text-align: left;
+}
+
+.counter-box:hover {
+  transform: scale(1.0);
+  z-index: 10;
+}
+
+.counter-box-breakdown {
+  display: none;
+  position: absolute;
+  bottom: 0;
+  left: 5;
+  width: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  color: white;
+  padding: 5px;
+  text-align: left;
+}
+
+.counter-box:hover .counter-box-breakdown {
+  display: block;
+}
+
+
