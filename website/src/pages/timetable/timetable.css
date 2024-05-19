@@ -1,6 +1,7 @@
 /* home.css */
 .timetable-container {
     display: flex;
+    box-sizing: border-box;
   }
 
   

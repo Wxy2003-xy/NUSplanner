@@ -49,7 +49,7 @@ const DynamicTable: React.FC = () => {
 
   return (
     <div>
-      <select value={columnCount} onChange={handleColumnChange}>
+      <select className='dropdown-list' value={columnCount} onChange={handleColumnChange}>
         {[6, 7, 8, 9, 10, 11, 12].map(num => <option key={num} value={num}>{`${num} Semesters`}</option>)}
       </select>
       <div className='counter-box'>
@@ -62,6 +62,7 @@ const DynamicTable: React.FC = () => {
       <div className="table">
         {cards.map((columnCards, idx) => (
           <div key={idx} className="column">
+            <p  className='sem-title'>{semesterCount(idx)}</p>
             {columnCards.map(card => (
               <Card
               key={card.id}
@@ -73,7 +74,7 @@ const DynamicTable: React.FC = () => {
                 && selectedCard.cardId === card.id}
             />
             ))}
-            <button onClick={() => addCard(idx)}>Add Mod</button>
+            <button className='add-button' onClick={() => addCard(idx)}>Add Mod</button>
           </div>
         ))}
       </div>

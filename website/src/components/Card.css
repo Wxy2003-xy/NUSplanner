@@ -1,19 +1,18 @@
 .card {
     position: relative; /* Needed for absolute positioning of children if needed */
-    width: 100%; /* Takes full width of the column */
+    width: 80%; 
     background-color: #ffffff; /* White background */
-    border-radius: 10px; /* Rounded corners */
+    border-radius: 5px; /* Rounded corners */
     overflow: hidden; /* Keeps children within the rounded corners */
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow */
-    margin: 10px; /* Spacing around cards */
     transition: transform 0.3s ease, box-shadow 0.3s ease; /* Smooth transitions */
-    
-    /* Maintain aspect ratio: Adjust the bottom padding % to control the card's height relative to its width */
     padding-top: 56.25%; /* 16:9 Aspect Ratio - for other ratios adjust the percentage */
     height: 0; /* Use padding to control height */
+    box-sizing: border-box  ;
+    transform: translateX(3px);
   }
 .card.selected {
-    background-color: #e0e0e0; /* Light grey to indicate selection */
+    background-color: blanchedalmond; /* Light grey to indicate selection */
     /* other styles to distinguish selected cards, e.g., border */
 }
 
@@ -28,8 +27,8 @@
     width: 100%; /* Ensures the image covers the full width of the card */
     height: 150px; /* Consistent height for all images */
     object-fit: cover; /* Cover fit to prevent distortion */
-    border-top-left-radius: 10px; /* Rounded top corners */
-    border-top-right-radius: 10px;
+    border-top-left-radius: 5px; /* Rounded top corners */
+    border-top-right-radius: 5px;
 }
 
 /* Title styles for better typography */
@@ -52,8 +51,8 @@
 /* Responsive design handling */
 @media (max-width: 600px) {
     .card {
-        width: 90%; /* More width in smaller screens */
-        margin: 10px auto; /* Reduced margin in smaller screens */
+        /*width: 90%; /* More width in smaller screens */
+        /*margin: 10px auto; /* Reduced margin in smaller screens */
     }
     .card-image {
         height: 120px; /* Slightly smaller image in smaller screens */
