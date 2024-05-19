@@ -1,0 +1,15 @@
+.horizontal-table {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  
+  .row {
+    display: flex;
+    margin-bottom: 20px;
+  }
+  
+  .row .card {
+    margin-right: 20px;
+  }
+  

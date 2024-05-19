@@ -25,23 +25,16 @@ const DynamicTable: React.FC = () => {
     }
   };
 
-  const semesterCount = (idx: number):string => {
-    switch(idx + 1) {
-      case 1: return 'Year 1 Sem 1';
-      case 2: return 'Year 1 Sem 2';
-      case 3: return 'Year 2 Sem 1';
-      case 4: return 'Year 2 Sem 2';
-      case 5: return 'Year 3 Sem 1';
-      case 6: return 'Year 3 Sem 2';
-      case 7: return 'Year 4 Sem 1';
-      case 8: return 'Year 4 Sem 2';
-      case 9: return 'Year 5 Sem 1';
-      case 10: return 'Year 5 Sem 2';
-      case 11: return 'Year 6 Sem 1';
-      case 12: return 'Year 6 Sem 2';
-      default: return '';
-    }
-  }
+  const semesterDescriptions = [
+    'Year 1 Sem 1', 'Year 1 Sem 2', 'Year 2 Sem 1', 'Year 2 Sem 2',
+    'Year 3 Sem 1', 'Year 3 Sem 2', 'Year 4 Sem 1', 'Year 4 Sem 2',
+    'Year 5 Sem 1', 'Year 5 Sem 2', 'Year 6 Sem 1', 'Year 6 Sem 2'
+  ];
+  
+  const semesterCount = (idx: number): string => {
+    return semesterDescriptions[idx] || ''; // Return the description or empty if out-of-bounds
+  };
+  
 
   return (
     <div>

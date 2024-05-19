@@ -3,6 +3,7 @@ import React from 'react';
 import './timetable.css';
 import PageTimetable from './components/PageTimetable';  // Component names should be PascalCase
 import underConstruction from '../../images/underConstruction.jpeg'
+import HorizontalDynamicTable from '../../components/HorizontalDynamicTable';
 const Timetable: React.FC = () => {
   const events = [
     { time: '10:00 - 11:00', name: 'Opening Ceremony', location: 'Main Hall' },
@@ -14,7 +15,7 @@ const Timetable: React.FC = () => {
       <div className="content">
         <h2>This is the timetable page</h2>
         <div>
-            <PageTimetable events={events} />
+            <HorizontalDynamicTable/>
             <img src={underConstruction}></img>
           <p>Under Construction...</p>
         </div>
