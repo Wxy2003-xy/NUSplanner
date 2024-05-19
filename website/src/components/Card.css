@@ -1,0 +1,36 @@
+/* Card.css */
+.card {
+    width: 40px; /* Fixed width, you can also make it responsive */
+    height: 20px;
+    margin: 20px auto; /* Center the card and provide some margin around it */
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1); /* Subtle shadow for depth */
+    border-radius: 10px; /* Rounded corners for a softer look */
+    overflow: hidden; /* Ensures nothing overflows the rounded corners */
+    background-color: #ffffff; /* White background */
+    transition: transform 0.3s ease, box-shadow 0.3s ease; /* Smooth transition for hover effects */
+}
+
+.card:hover {
+    transform: translateY(-5px); /* Slight lift on hover */
+    box-shadow: 0 6px 16px rgba(0,0,0,0.15); /* Enhanced shadow on hover for a "lifting" effect */
+}
+
+.card-image {
+    width: 100%; /* Make image take up the full container width */
+    height: 200px; /* Fixed height for the image */
+    object-fit: cover; /* Ensures the image covers the area nicely */
+    border-top-left-radius: 10px; /* Rounded top corners */
+    border-top-right-radius: 10px;
+}
+
+.card-title {
+    font-size: 0.8em; /* Relatively larger text for the title */
+    margin: 10px; /* Space around the text */
+    color: #333; /* Darker text for better readability */
+}
+
+.card-text {
+    font-size: 0.4em; /* Standard text size */
+    margin: 0 10px 20px 10px; /* Margins to keep text from touching the edges */
+    color: #666; /* Lighter text for the description */
+}

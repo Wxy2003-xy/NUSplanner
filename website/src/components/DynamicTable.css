@@ -1,20 +1,20 @@
-/* DynamicTable.css */
 .table {
-    display: flex;
-    justify-content: space-around;
-    padding: 20px;
-  }
-  
-  .column {
-    border: 1px solid #ccc;
-    padding: 10px;
-    width: 150px;
-  }
-  
-  .card {
-    margin: 5px;
-    padding: 10px;
-    background-color: #f0f0f0;
-    border: 1px solid #ddd;
-  }
-  
+  display: flex;
+  justify-content: space-between;
+  padding: 10px;
+  gap: 20px; /* This adds space between your columns */
+}
+
+.column {
+  display: flex;
+  flex-direction: column;
+  flex: 1; /* This makes each column take up equal space */
+  gap: 10px; /* This adds space between your cards */
+}
+
+.card {
+  /*flex-grow: 1; /* This makes each card expand to fill the column */
+  border: 1px solid #ccc; /* Optional, for styling */
+  padding: 10px;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1); /* Optional, for styling */
+}

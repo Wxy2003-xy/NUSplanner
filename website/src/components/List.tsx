@@ -1,6 +1,6 @@
 // Import React and Module type
 import React from 'react';
-import { Module } from './types/modules';  // Path might need adjustment based on actual file location
+import { Module } from '../types/modules';  // Path might need adjustment based on actual file location
 
 type ItemListProps = {
     modules: Module[];  // Array of Module objects

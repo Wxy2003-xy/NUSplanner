@@ -8,7 +8,7 @@ import Timetable from './pages/timetable';
 import Footer from './components/Footer';
 
 function App() {
-  const [message, setMessage] = useState<string>('message');
+  const [message, setMessage] = useState<string>('');
 
   useEffect(() => {
     fetch('/')
