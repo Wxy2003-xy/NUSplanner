@@ -1,4 +1,4 @@
-import React, { ComponentType, ReactNode } from 'react';
+import {ReactNode } from 'react';
 import './Container.css'; // Assuming you have a CSS file for styling
 
 type ContainerProps = {

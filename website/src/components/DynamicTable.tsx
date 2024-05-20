@@ -4,10 +4,10 @@ import Card from './Card.tsx';
 
 const DynamicTable: React.FC = () => {
   const [columnCount, setColumnCount] = useState<number>(8);
-  const [cards, setCards] = useState<Array<Array<{ id: number; name: string; content: string }>>>(new Array(8).fill([]).map(() => []));
+  const [cards, setCards] = 
+  useState<Array<Array<{ id: number; name: string; content: string }>>>(new Array(8).fill([]).map(() => []));
   const [selectedCard, setSelectedCard] = useState<{ columnIndex: number; cardId: number } | null>(null);
-  const [MCcount, setMCcount] = useState<number>(0);  // Assuming MCcount should be stateful if it's dynamic
-  const MCbreakDown:string = 'ssss';
+
   const handleColumnChange = (event: ChangeEvent<HTMLSelectElement>) => {
     const newCount = parseInt(event.target.value);
     const newCards = new Array(newCount).fill([]).map((_, idx) => cards[idx] || []);
@@ -17,7 +17,7 @@ const DynamicTable: React.FC = () => {
 
   const addCard = (columnIndex: number) => {
     const newCards = [...cards];
-    const newCard = { id: Date.now(), name: `User ${newCards[columnIndex].length + 1}`, content: `Card ${newCards[columnIndex].length + 1}` };
+    const newCard = { id: Date.now(), name: `Card ${newCards[columnIndex].length + 1}`, content: `Card ${newCards[columnIndex].length + 1}` };
     newCards[columnIndex].push(newCard);
     setCards(newCards);
   };
@@ -37,6 +37,14 @@ const DynamicTable: React.FC = () => {
     setSelectedCard(isSelected ? null : { columnIndex, cardId });
   };
 
+  const getMCCount = (columnCards: Array<{ id: number; name: string; content: string }>): number => {
+    return columnCards.length * 4; // Each card is worth 4 MC
+  };
+
+  const getTotalMCCount = (): number => {
+    return cards.reduce((total, columnCards) => total + getMCCount(columnCards), 0);
+  };
+
   const semesterDescriptions = [
     'Year 1 Sem 1', 'Year 1 Sem 2', 'Year 2 Sem 1', 'Year 2 Sem 2',
     'Year 3 Sem 1', 'Year 3 Sem 2', 'Year 4 Sem 1', 'Year 4 Sem 2',
@@ -53,16 +61,17 @@ const DynamicTable: React.FC = () => {
         {[6, 7, 8, 9, 10, 11, 12].map(num => <option key={num} value={num}>{`${num} Semesters`}</option>)}
       </select>
       <div className='counter-box'>
-        {MCcount}
+        Total MC count: {getTotalMCCount()}
         <hr></hr>
         <p className='counter-box-breakdown'>
-          {MCbreakDown}
+          Total MC breakdown:
         </p>
       </div>
       <div className="table">
         {cards.map((columnCards, idx) => (
           <div key={idx} className="column">
-            <p  className='sem-title'>{semesterCount(idx)}</p>
+            <p className='sem-title'>{semesterCount(idx)}</p>
+            <p className='sem-mc-count'>Total MC this semester: {getMCCount(columnCards)}</p>
             {columnCards.map(card => (
               <Card
               key={card.id}

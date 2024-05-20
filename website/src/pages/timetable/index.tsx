@@ -1,7 +1,6 @@
 // src/pages/studyPlan/index.tsx
 import React from 'react';
 import './timetable.css';
-import PageTimetable from './components/PageTimetable';  // Component names should be PascalCase
 import underConstruction from '../../images/underConstruction.jpeg'
 import HorizontalDynamicTable from '../../components/HorizontalDynamicTable';
 const Timetable: React.FC = () => {
@@ -15,7 +14,7 @@ const Timetable: React.FC = () => {
       <div className="content">
         <h2>This is the timetable page</h2>
         <div>
-            <HorizontalDynamicTable/>
+          <HorizontalDynamicTable/>
             <img src={underConstruction}></img>
           <p>Under Construction...</p>
         </div>

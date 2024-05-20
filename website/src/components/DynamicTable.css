@@ -46,9 +46,8 @@
 }
 
 .counter-box-breakdown {
-  display: none;
+  display: flex;
   position: absolute;
-  bottom: 0;
   left: 5;
   width: 95%;
   background-color: rgba(0, 0, 0, 0.5);
@@ -63,12 +62,23 @@
   display: block;
   align-self: center;
   align-items: center;
+  transform: translateY(33px);
+
   border: blue solid;
 }
 
 .sem-title {
   margin-top: 10px;
   margin-bottom: 10px;
+  display: block;
+  align-self: center;
+  align-items: center;
+  border: blue solid;
+}
+
+.sem-mc-count{
+  margin-top: 2px;
+  margin-bottom: 2px;
   display: block;
   align-self: center;
   align-items: center;

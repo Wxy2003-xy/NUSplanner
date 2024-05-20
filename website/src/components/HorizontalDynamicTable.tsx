@@ -6,6 +6,8 @@ const HorizontalDynamicTable: React.FC = () => {
   const [rowCount, setRowCount] = useState<number>(5);
   const [cards, setCards] = 
         useState<Array<Array<{ id: number; name: string; content: string }>>>(new Array(5).fill([]));
+  const [selectedCard, setSelectedCard] = useState<{ columnIndex: number; cardId: number } | null>(null);
+  
 
   const handleRowChange = (event: ChangeEvent<HTMLSelectElement>) => {
     const newCount = parseInt(event.target.value);
@@ -17,13 +19,27 @@ const HorizontalDynamicTable: React.FC = () => {
 
   const addCard = (rowIndex: number) => {
     const newCards = [...cards];
-    const newCard = { id: Date.now(), name: `User ${newCards[rowIndex].length + 1}`, 
+    const newCard = { id: Date.now(), name: `Card ${newCards[rowIndex].length + 1}`, 
                       content: `Card ${newCards[rowIndex].length + 1}` };
 
     if (newCards[rowIndex]) {
       newCards[rowIndex] = [...newCards[rowIndex], newCard];
       setCards(newCards);
     }
+  };
+
+  const removeCard = () => {
+    if (selectedCard) {
+      const { columnIndex, cardId } = selectedCard;
+      const newCards = [...cards];
+      newCards[columnIndex] = newCards[columnIndex].filter(card => card.id !== cardId);
+      setCards(newCards);
+      setSelectedCard(null);  // Clear the selection after deleting
+    }
+  };
+  const handleCardClick = (columnIndex: number, cardId: number) => {
+    const isSelected = selectedCard && selectedCard.columnIndex === columnIndex && selectedCard.cardId === cardId;
+    setSelectedCard(isSelected ? null : { columnIndex, cardId });
   };
 
   return (
@@ -36,7 +52,14 @@ const HorizontalDynamicTable: React.FC = () => {
         {cards.map((rowCards, idx) => (
           <div key={idx} className="row">
             {rowCards.map(card => (
-              <Card key={card.id} id={card.id} name={card.name} content={card.content} />
+              <Card 
+              key={card.id} 
+              id={card.id} 
+              name={card.name} 
+              content={card.content}
+              onClick={() => handleCardClick(idx, card.id)}
+              isSelected={selectedCard && selectedCard.columnIndex === idx 
+                && selectedCard.cardId === card.id} />
             ))}
             <button onClick={() => addCard(idx)}>Add Card</button>
           </div>
