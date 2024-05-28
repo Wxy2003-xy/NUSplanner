@@ -1,13 +1,20 @@
-import React, { useState, FormEvent } from 'react';
 
+import React, { useState, FormEvent, useEffect } from 'react';
+import { PrereqTree } from '../types/modules';
+import { PrereqTreeMap } from '../../scrapers/nus-v2/src/services/requisite-tree';
 interface ModuleInfo {
     preclusions: string;
     preclusionRule: string;
     prerequisites: string;
     prerequisiteRule: string;
+    prereqTree?: PrereqTree; // Optional detailed prerequisite tree visualization
 }
 
-const ModuleForm: React.FC = () => {
+interface Props {
+    prereqTreeMap?: PrereqTreeMap; // Optional prerequisite tree map passed from parent
+}
+
+const ModuleForm: React.FC<Props> = ({ prereqTreeMap }) => {
     const [acadYear, setAcadYear] = useState<string>('');
     const [moduleCode, setModuleCode] = useState<string>('');
     const [moduleInfo, setModuleInfo] = useState<ModuleInfo | null>(null);
@@ -37,11 +44,12 @@ const ModuleForm: React.FC = () => {
                 return response.json();
             })
             .then(data => {
-                const relevantData = {
+                const relevantData: ModuleInfo = {
                     preclusions: data.preclusion,
                     preclusionRule: data.preclusionRule,
                     prerequisites: data.prerequisite,
-                    prerequisiteRule: data.prerequisiteRule
+                    prerequisiteRule: data.prerequisiteRule,
+                    //prereqTree: prereqTreeMap ? prereqTreeMap[moduleCode] : undefined
                 };
                 setModuleInfo(relevantData);
                 setError('');
@@ -56,11 +64,19 @@ const ModuleForm: React.FC = () => {
             });
     };
 
+    useEffect(() => {
+        if (moduleCode && prereqTreeMap) {
+            // Optionally react to changes in moduleCode or prereqTreeMap to auto-refresh or update the display
+            fetchModuleInfo(acadYear, moduleCode);
+        }
+    }, [moduleCode, prereqTreeMap]);
+
     const handleSubmit = (event: FormEvent<HTMLFormElement>): void => {
         event.preventDefault();
         fetchModuleInfo(acadYear, moduleCode);
     };
 
+    // Styling remains the same
     const infoBlockStyle = {
         color: 'white',
         backgroundColor: 'black',
@@ -72,7 +88,6 @@ const ModuleForm: React.FC = () => {
     };
 
     return (
-        <>
         <div style={infoBlockStyle}>
             <h1>Fetch Module Information</h1>
             <form onSubmit={handleSubmit}>
@@ -109,11 +124,17 @@ const ModuleForm: React.FC = () => {
                     <p><strong>Prerequisite Rule:</strong> {moduleInfo.prerequisiteRule}</p>
                     <p><strong>Preclusions:</strong> {moduleInfo.preclusions}</p>
                     <p><strong>Preclusion Rule:</strong> {moduleInfo.preclusionRule}</p>
+                    {moduleInfo.prereqTree && (
+                        <div>
+                            <h3>Prerequisite Tree:</h3>
+                            {/* Custom component or visualization for displaying the prereq tree */}
+                        </div>
+                    )}
                 </div>
             )}
         </div>
-        </>
     );
 };
 
 export default ModuleForm;
+
