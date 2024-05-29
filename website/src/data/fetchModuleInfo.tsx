@@ -1,8 +1,11 @@
-
 import React, { useState, FormEvent, useEffect } from 'react';
 import { PrereqTree } from '../types/modules';
 import { PrereqTreeMap } from '../../scrapers/nus-v2/src/services/requisite-tree';
+import PrereqTreeComponent from '../util/visualiser';
+import {createEmptyPrereqTree, tokenize, parseTokens} from '../util/parser';
 interface ModuleInfo {
+    courseCode: string;
+    courseName: string;
     preclusions: string;
     preclusionRule: string;
     prerequisites: string;
@@ -10,12 +13,21 @@ interface ModuleInfo {
     prereqTree?: PrereqTree; // Optional detailed prerequisite tree visualization
 }
 
+interface Prereq {
+    prerequisites: string;
+    prerequisiteRule: string;
+}
+
 interface Props {
+    year?: number;
     prereqTreeMap?: PrereqTreeMap; // Optional prerequisite tree map passed from parent
 }
 
-const ModuleForm: React.FC<Props> = ({ prereqTreeMap }) => {
-    const [acadYear, setAcadYear] = useState<string>('');
+const ModuleForm: React.FC<Props> = ({}) => {
+    const [acadYear, setAcadYear] = useState<string>(() => {
+        // Retrieve the academic year from local storage if available
+        return localStorage.getItem('acadYear') || '';
+    });
     const [moduleCode, setModuleCode] = useState<string>('');
     const [moduleInfo, setModuleInfo] = useState<ModuleInfo | null>(null);
     const [error, setError] = useState<string>('');
@@ -24,6 +36,11 @@ const ModuleForm: React.FC<Props> = ({ prereqTreeMap }) => {
     const validateAcadYear = (year: string): boolean => {
         return /^\d{4}$/.test(year); // Checks if the year is a four-digit number
     };
+
+    useEffect(() => {
+        // Save acadYear to local storage whenever it changes
+        localStorage.setItem('acadYear', acadYear);
+    }, [acadYear]);
 
     const fetchModuleInfo = (acadYear: string, moduleCode: string): void => {
         if (!validateAcadYear(acadYear)) {
@@ -44,7 +61,13 @@ const ModuleForm: React.FC<Props> = ({ prereqTreeMap }) => {
                 return response.json();
             })
             .then(data => {
+                const prereqList: Prereq = {
+                    prerequisites: data.prerequisite,
+                    prerequisiteRule: data.prerequisiteRule,
+                }
                 const relevantData: ModuleInfo = {
+                    courseCode: data.moduleCode,
+                    courseName: data.title,
                     preclusions: data.preclusion,
                     preclusionRule: data.preclusionRule,
                     prerequisites: data.prerequisite,
@@ -64,13 +87,6 @@ const ModuleForm: React.FC<Props> = ({ prereqTreeMap }) => {
             });
     };
 
-    useEffect(() => {
-        if (moduleCode && prereqTreeMap) {
-            // Optionally react to changes in moduleCode or prereqTreeMap to auto-refresh or update the display
-            fetchModuleInfo(acadYear, moduleCode);
-        }
-    }, [moduleCode, prereqTreeMap]);
-
     const handleSubmit = (event: FormEvent<HTMLFormElement>): void => {
         event.preventDefault();
         fetchModuleInfo(acadYear, moduleCode);
@@ -83,7 +99,7 @@ const ModuleForm: React.FC<Props> = ({ prereqTreeMap }) => {
         padding: '10px',
         fontFamily: 'Arial',
         margin: '20px auto',
-        width: '80%',
+        width: '100%',
         borderRadius: '8px'
     };
 
@@ -120,16 +136,18 @@ const ModuleForm: React.FC<Props> = ({ prereqTreeMap }) => {
             {moduleInfo && (
                 <div>
                     <h2>Module Information:</h2>
+                    <h3>{moduleInfo.courseCode} {moduleInfo.courseName}</h3>
                     <p><strong>Prerequisites:</strong> {moduleInfo.prerequisites}</p>
                     <p><strong>Prerequisite Rule:</strong> {moduleInfo.prerequisiteRule}</p>
                     <p><strong>Preclusions:</strong> {moduleInfo.preclusions}</p>
                     <p><strong>Preclusion Rule:</strong> {moduleInfo.preclusionRule}</p>
-                    {moduleInfo.prereqTree && (
+                    {/* {moduleInfo.prereqTree && (
                         <div>
                             <h3>Prerequisite Tree:</h3>
-                            {/* Custom component or visualization for displaying the prereq tree */}
+                            <PrereqTreeComponent node={parseTokens(tokenize(moduleInfo.prerequisites))} />
                         </div>
-                    )}
+                    )} */}
+                    <PrereqTreeComponent node={parseTokens(tokenize(moduleInfo.prerequisites))} />
                 </div>
             )}
         </div>
@@ -137,4 +155,3 @@ const ModuleForm: React.FC<Props> = ({ prereqTreeMap }) => {
 };
 
 export default ModuleForm;
-

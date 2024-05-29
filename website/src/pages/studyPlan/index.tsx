@@ -15,7 +15,8 @@ const StudyPlan: React.FC = () => {
     <div className="studyplan-container">
       <div className="content">
         <h2>This is the study plan page</h2>
-        <Container><DynamicTable></DynamicTable></Container>
+        {/* <Container><DynamicTable></DynamicTable></Container> */}
+        
         <ModuleForm ></ModuleForm>
         
               
