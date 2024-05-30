@@ -1,9 +1,15 @@
+/* src/pages/studyPlan/studyplan.css */
 .studyplan-container {
-  display: flex;
-  width: 100%; /* Ensures it takes full width */
+  width: 100%;  /* Adjust width as needed */
+  margin: 0 auto;  /* Center align if needed */
+  padding: 20px;
+  box-sizing: border-box;
 }
 
-.content {
-  flex-grow: 1; /* Ensure it expands */
-  padding: 20px; /* Check if this padding is intended or needs adjustment */
+.dynamic-table-container {
+  width: 100%;  /* Adjust width as needed */
+  margin-top: 20px;  /* Space between ModuleForm and DynamicTable */
+  margin-bottom: 20px;
+  padding: 20px;
+  box-sizing: border-box;
 }

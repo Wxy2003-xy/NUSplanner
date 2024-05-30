@@ -1,0 +1,60 @@
+.card {
+    position: relative; /* Needed for absolute positioning of children if needed */
+    width: 80%; 
+    background-color: #ffffff; /* White background */
+    border-radius: 5px; /* Rounded corners */
+    overflow: hidden; /* Keeps children within the rounded corners */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+    transition: transform 0.3s ease, box-shadow 0.3s ease; /* Smooth transitions */
+    padding-top: 56.25%; /* 16:9 Aspect Ratio - for other ratios adjust the percentage */
+    height: 0; /* Use padding to control height */
+    box-sizing: border-box  ;
+    transform: translateX(3px);
+  }
+.card.selected {
+    background-color: blanchedalmond; /* Light grey to indicate selection */
+    /* other styles to distinguish selected cards, e.g., border */
+}
+
+/* Enhanced hover effect */
+.card:hover {
+    transform: translateY(-5px); /* Lift effect on hover */
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2); /* Stronger shadow to emphasize lift */
+}
+
+/* Styles for the image within the card */
+.card-image {
+    width: 100%; /* Ensures the image covers the full width of the card */
+    height: 150px; /* Consistent height for all images */
+    object-fit: cover; /* Cover fit to prevent distortion */
+    border-top-left-radius: 5px; /* Rounded top corners */
+    border-top-right-radius: 5px;
+}
+
+/* Title styles for better typography */
+.card-title {
+    font-size: 1em; /* Appropriately sized text */
+    font-weight: bold; /* Bold for emphasis */
+    color: #333; /* Dark color for contrast */
+    margin: 10px; /* Adequate spacing around the title */
+}
+
+/* Text styles for better legibility */
+.card-text {
+    font-size: 0.8em; /* Smaller text size than title for hierarchy */
+    line-height: 1.5; /* Improved line spacing for readability */
+    color: #666; /* Soft color for descriptions */
+    margin: 10px; /* Consistent margin for spacing */
+    flex-grow: 1; /* Allows text to fill the space and push actions to the bottom */
+}
+
+/* Responsive design handling */
+@media (max-width: 600px) {
+    .card {
+        /*width: 90%; /* More width in smaller screens */
+        /*margin: 10px auto; /* Reduced margin in smaller screens */
+    }
+    .card-image {
+        height: 120px; /* Slightly smaller image in smaller screens */
+    }
+}

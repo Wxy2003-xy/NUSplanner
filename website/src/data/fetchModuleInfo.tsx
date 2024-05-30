@@ -23,7 +23,12 @@ interface Props {
     prereqTreeMap?: PrereqTreeMap; // Optional prerequisite tree map passed from parent
 }
 
-const ModuleForm: React.FC<Props> = ({}) => {
+interface ModuleFormProps {
+    setTempCard: (card: { id: number; name: string; content: string }) => void;
+}
+
+
+const ModuleForm: React.FC<ModuleFormProps> = ({ setTempCard }) => {
     const [acadYear, setAcadYear] = useState<string>(() => {
         // Retrieve the academic year from local storage if available
         return localStorage.getItem('acadYear') || '';
@@ -61,20 +66,13 @@ const ModuleForm: React.FC<Props> = ({}) => {
                 return response.json();
             })
             .then(data => {
-                const prereqList: Prereq = {
-                    prerequisites: data.prerequisite,
-                    prerequisiteRule: data.prerequisiteRule,
-                }
-                const relevantData: ModuleInfo = {
-                    courseCode: data.moduleCode,
-                    courseName: data.title,
-                    preclusions: data.preclusion,
-                    preclusionRule: data.preclusionRule,
-                    prerequisites: data.prerequisite,
-                    prerequisiteRule: data.prerequisiteRule,
-                    //prereqTree: prereqTreeMap ? prereqTreeMap[moduleCode] : undefined
+                const card = {
+                    id: Date.now(),
+                    name: data.moduleCode,
+                    content: data.title
                 };
-                setModuleInfo(relevantData);
+                setTempCard(card); // Set the temporary card with the fetched data
+                setModuleInfo(data);
                 setError('');
             })
             .catch(error => {
@@ -95,7 +93,7 @@ const ModuleForm: React.FC<Props> = ({}) => {
     // Styling remains the same
     const infoBlockStyle = {
         color: 'white',
-        backgroundColor: 'black',
+        backgroundColor: 'grey',
         padding: '10px',
         fontFamily: 'Arial',
         margin: '20px auto',

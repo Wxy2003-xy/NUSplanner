@@ -1,0 +1,97 @@
+.table {
+  width: 100%;
+  max-width: 100%;
+  display: flex;
+  padding: 10px;
+  gap: 10px; /* This adds space between your columns */
+  box-sizing: border-box; /* Makes padding and border part of the width */
+}
+
+.dropdown-list {
+  border: blue solid ;    /* guideline to be removed*/
+  padding: 10px;
+  border-radius: 5px;
+  margin-bottom: 10px;
+}
+
+.column {
+  display: flex;
+  flex-direction: column;
+  flex: 1; /* This makes each column take up equal space */
+  gap: 10px; /* This adds space between your cards */
+  border: blue solid ;    /* guideline to be removed*/
+}
+
+.card {
+  border: 1px solid #ccc; /* Optional, for styling */
+  padding: 2px;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1); /* Optional, for styling */
+}
+
+.counter-box {
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  background-color: blanchedalmond;
+  color: black;
+  padding: 5px;
+  text-align: left;
+  border: blue solid;
+  margin-bottom: 5px;
+}
+
+.counter-box:hover {
+  transform: scale(1.0);
+  z-index: 10;
+}
+
+.counter-box-breakdown {
+  display: flex;
+  position: absolute;
+  left: 5;
+  width: 95%;
+  background-color: rgba(0, 0, 0, 0.5);
+  color: white;
+  padding: 5px;
+  text-align: left;
+  transform: translateX(40px);
+  border: blue solid;
+}
+
+.counter-box:hover .counter-box-breakdown {
+  display: block;
+  align-self: center;
+  align-items: center;
+  transform: translateY(33px);
+
+  border: blue solid;
+}
+
+.sem-title {
+  margin-top: 10px;
+  margin-bottom: 0px;
+  display: block;
+  align-self: center;
+  align-items: center;
+  border: blue solid;
+}
+
+.sem-mc-count{
+  margin: 5px;
+  margin-top: -10px;
+  display: block;
+  align-self: center;
+  align-items: center;
+  border: blue solid;
+  
+}
+
+.add-button {
+  display: flex;
+  width: 80%;
+  block-size: border-box;
+  align-self: center;
+  margin-bottom: 10px;
+  border: blue solid;
+}
+
