@@ -2,7 +2,7 @@ import React, { useState, FormEvent, useEffect } from 'react';
 import { PrereqTree } from '../types/modules';
 import { PrereqTreeMap } from '../../scrapers/nus-v2/src/services/requisite-tree';
 import PrereqTreeComponent from '../util/visualiser';
-import {createEmptyPrereqTree, tokenize, parseTokens} from '../util/parser';
+import {tokenize, parseTokens} from '../util/parser';
 interface ModuleInfo {
     courseCode: string;
     courseName: string;
@@ -28,6 +28,7 @@ interface ModuleFormProps {
 }
 
 
+
 const ModuleForm: React.FC<ModuleFormProps> = ({ setTempCard }) => {
     const [acadYear, setAcadYear] = useState<string>(() => {
         // Retrieve the academic year from local storage if available
@@ -37,7 +38,6 @@ const ModuleForm: React.FC<ModuleFormProps> = ({ setTempCard }) => {
     const [moduleInfo, setModuleInfo] = useState<ModuleInfo | null>(null);
     const [error, setError] = useState<string>('');
     const [isLoading, setIsLoading] = useState<boolean>(false);
-
     const validateAcadYear = (year: string): boolean => {
         return /^\d{4}$/.test(year); // Checks if the year is a four-digit number
     };
@@ -66,15 +66,27 @@ const ModuleForm: React.FC<ModuleFormProps> = ({ setTempCard }) => {
                 return response.json();
             })
             .then(data => {
+                console.log(data);
+                setModuleInfo({
+                    courseCode: data.moduleCode,
+                    courseName: data.title,
+                    preclusions: data.preclusion, // Defaulting to "N/A" if not present
+                    preclusionRule: data.preclusionRule,
+                    prerequisites: data.prerequisite,
+                    prerequisiteRule: data.prerequisiteRule,
+                    prereqTree: data.prereqTree // Assuming 'prereqTree' might be a part of the data
+                });
+                console.log(moduleInfo);
                 const card = {
                     id: Date.now(),
                     name: data.moduleCode,
                     content: data.title
                 };
-                setTempCard(card); // Set the temporary card with the fetched data
-                setModuleInfo(data);
+                setTempCard(card);
+                
                 setError('');
             })
+            
             .catch(error => {
                 console.error('Error fetching data:', error);
                 setError(error.message);
@@ -139,13 +151,11 @@ const ModuleForm: React.FC<ModuleFormProps> = ({ setTempCard }) => {
                     <p><strong>Prerequisite Rule:</strong> {moduleInfo.prerequisiteRule}</p>
                     <p><strong>Preclusions:</strong> {moduleInfo.preclusions}</p>
                     <p><strong>Preclusion Rule:</strong> {moduleInfo.preclusionRule}</p>
-                    {/* {moduleInfo.prereqTree && (
-                        <div>
-                            <h3>Prerequisite Tree:</h3>
-                            <PrereqTreeComponent node={parseTokens(tokenize(moduleInfo.prerequisites))} />
-                        </div>
-                    )} */}
-                    <PrereqTreeComponent node={parseTokens(tokenize(moduleInfo.prerequisites))} />
+                    {<div>
+                        <h3>Prerequisite Tree:</h3>
+                        <PrereqTreeComponent node={parseTokens(tokenize(moduleInfo.prerequisites))} />
+                    </div> }
+                    <p>here</p>
                 </div>
             )}
         </div>

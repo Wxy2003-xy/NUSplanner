@@ -9,18 +9,20 @@ import { PreloadedState } from 'redux';
 import parseString from '../../../scrapers/nus-v2/src/services/requisite-tree/parseString';
 import ModuleForm from '../../data/fetchModuleInfo';
 import { useState } from 'react';
+import PrereqTreeComponent from '../../util/visualiser.tsx';
 
 const StudyPlan: React.FC = () => {
   const [tempCard, setTempCard] = useState<{ id: number; name: string; content: string } | null>(null);
+  // In StudyPlan component
+  const [prereqTree, setPrereqTree] = useState<PrereqTree | null>(null);
+
   return (
-    <>
-      <div className="studyplan-container">
-        <ModuleForm setTempCard={setTempCard} />
-      
+    <div className="studyplan-container">
+        <ModuleForm setTempCard={setTempCard}/>
         <DynamicTable tempCard={tempCard} setTempCard={setTempCard} />
-        </div>
-    </>
-  );
+    </div>
+);
+
 }
 
 export default StudyPlan;
