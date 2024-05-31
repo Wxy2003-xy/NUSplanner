@@ -3,95 +3,72 @@
   max-width: 100%;
   display: flex;
   padding: 10px;
-  gap: 10px; /* This adds space between your columns */
-  box-sizing: border-box; /* Makes padding and border part of the width */
+  gap: 20px; /* Increased space between columns for better separation */
+  box-sizing: border-box;
 }
 
 .dropdown-list {
-  border: blue solid ;    /* guideline to be removed*/
   padding: 10px;
-  border-radius: 5px;
-  margin-bottom: 10px;
+  border-radius: 8px; /* Smoother border radius */
+  margin-bottom: 15px;
+  background-color: #f8f9fa; /* Light grey background */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
 }
 
-.column {
+.vcolumns {
   display: flex;
   flex-direction: column;
-  flex: 1; /* This makes each column take up equal space */
-  gap: 10px; /* This adds space between your cards */
-  border: blue solid ;    /* guideline to be removed*/
+  flex: 1;
+  gap: 15px; /* Increased gap for clarity */
+  border: red, solid;
 }
 
 .card {
-  border: 1px solid #ccc; /* Optional, for styling */
-  padding: 2px;
-  box-shadow: 0 2px 5px rgba(0,0,0,0.1); /* Optional, for styling */
+  border: 1px solid #e0e0e0; /* Lighter border color */
+  padding: 10px;
+  border-radius: 5px; /* Rounded corners for the card */
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Enhanced shadow for 3D effect */
 }
 
 .counter-box {
-  bottom: 0;
-  left: 0;
-  width: 100%;
-  background-color: blanchedalmond;
-  color: black;
-  padding: 5px;
+  position: relative; /* Ensures proper stacking and positioning */
+  background-color: #ffffff; /* White background for clarity */
+  color: #333; /* Darker text for better readability */
+  padding: 10px;
   text-align: left;
-  border: blue solid;
-  margin-bottom: 5px;
+  border-radius: 5px; /* Consistent rounded corners */
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2); /* Stronger shadow for emphasis */
 }
 
 .counter-box:hover {
-  transform: scale(1.0);
-  z-index: 10;
+  transform: scale(1.03); /* Subtle growth on hover for interaction feedback */
+  z-index: 10; /* Ensures it stays above other elements */
 }
 
 .counter-box-breakdown {
-  display: flex;
+  display: none; /* Hide by default */
   position: absolute;
-  left: 5;
-  width: 95%;
-  background-color: rgba(0, 0, 0, 0.5);
+  top: 100%; /* Position directly below the counter-box */
+  left: 0;
+  width: 100%;
+  background-color: rgba(50, 50, 50, 0.9); /* Semi-transparent dark background */
   color: white;
   padding: 5px;
   text-align: left;
-  transform: translateX(40px);
-  border: blue solid;
+  border-radius: 3px; /* Slight rounding of corners */
 }
 
 .counter-box:hover .counter-box-breakdown {
-  display: block;
-  align-self: center;
-  align-items: center;
-  transform: translateY(33px);
-
-  border: blue solid;
-}
-
-.sem-title {
-  margin-top: 10px;
-  margin-bottom: 0px;
-  display: block;
-  align-self: center;
-  align-items: center;
-  border: blue solid;
-}
-
-.sem-mc-count{
-  margin: 5px;
-  margin-top: -10px;
-  display: block;
-  align-self: center;
-  align-items: center;
-  border: blue solid;
-  
-}
-
-.add-button {
   display: flex;
-  width: 80%;
-  block-size: border-box;
-  align-self: center;
-  margin-bottom: 10px;
-  border: blue solid;
+  align-items: center;
+  justify-content: center; /* Center contents horizontally and vertically */
 }
 
+.sem-title, .sem-mc-count, .add-button {
+  text-align: center; /* Centering text for consistency */
+  background-color: #f0f0f0; /* Uniform background for grouping elements */
+  padding: 10px;
+  margin: 10px 0;
+  border-radius: 5px; /* Consistent border radius */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Adds depth */
+}

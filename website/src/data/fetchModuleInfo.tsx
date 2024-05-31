@@ -1,6 +1,5 @@
 import React, { useState, FormEvent, useEffect } from 'react';
 import { PrereqTree } from '../types/modules';
-import { PrereqTreeMap } from '../../scrapers/nus-v2/src/services/requisite-tree';
 import PrereqTreeComponent from '../util/visualiser';
 import {tokenize, parseTokens} from '../util/parser';
 interface ModuleInfo {
@@ -12,16 +11,6 @@ interface ModuleInfo {
     prerequisites: string;
     prerequisiteRule: string;
     prereqTree?: PrereqTree; // Optional detailed prerequisite tree visualization
-}
-
-interface Prereq {
-    prerequisites: string;
-    prerequisiteRule: string;
-}
-
-interface Props {
-    year?: number;
-    prereqTreeMap?: PrereqTreeMap; // Optional prerequisite tree map passed from parent
 }
 
 interface ModuleFormProps {
@@ -107,14 +96,17 @@ const ModuleForm: React.FC<ModuleFormProps> = ({ setTempCard }) => {
 
     // Styling remains the same
     const infoBlockStyle = {
-        color: 'white',
-        backgroundColor: 'grey',
-        padding: '10px',
-        fontFamily: 'Arial',
-        margin: '20px auto',
-        width: '100%',
-        borderRadius: '8px'
+        color: '#333',  // Dark gray for better readability
+        backgroundColor: '#69c9a3',  // Light gray background for subtlety
+        padding: '20px',  // Increased padding for better spacing
+        fontFamily: 'Arial, sans-serif',  // Ensures fallback to sans-serif
+        margin: '20px auto',  // Keeps center alignment and adds vertical spacing
+        width: '100%',  // Slightly reduced for better focus on mobile
+        // maxWidth: '600px',  // Max width to avoid overly wide blocks on large screens
+        borderRadius: '10px',  // Slightly larger radius for a softer look
+        boxShadow: '0 10px 20px rgba(0,0,0,0.1)',  // Subtle shadow for depth
     };
+    
 
     return (
         <div style={infoBlockStyle}>
@@ -129,6 +121,7 @@ const ModuleForm: React.FC<ModuleFormProps> = ({ setTempCard }) => {
                         required
                     />
                 </label>
+                <p></p>
                 <label>
                     Module Code (e.g., CS1101S):
                     <input

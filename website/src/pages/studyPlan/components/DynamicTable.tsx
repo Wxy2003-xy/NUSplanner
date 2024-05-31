@@ -126,7 +126,7 @@ const DynamicTable: React.FC<DynamicTableProps> = ({ tempCard, setTempCard }) =>
       </div>
       <div className="table">
         {cards.map((columnCards, idx) => (
-          <div key={idx} className="column">
+          <div key={idx} className="vcolumns">
             <p className='sem-title'>{semesterCount(idx)}</p>
             <p className='sem-mc-count'>Total MC this semester: {getMCCount(columnCards)}</p>
             {columnCards.map(card => (
@@ -141,7 +141,7 @@ const DynamicTable: React.FC<DynamicTableProps> = ({ tempCard, setTempCard }) =>
                 && selectedCard.cardId === card.id}
             />
             ))}
-            <button className='add-button' onClick={() => addCard(idx)}>Add Mod</button>
+            <button className='add-button' onClick={() => addCard(idx)}>Add Course</button>
           </div>
         ))}
       </div>

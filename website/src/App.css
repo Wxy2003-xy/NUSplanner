@@ -14,7 +14,7 @@
 }
 
 .App-header {
-  background-color: #282c34;
+  background-color: #2f3a40;
   min-height: 100vh;
   display: flex;
   flex-direction: column;
@@ -31,7 +31,7 @@
 
 /* Add styles for the Header component */
 .Header {
-  background-color: #282c34;
+  background-color: #2f3a40;
   padding: 20px;
   color: white;
 }
@@ -89,10 +89,10 @@
 }
 
 .sidebar {
-  width: 200px; /* Set the width of the sidebar */
-  background-color: #f4f4f4; /* Light grey background */
+  width: 12%; /* Set the width of the sidebar */
+  background-color: #00c598; /* Light grey background */
   padding: 20px;
-  height: 100vh; /* Full-view height */
+  height: 105dvh; /* Full-view height */
 }
 
 .content {
