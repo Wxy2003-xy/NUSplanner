@@ -12,7 +12,7 @@ import { useState } from 'react';
 import PrereqTreeComponent from '../../util/visualiser.tsx';
 
 const StudyPlan: React.FC = () => {
-  const [tempCard, setTempCard] = useState<{ id: number; name: string; content: string } | null>(null);
+  const [tempCard, setTempCard] = useState<{ id: number; name: string; content: string; courseCredit: number} | null>(null);
   // In StudyPlan component
   const [prereqTree, setPrereqTree] = useState<PrereqTree | null>(null);
 

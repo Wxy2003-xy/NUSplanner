@@ -6,6 +6,7 @@ import {tokenize, parseTokens} from '../util/parser';
 interface ModuleInfo {
     courseCode: string;
     courseName: string;
+    courseCredit: number;
     preclusions: string;
     preclusionRule: string;
     prerequisites: string;
@@ -24,7 +25,7 @@ interface Props {
 }
 
 interface ModuleFormProps {
-    setTempCard: (card: { id: number; name: string; content: string }) => void;
+    setTempCard: (card: { id: number; name: string; content: string; courseCredit: number}) => void;
 }
 
 
@@ -70,6 +71,7 @@ const ModuleForm: React.FC<ModuleFormProps> = ({ setTempCard }) => {
                 setModuleInfo({
                     courseCode: data.moduleCode,
                     courseName: data.title,
+                    courseCredit: data.moduleCredit,
                     preclusions: data.preclusion, // Defaulting to "N/A" if not present
                     preclusionRule: data.preclusionRule,
                     prerequisites: data.prerequisite,
@@ -80,7 +82,8 @@ const ModuleForm: React.FC<ModuleFormProps> = ({ setTempCard }) => {
                 const card = {
                     id: Date.now(),
                     name: data.moduleCode,
-                    content: data.title
+                    content: data.title,
+                    courseCredit: data.moduleCredit
                 };
                 setTempCard(card);
                 
@@ -131,7 +134,7 @@ const ModuleForm: React.FC<ModuleFormProps> = ({ setTempCard }) => {
                     <input
                         type="text"
                         value={moduleCode}
-                        onChange={e => setModuleCode(e.target.value)}
+                        onChange={e => setModuleCode(e.target.value.toLocaleUpperCase())}
                         required
                     />
                 </label>
@@ -147,6 +150,7 @@ const ModuleForm: React.FC<ModuleFormProps> = ({ setTempCard }) => {
                 <div>
                     <h2>Module Information:</h2>
                     <h3>{moduleInfo.courseCode} {moduleInfo.courseName}</h3>
+                    <p><strong>Credit:</strong> {moduleInfo.courseCredit}</p>
                     <p><strong>Prerequisites:</strong> {moduleInfo.prerequisites}</p>
                     <p><strong>Prerequisite Rule:</strong> {moduleInfo.prerequisiteRule}</p>
                     <p><strong>Preclusions:</strong> {moduleInfo.preclusions}</p>
