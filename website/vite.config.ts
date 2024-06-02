@@ -4,5 +4,8 @@ import react from '@vitejs/plugin-react-swc'
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [react()],
-  base: '/NUSplanner/'
-})
+  build: {
+    outDir: 'dist',  // Ensure this is set to 'dist'
+  },
+  base: '/NUSplanner/'  // Make sure base path is correct
+});
