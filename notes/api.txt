@@ -1,0 +1,32 @@
+api
+
+key functions:
+- communication
+- abstraction
+- interoperability
+
+REST
+- Representation state transfer
+- set of rules to be used for creating web services
+- constraints for transferring, 
+    accessing and manipulating textual data Representation
+    of hypermedia, in a stateless manner acreoss a net work of systems
+
+- constraints:
+    - uniform interface
+    - client-server
+    - layered system: middleware
+    - stateless: entire query is self-contained 
+    - cacheable: 
+    - code-on-demand
+
+Websocket
+
+
+
+API endpoint
+
+https://api.example.com/users?key=1234&lang=ENG
+            ? : start of query
+            & : add query
+
