@@ -1,10 +1,11 @@
 {
-  "homepage": "https://Wxy-2003-xy.github.io/NUSplanner",
+  "homepage": "https://Wxy-2003-xy.github.io/NUSplanner/website",
   "name": "nusplanner",
   "private": false,
   "version": "1.0.0",
   "type": "module",
   "scripts": {
+    "dev": "vite",
     "start": "react-scripts start",
     "build": "tsc && vite build",
     "deploy": "gh-pages -d dist",
