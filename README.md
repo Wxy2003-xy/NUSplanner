@@ -146,12 +146,12 @@ The software engineering related techniques that we plan to apply in this projec
 For back-end web development, we have already taken some extra courses outside of NUS to learn more about Java (such as its OOP nature and frameworks like MyBatis and Spring Boot) and Database (such as the common SELECT, INSERT, UPDATE and DELETE queries). For the recommendation algorithm(s), we have taken CS2040/CS2040S and plan to use what we have learnt (GameTree) to come up with an appropriate algorithm. If not, we plan to self study and research more algorithms to come up with solutions for our project. For the remaining techniques in ‘Tech Stack’ that have not been mentioned, we are not very familiar with them now but think that they are useful and essential for our project. Thus, we plan to self study, research and master these techniques on our own to help ourselves to complete the project. In short, we will try our best to make sure that there is strong evidence of Software Engineering in our project.
 
 ## Deployment (Instruction & Link) 
-Local Deployment Instruction:
-1.Clone Github Repository
-Open terminal, run command “git clone https://github.com/Wxy2003-xy/NUSplanner”.
-2.Run command “cd NUSPlanner”.
-3.Run command “cd website”.
-4.Run command “npm run dev”. (If there is a missing script error, run command “npm install” first).
-Upon Step 4, the terminal should display a local website link that allows entry into the website.
+Local Deployment Instruction:<br>
+1.Clone Github Repository.<br>
+&emsp;&emsp;&emsp;&emsp;Open terminal, run command “git clone https://github.com/Wxy2003-xy/NUSplanner”.<br>
+2.Run command “cd NUSPlanner”.<br>
+3.Run command “cd website”.<br>
+4.Run command “npm run dev”. (If there is a missing script error, run command “npm install” first).<br>
+Upon Step 4, the terminal should display a local website link that allows entry into the website.<br>
 
 Alternatively, one can access the website using the following link: https://wxy2003-xy.github.io/NUSplanner/
