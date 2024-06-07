@@ -1,30 +1,43 @@
 import React, { useRef, useEffect } from 'react';
 import * as d3 from 'd3';
 
-const parsePrereqTree = (data) => {
-  if (typeof data === 'string') {
-    return { name: data };
+interface PrereqTreeNode {
+    and?: (PrereqTreeNode | string)[];
+    or?: (PrereqTreeNode | string)[];
   }
 
-  if (data.and) {
-    return {
-      name: 'all of',
-      children: data.and.map(parsePrereqTree),
-    };
-  }
+interface PrereqTreeProps {
+  data?: PrereqTreeNode | undefined;
+}
 
-  if (data.or) {
-    return {
-      name: 'one of',
-      children: data.or.map(parsePrereqTree),
-    };
-  }
+const parsePrereqTree = (data: PrereqTreeNode | string | undefined): any => {
+    if (typeof data === 'undefined') {
+      return;
+    }
 
-  return { name: 'Unknown' };
-};
+    if (typeof data === 'string') {
+      return { name: data };
+    }
+  
+    if (data.and) {
+      return {
+        name: 'all of',
+        children: data.and.map(parsePrereqTree),
+      };
+    }
+  
+    if (data.or) {
+      return {
+        name: 'one of',
+        children: data.or.map(parsePrereqTree),
+      };
+    }
+  
+    return { name: 'Unknown' };
+  };
 
-const PrereqTreeVisual = ({ data }) => {
-  const svgRef = useRef(null);
+const PrereqTreeVisual: React.FC<PrereqTreeProps> = ({ data }) => {
+  const svgRef = useRef<SVGSVGElement | null>(null);
 
   useEffect(() => {
     if (!svgRef.current) return;
