@@ -1,5 +1,5 @@
 {
-  "homepage": "https://nusplanner-studyplan.com",
+  "homepage": "https://wxy2003-xy.github.io/NUSplanner/",
   "name": "nusplanner",
   "private": false,
   "version": "1.0.0",
@@ -19,6 +19,7 @@
     "axios": "^1.6.8",
     "bunyan": "^1.8.15",
     "classnames": "^2.5.1",
+    "d3": "^7.9.0",
     "date-fns": "^3.6.0",
     "downshift": "^9.0.6",
     "elements": "^0.2.4",

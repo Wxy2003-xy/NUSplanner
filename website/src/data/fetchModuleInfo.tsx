@@ -1,7 +1,13 @@
 import React, { useState, FormEvent, useEffect } from 'react';
-import { PrereqTree } from '../types/modules';
 import PrereqTreeComponent from '../util/visualiser';
 import { tokenize, parseTokens } from '../util/parser';
+import PrereqTreeVisual from '../pages/studyPlan/components/TreeVisualization';
+import { PrereqTree } from '../types/modules';
+
+interface PrereqTreeNode {
+    and?: (PrereqTreeNode | string)[];
+    or?: (PrereqTreeNode | string)[];
+  }
 
 interface ModuleInfo {
     courseCode: string;
@@ -11,7 +17,7 @@ interface ModuleInfo {
     preclusionRule: string;
     prerequisites: string;
     prerequisiteRule: string;
-    prereqTree?: string; // Optional detailed prerequisite tree visualization
+    prereqTree?: PrereqTreeNode; // Optional detailed prerequisite tree visualization
 }
 
 interface ModuleFormProps {
@@ -68,7 +74,7 @@ const ModuleForm: React.FC<ModuleFormProps> = ({ setTempCard }) => {
                     preclusionRule: data.preclusionRule,
                     prerequisites: data.prerequisite,
                     prerequisiteRule: data.prerequisiteRule,
-                    prereqTree: JSON.stringify(data.prereqTree) // Assuming 'prereqTree' might be a part of the data
+                    prereqTree: data.prereqTree // Assuming 'prereqTree' might be a part of the data
                 });
                 console.log(moduleInfo);
                 const card = {
@@ -149,7 +155,10 @@ const ModuleForm: React.FC<ModuleFormProps> = ({ setTempCard }) => {
                     <p><strong>Prerequisite Rule:</strong> {moduleInfo.prerequisiteRule}</p>
                     <p><strong>Preclusions:</strong> {moduleInfo.preclusions}</p>
                     <p><strong>Preclusion Rule:</strong> {moduleInfo.preclusionRule}</p>
-                    <p><strong>Prereq tree:</strong> {moduleInfo.prereqTree}</p>
+                    <p><strong>Prereq tree:</strong> {JSON.stringify(moduleInfo.prereqTree)}</p>
+                    <div>
+                        <PrereqTreeVisual data={moduleInfo.prereqTree} />
+                    </div> 
                     {<div>
                         <h3>Prerequisite Tree:</h3>
                         <PrereqTreeComponent node={parseTokens(tokenize(moduleInfo.prerequisites))} />
