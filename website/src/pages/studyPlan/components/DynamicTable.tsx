@@ -28,6 +28,7 @@ interface SelectedCard {
 interface PrereqTreeNode {
   and?: (PrereqTreeNode | string)[];
   or?: (PrereqTreeNode | string)[];
+  nOf?: [number, (PrereqTreeNode | string)[]];
 }
 
 const DynamicTable: React.FC<DynamicTableProps> = ({ tempCard, setTempCard }) => {
@@ -198,9 +199,14 @@ const DynamicTable: React.FC<DynamicTableProps> = ({ tempCard, setTempCard }) =>
       return prereqTree.and.every(checkPrerequisites);
     } else if (prereqTree.or) {
       return prereqTree.or.some(checkPrerequisites);
+    } else if (prereqTree.nOf) {
+      const [n, requirements] = prereqTree.nOf;
+      const satisfied = requirements.filter(checkPrerequisites).length;
+      return satisfied >= n;
     }
     return true;
   };
+  
 
   // Get a card by its ID
   const getCardById = (id: number): CardType | undefined => {

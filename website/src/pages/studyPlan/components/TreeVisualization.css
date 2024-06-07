@@ -1,0 +1,90 @@
+/* TreeVisualization.css */
+
+.link {
+  fill: none;
+  stroke: #333;
+  stroke-width: 1.5px;
+  stroke-opacity: 0.9;
+}
+
+.node rect {
+  fill: #ffffff;
+  stroke: steelblue;
+  stroke-width: 1.5px;
+}
+
+.node text {
+  font: 12px sans-serif;
+  fill: #333;
+}
+
+.svg-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+}
+
+.graph {
+  margin: auto;
+}
+
+/* Card.css */
+
+.card {
+  position: relative;
+  width: 90%;
+  background-color: #88f7c5; /* Default color */
+  border-radius: 5px;
+  overflow: hidden;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  box-sizing: border-box;
+  transform: translateX(3px);
+  padding: 10px;
+}
+
+.card.selected {
+  background-color: #00c99e;
+}
+
+.card.prereq-not-satisfied {
+  background-color: #ff9999; /* Different color for unmet prerequisites */
+}
+
+.card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
+}
+
+.card-title {
+  font-size: 1em;
+  font-weight: bold;
+  color: #333;
+  margin: 10px 0;
+}
+
+.card-text {
+  font-size: 0.8em;
+  line-height: 1.2;
+  color: #666;
+  margin: 10px 0;
+  flex-grow: 1;
+}
+
+.card-grade {
+  font-size: 14px;
+  color: #333;
+  margin: 10px 0;
+}
+
+@media (max-width: 600px) {
+  .card {
+    width: 90%;
+    margin: 10px auto;
+  }
+  .card-image {
+    height: 120px;
+  }
+}
