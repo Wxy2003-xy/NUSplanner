@@ -1,7 +1,8 @@
 import React, { useState, FormEvent, useEffect } from 'react';
 import { PrereqTree } from '../types/modules';
 import PrereqTreeComponent from '../util/visualiser';
-import {tokenize, parseTokens} from '../util/parser';
+import { tokenize, parseTokens } from '../util/parser';
+
 interface ModuleInfo {
     courseCode: string;
     courseName: string;
@@ -10,30 +11,32 @@ interface ModuleInfo {
     preclusionRule: string;
     prerequisites: string;
     prerequisiteRule: string;
-    prereqTree?: PrereqTree; // Optional detailed prerequisite tree visualization
+    prereqTree?: string; // Optional detailed prerequisite tree visualization
 }
 
 interface ModuleFormProps {
-    setTempCard: (card: { id: number; name: string; content: string; courseCredit: number}) => void;
+    setTempCard: (card: { 
+        id: number; 
+        name: string; 
+        content: string; 
+        courseCredit: number; 
+        prereqTree?: string | undefined | null}) => void;
 }
-
-
 
 const ModuleForm: React.FC<ModuleFormProps> = ({ setTempCard }) => {
     const [acadYear, setAcadYear] = useState<string>(() => {
-        // Retrieve the academic year from local storage if available
         return localStorage.getItem('acadYear') || '';
     });
     const [moduleCode, setModuleCode] = useState<string>('');
     const [moduleInfo, setModuleInfo] = useState<ModuleInfo | null>(null);
     const [error, setError] = useState<string>('');
     const [isLoading, setIsLoading] = useState<boolean>(false);
+
     const validateAcadYear = (year: string): boolean => {
         return /^\d{4}$/.test(year); // Checks if the year is a four-digit number
     };
 
     useEffect(() => {
-        // Save acadYear to local storage whenever it changes
         localStorage.setItem('acadYear', acadYear);
     }, [acadYear]);
 
@@ -61,24 +64,25 @@ const ModuleForm: React.FC<ModuleFormProps> = ({ setTempCard }) => {
                     courseCode: data.moduleCode,
                     courseName: data.title,
                     courseCredit: data.moduleCredit,
-                    preclusions: data.preclusion, // Defaulting to "N/A" if not present
+                    preclusions: data.preclusion,
                     preclusionRule: data.preclusionRule,
                     prerequisites: data.prerequisite,
                     prerequisiteRule: data.prerequisiteRule,
-                    prereqTree: data.prereqTree // Assuming 'prereqTree' might be a part of the data
+                    prereqTree: JSON.stringify(data.prereqTree) // Assuming 'prereqTree' might be a part of the data
                 });
                 console.log(moduleInfo);
                 const card = {
                     id: Date.now(),
                     name: data.moduleCode,
                     content: data.title,
-                    courseCredit: data.moduleCredit
+                    courseCredit: data.moduleCredit,
+                    prereqTree: JSON.stringify(data.prereqTree)
                 };
+                console.log("Setting tempCard:", card); // Debugging log
                 setTempCard(card);
-                
+
                 setError('');
             })
-            
             .catch(error => {
                 console.error('Error fetching data:', error);
                 setError(error.message);
@@ -94,19 +98,16 @@ const ModuleForm: React.FC<ModuleFormProps> = ({ setTempCard }) => {
         fetchModuleInfo(acadYear, moduleCode);
     };
 
-    // Styling remains the same
     const infoBlockStyle = {
-        color: '#333',  // Dark gray for better readability
-        backgroundColor: '#69c9a3',  // Light gray background for subtlety
-        padding: '20px',  // Increased padding for better spacing
-        fontFamily: 'Arial, sans-serif',  // Ensures fallback to sans-serif
-        margin: '20px auto',  // Keeps center alignment and adds vertical spacing
-        width: '100%',  // Slightly reduced for better focus on mobile
-        // maxWidth: '600px',  // Max width to avoid overly wide blocks on large screens
-        borderRadius: '10px',  // Slightly larger radius for a softer look
-        boxShadow: '0 10px 20px rgba(0,0,0,0.1)',  // Subtle shadow for depth
+        color: '#333',
+        backgroundColor: '#69c9a3',
+        padding: '20px',
+        fontFamily: 'Arial, sans-serif',
+        margin: '20px auto',
+        width: '100%',
+        borderRadius: '10px',
+        boxShadow: '0 10px 20px rgba(0,0,0,0.1)',
     };
-    
 
     return (
         <div style={infoBlockStyle}>
@@ -148,6 +149,7 @@ const ModuleForm: React.FC<ModuleFormProps> = ({ setTempCard }) => {
                     <p><strong>Prerequisite Rule:</strong> {moduleInfo.prerequisiteRule}</p>
                     <p><strong>Preclusions:</strong> {moduleInfo.preclusions}</p>
                     <p><strong>Preclusion Rule:</strong> {moduleInfo.preclusionRule}</p>
+                    <p><strong>Prereq tree:</strong> {moduleInfo.prereqTree}</p>
                     {<div>
                         <h3>Prerequisite Tree:</h3>
                         <PrereqTreeComponent node={parseTokens(tokenize(moduleInfo.prerequisites))} />

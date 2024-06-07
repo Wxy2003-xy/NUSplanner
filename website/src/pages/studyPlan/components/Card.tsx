@@ -1,4 +1,3 @@
-// Card.tsx
 import React from 'react';
 import './Card.css';
 import classnames from 'classnames';
@@ -11,10 +10,16 @@ type CardProps = {
   onClick: () => void;
   isSelected?: boolean | undefined | null;
   grade?: string | null;
+  prereqTree?: string | undefined | null;
+  prereqNotSatisfied?: boolean; 
+  color?: string
 };
 
-const Card: React.FC<CardProps> = ({ id, name, courseCredit, content, onClick, isSelected = false, grade }) => {
-  const cardClass = isSelected ? 'card selected' : 'card';
+const Card: React.FC<CardProps> = ({ id, name, courseCredit, content, onClick, isSelected = false, grade, prereqNotSatisfied }) => {
+  const cardClass = classnames('card', {
+    'selected': isSelected,
+    'prereq-not-satisfied': prereqNotSatisfied, // Apply different class if prereqNotSatisfied is true
+  });
 
   return (
     <div className={cardClass} onClick={onClick}>

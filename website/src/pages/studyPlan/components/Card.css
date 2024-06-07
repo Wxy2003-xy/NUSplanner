@@ -1,62 +1,57 @@
 .card {
-    position: relative; /* Needed for absolute positioning of children if needed */
-    width: 90%; 
-    background-color: #88f7c5; /* White background */
-    border-radius: 5px; /* Rounded corners */
-    overflow: hidden; /* Keeps children within the rounded corners */
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow */
-    transition: transform 0.3s ease, box-shadow 0.3s ease; /* Smooth transitions */
+    position: relative;
+    width: 90%;
+    background-color: #88f7c5;
+    border-radius: 5px;
+    overflow: hidden;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
     box-sizing: border-box;
     transform: translateX(3px);
-    padding: 10px; /* Add padding to ensure content is not cut off */
-}
-
-.card.selected {
-    background-color: blanchedalmond; /* Light grey to indicate selection */
-    /* other styles to distinguish selected cards, e.g., border */
-}
-
-.card:hover {
-    transform: translateY(-5px); /* Lift effect on hover */
-    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2); /* Stronger shadow to emphasize lift */
-}
-
-.card-image {
-    width: 100%; /* Ensures the image covers the full width of the card */
-    height: 150px; /* Consistent height for all images */
-    object-fit: cover; /* Cover fit to prevent distortion */
-    border-top-left-radius: 5px; /* Rounded top corners */
-    border-top-right-radius: 5px;
-}
-
-.card-title {
-    font-size: 1em; /* Appropriately sized text */
-    font-weight: bold; /* Bold for emphasis */
-    color: #333; /* Dark color for contrast */
-    margin: 10px 0; /* Adequate spacing around the title */
-}
-
-.card-text {
-    font-size: 0.8em; /* Smaller text size than title for hierarchy */
-    line-height: 1.2; /* Improved line spacing for readability */
-    color: #666; /* Soft color for descriptions */
-    margin: 10px 0; /* Consistent margin for spacing */
-    flex-grow: 1; /* Allows text to fill the space and push actions to the bottom */
-}
-
-.card-grade {
-    font-size: 14px; /* Example styling */
+    padding: 10px;
+  }
+  
+  .card.selected {
+    background-color: #00c99e;
+  }
+  
+  .card.prereq-not-satisfied {
+    background-color: #ff9999; /* Different color for unmet prerequisites */
+  }
+  
+  .card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
+  }
+  
+  .card-title {
+    font-size: 1em;
+    font-weight: bold;
     color: #333;
-    margin: 10px 0; /* Margin for spacing */
-}
-
-/* Responsive design handling */
-@media (max-width: 600px) {
+    margin: 10px 0;
+  }
+  
+  .card-text {
+    font-size: 0.8em;
+    line-height: 1.2;
+    color: #666;
+    margin: 10px 0;
+    flex-grow: 1;
+  }
+  
+  .card-grade {
+    font-size: 14px;
+    color: #333;
+    margin: 10px 0;
+  }
+  
+  @media (max-width: 600px) {
     .card {
-        width: 90%; /* More width in smaller screens */
-        margin: 10px auto; /* Reduced margin in smaller screens */
+      width: 90%;
+      margin: 10px auto;
     }
     .card-image {
-        height: 120px; /* Slightly smaller image in smaller screens */
+      height: 120px;
     }
-}
+  }
+  
