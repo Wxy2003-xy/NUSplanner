@@ -1,7 +1,7 @@
 {
   "homepage": "https://wxy-2003-xy.github.io/NUSplanner",
   "name": "nusplanner",
-  "private": false,
+  "private": true,
   "version": "1.0.0",
   "type": "module",
   "scripts": {
