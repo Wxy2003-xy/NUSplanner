@@ -8,9 +8,9 @@ interface CardType {
   content: string;
   courseCredit: number;
   grade?: string | null;
-  prereqTree?: string | undefined | null;
-  prereqNotSatisfied?: boolean; 
-  color?: string; // defaulting in css
+  prereqTree?: PrereqTreeNode;  
+  prereqNotSatisfied?: boolean;
+  color?: string;
 }
 
 interface DynamicTableProps {
@@ -42,13 +42,28 @@ const DynamicTable: React.FC<DynamicTableProps> = ({ tempCard, setTempCard }) =>
   const [selectedCard, setSelectedCard] = useState<SelectedCard | null>(null);
   const [grade, setGrade] = useState<string>('');
 
-  // Handle the column change event
+  // Handle the no of column change event
   const handleColumnChange = (event: ChangeEvent<HTMLSelectElement>) => {
     const newCount = parseInt(event.target.value);
     const newCards = new Array(newCount).fill([]).map((_, idx) => cards[idx] || []);
     setColumnCount(newCount);
     setCards(newCards);
   };
+
+  useEffect(() => {
+    const updatePrerequisites = () => {
+        const newCards = cards.map((column, columnIndex) => {
+            return column.map(card => {
+                const isSatisfied = checkPrerequisites(card.prereqTree, columnIndex);
+                return { ...card, prereqNotSatisfied: !isSatisfied, color: isSatisfied ? '#88f7c5' : '#ff9999' };
+            });
+        });
+        setCards(newCards); 
+    };
+
+    updatePrerequisites();
+}, [cards]);
+
 
   // Add a card to the table
   const addCard = (columnIndex: number) => {
@@ -57,8 +72,9 @@ const DynamicTable: React.FC<DynamicTableProps> = ({ tempCard, setTempCard }) =>
   
       if (tempCard.prereqTree) {
         try {
-          const prereqTree = JSON.parse(tempCard.prereqTree);
-          if (!checkPrerequisites(prereqTree)) {
+          const prereqTree:PrereqTreeNode = tempCard.prereqTree;
+          console.log(JSON.stringify(prereqTree))
+          if (!checkPrerequisites(prereqTree, columnIndex)) {
             prereqNotSatisfied = true;
             console.log("not satisfied, labelled");
           }
@@ -68,7 +84,7 @@ const DynamicTable: React.FC<DynamicTableProps> = ({ tempCard, setTempCard }) =>
         }
       }
   
-      const newCard = { ...tempCard, prereqNotSatisfied }; 
+      const newCard = { ...tempCard, prereqNotSatisfied };
       let existingCardFound = false;
   
       for (let i = 0; i < cards.length; i++) {
@@ -98,22 +114,49 @@ const DynamicTable: React.FC<DynamicTableProps> = ({ tempCard, setTempCard }) =>
         } else {
           setNotification(null); // Clear notification
         }
+
+        let len:number = newCards.length;
+  
+        // Check prerequisites for all existing cards in columns left to the newly added card
+        updateAllPrerequisites()
+        setCards(newCards);
       }
     }
   };
-  
   
 
   // Remove a card from the table
   const removeCard = () => {
     if (selectedCard) {
-      const { columnIndex, cardId } = selectedCard;
-      const newCards = [...cards];
-      newCards[columnIndex] = newCards[columnIndex].filter(card => card.id !== cardId);
-      setCards(newCards);
-      setSelectedCard(null);
+        console.log('Removing card:', selectedCard);
+        const { columnIndex, cardId } = selectedCard;
+        const newCards = [...cards];
+        const filteredCards = newCards[columnIndex].filter(card => card.id !== cardId);
+
+        if (newCards[columnIndex].length === filteredCards.length) {
+            console.log('No card found to remove with id:', cardId);
+        } else {
+            console.log('Card removed, updating state.');
+            newCards[columnIndex] = filteredCards;
+            setCards(newCards);
+            setSelectedCard(null);
+
+            // Update prerequisites for all remaining cards in the affected and subsequent columns
+            for (let i = columnIndex; i < newCards.length; i++) {
+                newCards[i].forEach(card => {
+                    const isSatisfied = checkPrerequisites(card.prereqTree, i);
+                    card.prereqNotSatisfied = !isSatisfied;
+                    card.color = isSatisfied ? '#88f7c5' : '#ff9999';
+                });
+            }
+            setCards(newCards);
+        }
+    } else {
+        console.log('No selected card to remove.');
     }
-  };
+};
+
+  
 
   // Handle card click event
   const handleCardClick = (columnIndex: number, cardId: number) => {
@@ -127,15 +170,17 @@ const DynamicTable: React.FC<DynamicTableProps> = ({ tempCard, setTempCard }) =>
     }
   };
 
-  const changeCardColor = (cardId: number, newColor: string) => {
-    const newCards = cards.map(column =>
-      column.map(card =>
-        card.id === cardId ? { ...card, color: newColor } : card
-      )
-    );
-    setCards(newCards);
+  const parsePrereqTree = (prereq: PrereqTreeNode | string): PrereqTreeNode => {
+    if (typeof prereq === 'string') {
+      try {
+        return JSON.parse(prereq);
+      } catch {
+        console.error('Failed to parse prereq string:', prereq);
+        return {}; // Return an empty structure if parsing fails
+      }
+    }
+    return prereq;
   };
-  
 
   // Update the grade state
   const updateGrade = (event: ChangeEvent<HTMLSelectElement>) => {
@@ -192,22 +237,60 @@ const DynamicTable: React.FC<DynamicTableProps> = ({ tempCard, setTempCard }) =>
   };
 
   // Check if prerequisites are satisfied
-  const checkPrerequisites = (prereqTree: PrereqTreeNode | string): boolean => {
+  const checkPrerequisites = (prereqTree: PrereqTreeNode | string | undefined, columnIdx: number): boolean => {
     if (typeof prereqTree === 'string') {
-      return getCardByCourseCode(prereqTree.split(':')[0]) !== undefined;
-    } else if (prereqTree.and) {
-      return prereqTree.and.every(checkPrerequisites);
-    } else if (prereqTree.or) {
-      return prereqTree.or.some(checkPrerequisites);
-    } else if (prereqTree.nOf) {
-      const [n, requirements] = prereqTree.nOf;
-      const satisfied = requirements.filter(checkPrerequisites).length;
-      return satisfied >= n;
+      try {
+        // Attempt to parse the string as JSON to handle complex prereq structures
+        const parsedTree = JSON.parse(prereqTree);
+        return checkPrerequisites(parsedTree, columnIdx);
+      } catch {
+        // If parsing fails, assume it's a single course code string
+        return getCardByCourseCodeLeft(prereqTree, columnIdx);
+      }
     }
-    return true;
+  
+    if (!prereqTree) return true;  // If no prereqTree, return true (no prerequisites)
+  
+    // Handling 'and' logic
+    if (prereqTree.and) {
+      return prereqTree.and.reduce((acc, prereq) => 
+        acc && checkPrerequisites(prereq, columnIdx), true);
+    }
+  
+    // Handling 'or' logic
+    if (prereqTree.or) {
+      return prereqTree.or.reduce((acc, prereq) => 
+        acc || checkPrerequisites(prereq, columnIdx), false);
+    }
+  
+    // Handling 'nOf' logic
+    if (prereqTree.nOf) {
+      const [n, requirements] = prereqTree.nOf;
+      const countSatisfied = requirements.reduce((count, prereq) => 
+        checkPrerequisites(prereq, columnIdx) ? count + 1 : count, 0);
+      return countSatisfied >= n;
+    }
+  
+    // Unrecognized structure, log and return false
+    console.error('Invalid prerequisite structure:', prereqTree);
+    return false;
   };
   
 
+  const updateAllPrerequisites = () => {
+    cards.forEach((column, columnIndex) => {
+      column.forEach(card => {
+        updateCardPrerequisites(card, columnIndex);
+      });
+    });
+  };
+  
+  // Called after a card is removed or added to update its display based on prerequisites
+  const updateCardPrerequisites = (card:CardType, columnIndex:number) => {
+    const isSatisfied = checkPrerequisites(card.prereqTree, columnIndex);
+    card.prereqNotSatisfied = !isSatisfied;
+    card.color = isSatisfied ? '#88f7c5' : '#ff9999';
+};
   // Get a card by its ID
   const getCardById = (id: number): CardType | undefined => {
     for (let column of cards) {
@@ -219,17 +302,21 @@ const DynamicTable: React.FC<DynamicTableProps> = ({ tempCard, setTempCard }) =>
     }
     return undefined;
   };
-
   // Get a card by its course code
-  const getCardByCourseCode = (courseName: string): CardType | undefined => {
-    for (let column of cards) {
-      for (let card of column) {
-        if (card.name === courseName) {
-          return card;
-        }
+  const getCardByCourseCodeLeft = (courseCode: string, columnIdx: number): boolean => {
+    // Extract the course code before the colon if present
+    const cleanCourseCode = courseCode.split(':')[0].trim();
+  
+    // Check each column from 0 to columnIdx-1
+    for (let i = 0; i < columnIdx; i++) {
+      // Check if any card in the column matches the clean course code
+      if (cards[i].some(card => card.name === cleanCourseCode)) {
+        console.log(`${cleanCourseCode} found in column ${i}`);
+        return true;  // Return true if any match found
       }
     }
-    return undefined;
+    console.log(`${cleanCourseCode} not found`);
+    return false;  // Return false if no matches found
   };
 
   return (
@@ -295,7 +382,6 @@ const DynamicTable: React.FC<DynamicTableProps> = ({ tempCard, setTempCard }) =>
       )}
     </div>
   );
-  
 };
 
 export default DynamicTable;
