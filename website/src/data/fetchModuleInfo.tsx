@@ -2,7 +2,6 @@ import React, { useState, FormEvent, useEffect } from 'react';
 import PrereqTreeComponent from '../util/visualiser';
 import { tokenize, parseTokens } from '../util/parser';
 import PrereqTreeVisual from '../pages/studyPlan/components/TreeVisualization';
-import { PrereqTree } from '../types/modules';
 
 interface PrereqTreeNode {
     and?: (PrereqTreeNode | string)[];
@@ -74,7 +73,7 @@ const ModuleForm: React.FC<ModuleFormProps> = ({ setTempCard }) => {
                     preclusionRule: data.preclusionRule,
                     prerequisites: data.prerequisite,
                     prerequisiteRule: data.prerequisiteRule,
-                    prereqTree: data.prereqTree // Assuming 'prereqTree' might be a part of the data
+                    prereqTree: data.prereqTree 
                 });
                 console.log(moduleInfo);
                 const card = {
@@ -84,7 +83,7 @@ const ModuleForm: React.FC<ModuleFormProps> = ({ setTempCard }) => {
                     courseCredit: data.moduleCredit,
                     prereqTree: JSON.stringify(data.prereqTree)
                 };
-                console.log("Setting tempCard:", card); // Debugging log
+                console.log("Setting tempCard:", card);
                 setTempCard(card);
 
                 setError('');
@@ -163,7 +162,7 @@ const ModuleForm: React.FC<ModuleFormProps> = ({ setTempCard }) => {
                         <h3>Prerequisite Tree:</h3>
                         <PrereqTreeComponent node={parseTokens(tokenize(moduleInfo.prerequisites))} />
                     </div> }
-                    <p>here</p>
+                    <p>test</p>
                 </div>
             )}
         </div>

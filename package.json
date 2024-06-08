@@ -1,5 +1,5 @@
 {
-  "homepage": "https://wxy-2003-xy.github.io/NUSplanner",
+  "homepage": "https://Wxy2003-xy.github.io/NUSplanner",
   "name": "nusplanner",
   "version": "1.0.0",
   "main": "index.js",
@@ -18,7 +18,8 @@
     "axios": "^1.7.2",
     "d3": "^7.9.0",
     "express": "^4.19.2",
-    "react-scripts": "^3.0.1"
+    "react-scripts": "^3.0.1",
+    "vite": "^5.2.12"
   },
   "devDependencies": {
     "gh-pages": "^6.1.1",
