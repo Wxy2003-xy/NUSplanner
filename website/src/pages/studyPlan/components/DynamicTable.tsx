@@ -45,7 +45,7 @@ const DynamicTable: React.FC<DynamicTableProps> = ({ tempCard, setTempCard }) =>
   // Handle the no of column change event
   const handleColumnChange = (event: ChangeEvent<HTMLSelectElement>) => {
     const newCount = parseInt(event.target.value);
-    const newCards = new Array(newCount).fill([]).map((_, idx) => cards[idx] || []);
+    const newCards = new Array(newCount + 1).fill([]).map((_, idx) => cards[idx] || []);
     setColumnCount(newCount);
     setCards(newCards);
   };
@@ -207,11 +207,16 @@ const DynamicTable: React.FC<DynamicTableProps> = ({ tempCard, setTempCard }) =>
 
   // Get the total MC count
   const getTotalMCCount = (): number => {
-    return cards.flat().reduce((total, card) => total + Number(card.courseCredit), 0);
+    // Start from the second column, assuming columns are 0-indexed
+    return cards.slice(1).reduce((total, column) => {
+      return total + column.reduce((colTotal, card) => colTotal + Number(card.courseCredit), 0);
+    }, 0);
   };
+  
 
   // Semester descriptions
   const semesterDescriptions = [
+    'Exemptions',
     'Year 1 Sem 1', 'Year 1 Sem 2', 'Year 2 Sem 1', 'Year 2 Sem 2',
     'Year 3 Sem 1', 'Year 3 Sem 2', 'Year 4 Sem 1', 'Year 4 Sem 2',
     'Year 5 Sem 1', 'Year 5 Sem 2', 'Year 6 Sem 1', 'Year 6 Sem 2',
@@ -333,7 +338,28 @@ const DynamicTable: React.FC<DynamicTableProps> = ({ tempCard, setTempCard }) =>
         <p className="counter-box-breakdown">Total MC breakdown:</p>
       </div>
       <div className="table">
-        {cards.map((columnCards, idx) => (
+        {cards.map((columnCards, idx) => (idx === 0 ? 
+          <div key={idx} className="vcolumns">
+          <p className="sem-title">{semesterCount(idx)}</p>
+          <p className="sem-mc-count">Courses exempted from:</p>
+          {columnCards.map(card => (
+            <Card
+              key={card.id}
+              id={card.id}
+              name={card.name}
+              courseCredit={card.courseCredit}
+              content={card.content}
+              onClick={() => handleCardClick(idx, card.id)}
+              isSelected={selectedCard && selectedCard.columnIndex === idx && selectedCard.cardId === card.id}
+              grade={card.grade}
+              prereqTree={card.prereqTree}
+              prereqNotSatisfied={card.prereqNotSatisfied}
+              color={card.color} // Pass the custom color
+            />
+          ))}
+          <button className="add-button" onClick={() => addCard(idx)}>Add Course</button>
+      </div>
+        :
           <div key={idx} className="vcolumns">
             <p className="sem-title">{semesterCount(idx)}</p>
             <p className="sem-mc-count">Total MC this semester: {getMCCount(columnCards)}</p>

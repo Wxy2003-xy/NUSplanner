@@ -3,13 +3,25 @@ import DynamicTable from './components/DynamicTable';
 import ModuleForm from '../../data/fetchModuleInfo';
 import { useState } from 'react';
 
+interface PrereqTreeNode {
+  and?: (PrereqTreeNode | string)[];
+  or?: (PrereqTreeNode | string)[];
+  nOf?: [number, (PrereqTreeNode | string)[]];
+}
+
+interface CardType {
+  id: number;
+  name: string;
+  content: string;
+  courseCredit: number;
+  grade?: string | null;
+  prereqTree?: PrereqTreeNode;  
+  prereqNotSatisfied?: boolean;
+  color?: string;
+}
+
 const StudyPlan: React.FC = () => {
-  const [tempCard, setTempCard] = useState<{ 
-    id: number; 
-    name: string; 
-    content: string; 
-    courseCredit: number; 
-    prereqTree?: string | undefined | null} | null>(null);
+  const [tempCard, setTempCard] = useState<CardType | null>(null);
 
   return (
     <div className="studyplan-container">
