@@ -51,18 +51,20 @@ const DynamicTable: React.FC<DynamicTableProps> = ({ tempCard, setTempCard }) =>
   };
 
   useEffect(() => {
-    const updatePrerequisites = () => {
-        const newCards = cards.map((column, columnIndex) => {
-            return column.map(card => {
-                const isSatisfied = checkPrerequisites(card.prereqTree, columnIndex);
-                return { ...card, prereqNotSatisfied: !isSatisfied, color: isSatisfied ? '#88f7c5' : '#ff9999' };
-            });
-        });
-        setCards(newCards); 
-    };
+    const newCards = calculatePrerequisites(cards);
+    if (JSON.stringify(newCards) !== JSON.stringify(cards)) {
+      setCards(newCards);
+    }
+  }, [cards]); // Dependency only on `cards`
 
-    updatePrerequisites();
-}, [cards]);
+const calculatePrerequisites = (cards: Array<Array<CardType>>): Array<Array<CardType>> => {
+  return cards.map((column, columnIndex) => {
+    return column.map(card => {
+      const isSatisfied = checkPrerequisites(card.prereqTree, columnIndex); // Ensure this function is also optimized
+      return { ...card, prereqNotSatisfied: !isSatisfied, color: isSatisfied ? '#88f7c5' : '#ff9999' };
+    });
+  });
+};
 
 
   // Add a card to the table
