@@ -1,6 +1,8 @@
 import React, { useState, useEffect, ChangeEvent, Dispatch, SetStateAction } from 'react';
 import './DynamicTable.css';
 import Card from './Card';
+import PrereqTreeVisual from '../../../pages/studyPlan/components/TreeVisualization';
+import { PrereqTree } from '../../../../../../../Downloads/nusmod/nusmods-master/website/src/types/modules';
 
 interface CardType {
   id: number;
@@ -8,7 +10,7 @@ interface CardType {
   content: string;
   courseCredit: number;
   grade?: string | null;
-  prereqTree?: PrereqTreeNode;  
+  prereqTree?: PrereqTreeNode | string;  
   prereqNotSatisfied?: boolean;
   color?: string;
 }
@@ -18,11 +20,8 @@ interface DynamicTableProps {
   setTempCard: Dispatch<SetStateAction<CardType | null>>;
 }
 
-interface SelectedCard {
+interface SelectedCard extends CardType {
   columnIndex: number;
-  cardId: number;
-  name: string;
-  courseCredit: number;
 }
 
 interface PrereqTreeNode {
@@ -74,7 +73,7 @@ const calculatePrerequisites = (cards: Array<Array<CardType>>): Array<Array<Card
   
       if (tempCard.prereqTree) {
         try {
-          const prereqTree:PrereqTreeNode = tempCard.prereqTree;
+          const prereqTree:PrereqTreeNode | string = tempCard.prereqTree;
           console.log(JSON.stringify(prereqTree))
           if (!checkPrerequisites(prereqTree, columnIndex)) {
             prereqNotSatisfied = true;
@@ -93,10 +92,9 @@ const calculatePrerequisites = (cards: Array<Array<CardType>>): Array<Array<Card
         for (let j = 0; j < cards[i].length; j++) {
           if (cards[i][j].name === newCard.name) {
             setSelectedCard({
+              ...cards[i][columnIndex],
               columnIndex: i,
-              cardId: cards[i][j].id,
-              name: cards[i][j].name,
-              courseCredit: newCard.courseCredit,
+              courseCredit: newCard.courseCredit
             });
             existingCardFound = true;
             setNotification(`Course: ${newCard.name} is already allocated for ${semesterCount(i)}.`);
@@ -116,9 +114,7 @@ const calculatePrerequisites = (cards: Array<Array<CardType>>): Array<Array<Card
         } else {
           setNotification(null); // Clear notification
         }
-
-        let len:number = newCards.length;
-  
+        setSelectedCard({ ...newCard, columnIndex });
         // Check prerequisites for all existing cards in columns left to the newly added card
         updateAllPrerequisites()
         setCards(newCards);
@@ -131,12 +127,12 @@ const calculatePrerequisites = (cards: Array<Array<CardType>>): Array<Array<Card
   const removeCard = () => {
     if (selectedCard) {
         console.log('Removing card:', selectedCard);
-        const { columnIndex, cardId } = selectedCard;
+        const { columnIndex, id } = selectedCard;
         const newCards = [...cards];
-        const filteredCards = newCards[columnIndex].filter(card => card.id !== cardId);
+        const filteredCards = newCards[columnIndex].filter(card => card.id !== id);
 
         if (newCards[columnIndex].length === filteredCards.length) {
-            console.log('No card found to remove with id:', cardId);
+            console.log('No card found to remove with id:', id);
         } else {
             console.log('Card removed, updating state.');
             newCards[columnIndex] = filteredCards;
@@ -163,25 +159,18 @@ const calculatePrerequisites = (cards: Array<Array<CardType>>): Array<Array<Card
   // Handle card click event
   const handleCardClick = (columnIndex: number, cardId: number) => {
     const card = cards[columnIndex].find(card => card.id === cardId);
-    const isSelected = selectedCard && selectedCard.cardId === cardId;
+    const isSelected = selectedCard && selectedCard.id === cardId;
     if (isSelected) {
       setSelectedCard(null);
     } else if (card) {
-      setSelectedCard({ columnIndex, cardId, name: card.name, courseCredit: card.courseCredit });
+      setSelectedCard({
+        ...card,
+        columnIndex
+      });
+      console.log(card.prereqTree)
+      console.log(typeof(card.prereqTree))
       setGrade(card.grade || '');
     }
-  };
-
-  const parsePrereqTree = (prereq: PrereqTreeNode | string): PrereqTreeNode => {
-    if (typeof prereq === 'string') {
-      try {
-        return JSON.parse(prereq);
-      } catch {
-        console.error('Failed to parse prereq string:', prereq);
-        return {}; // Return an empty structure if parsing fails
-      }
-    }
-    return prereq;
   };
 
   // Update the grade state
@@ -192,9 +181,9 @@ const calculatePrerequisites = (cards: Array<Array<CardType>>): Array<Array<Card
   // Save the updated grade
   const saveGrade = () => {
     if (selectedCard) {
-      const { columnIndex, cardId } = selectedCard;
+      const { columnIndex, id } = selectedCard;
       const newCards = [...cards];
-      const cardIndex = newCards[columnIndex].findIndex(card => card.id === cardId);
+      const cardIndex = newCards[columnIndex].findIndex(card => card.id === id);
       if (cardIndex !== -1) {
         newCards[columnIndex][cardIndex].grade = grade;
         setCards(newCards);
@@ -326,6 +315,28 @@ const calculatePrerequisites = (cards: Array<Array<CardType>>): Array<Array<Card
     return false;  // Return false if no matches found
   };
 
+  function isPrereqTreeNode(tree: PrereqTreeNode | string | undefined): tree is PrereqTreeNode {
+    return (typeof tree !== 'string') && (tree !== undefined);
+  }
+
+  const renderPrereqTreeVisual = (prereqData: PrereqTreeNode | string | undefined) => {
+    if (typeof prereqData === 'string') {
+      try {
+        const treeData = JSON.parse(prereqData);
+        if (isPrereqTreeNode(treeData)) {
+          return <PrereqTreeVisual data={treeData} />;
+        }
+      } catch (error) {
+        console.error("Failed to parse prerequisite data:", error);
+        return <p>Error displaying prerequisites. Invalid data format.</p>;
+      }
+    } else if (isPrereqTreeNode(prereqData)) {
+      return <PrereqTreeVisual data={prereqData} />;
+    }
+    return <p>No prerequisite</p>;
+  };
+  
+  
   return (
     <div>
       {notification && <div className="notification">{notification}</div>}
@@ -352,7 +363,7 @@ const calculatePrerequisites = (cards: Array<Array<CardType>>): Array<Array<Card
               courseCredit={card.courseCredit}
               content={card.content}
               onClick={() => handleCardClick(idx, card.id)}
-              isSelected={selectedCard && selectedCard.columnIndex === idx && selectedCard.cardId === card.id}
+              isSelected={selectedCard && selectedCard.columnIndex === idx && selectedCard.id === card.id}
               grade={card.grade}
               prereqTree={card.prereqTree}
               prereqNotSatisfied={card.prereqNotSatisfied}
@@ -373,7 +384,7 @@ const calculatePrerequisites = (cards: Array<Array<CardType>>): Array<Array<Card
                 courseCredit={card.courseCredit}
                 content={card.content}
                 onClick={() => handleCardClick(idx, card.id)}
-                isSelected={selectedCard && selectedCard.columnIndex === idx && selectedCard.cardId === card.id}
+                isSelected={selectedCard && selectedCard.columnIndex === idx && selectedCard.id === card.id}
                 grade={card.grade}
                 prereqTree={card.prereqTree}
                 prereqNotSatisfied={card.prereqNotSatisfied}
@@ -386,7 +397,7 @@ const calculatePrerequisites = (cards: Array<Array<CardType>>): Array<Array<Card
       </div>
       {selectedCard && (
         <div className="confirmation-dialog">
-          <p>Are you sure you want to delete course {selectedCard.name} from {semesterCount(selectedCard.columnIndex)}?</p>
+          <p>Delete course {selectedCard.name} from {semesterCount(selectedCard.columnIndex)}?</p>
           <button onClick={removeCard}>Yes</button>
           <button onClick={() => setSelectedCard(null)}>No</button>
           <p>Update grade:</p>
@@ -406,7 +417,21 @@ const calculatePrerequisites = (cards: Array<Array<CardType>>): Array<Array<Card
             <option value="F">F</option>
           </select>
           <button onClick={saveGrade}>Update Grade</button>
+          <h3>Selected Course Details:</h3>
+          {/* <p><strong>ID:</strong> {selectedCard.id}</p> */}
+          <h2><strong></strong> {selectedCard.name}</h2>
+          <p><strong>Course Name:</strong> {selectedCard.content}</p>
+          <p><strong>Course Credit:</strong> {selectedCard.courseCredit}</p>
+          <p><strong>Grade:</strong> {selectedCard.grade || 'Not Set'}</p>
+          <h3>Prerequisite Tree:</h3>
+          <div className='tree-container'>
+            {selectedCard ? renderPrereqTreeVisual(selectedCard.prereqTree) 
+            : <p>Prerequisite tree not available.</p>}
+          </div>
+          <p><strong>Prerequisites Satisfied:</strong> {selectedCard.prereqNotSatisfied ? 'No' : 'Yes'}</p>
+          <button onClick={() => setSelectedCard(null)}>Close Details</button>
         </div>
+        
       )}
     </div>
   );

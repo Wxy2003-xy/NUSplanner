@@ -15,7 +15,7 @@ interface CardType {
   content: string;
   courseCredit: number;
   grade?: string | null;
-  prereqTree?: PrereqTreeNode;  
+  prereqTree?: PrereqTreeNode | string;  
   prereqNotSatisfied?: boolean;
   color?: string;
 }

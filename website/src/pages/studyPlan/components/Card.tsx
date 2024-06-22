@@ -16,7 +16,7 @@ type CardProps = {
   onClick: () => void;
   isSelected?: boolean | undefined | null;
   grade?: string | null;
-  prereqTree?: PrereqTreeNode;
+  prereqTree?: PrereqTreeNode | string;
   prereqNotSatisfied?: boolean;
   color?: string; // Add the color prop
 };
