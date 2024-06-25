@@ -2,7 +2,6 @@ import React, { useState, useEffect, ChangeEvent, Dispatch, SetStateAction } fro
 import './DynamicTable.css';
 import Card from './Card';
 import PrereqTreeVisual from '../../../pages/studyPlan/components/TreeVisualization';
-import { PrereqTree } from '../../../../../../../Downloads/nusmod/nusmods-master/website/src/types/modules';
 
 interface CardType {
   id: number;
@@ -398,8 +397,8 @@ const calculatePrerequisites = (cards: Array<Array<CardType>>): Array<Array<Card
       {selectedCard && (
         <div className="confirmation-dialog">
           <p>Delete course {selectedCard.name} from {semesterCount(selectedCard.columnIndex)}?</p>
-          <button onClick={removeCard}>Yes</button>
-          <button onClick={() => setSelectedCard(null)}>No</button>
+          <button className='yes-button'onClick={removeCard}>Yes</button>
+          <button className='no-button'onClick={() => setSelectedCard(null)}>No</button>
           <p>Update grade:</p>
           <select value={grade} onChange={updateGrade} required>
             <option value="">Select Grade</option>
@@ -416,7 +415,7 @@ const calculatePrerequisites = (cards: Array<Array<CardType>>): Array<Array<Card
             <option value="D">D</option>
             <option value="F">F</option>
           </select>
-          <button onClick={saveGrade}>Update Grade</button>
+          <button className='update-grade-button'onClick={saveGrade}>Update Grade</button>
           <h3>Selected Course Details:</h3>
           {/* <p><strong>ID:</strong> {selectedCard.id}</p> */}
           <h2><strong></strong> {selectedCard.name}</h2>
