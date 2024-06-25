@@ -13,7 +13,6 @@ const Timetable: React.FC = () => {
       <div className="content">
         <h2>This is the timetable page</h2>
         <div>
-          
             <img src={underConstruction}></img>
           <p>Under Construction...</p>
         </div>

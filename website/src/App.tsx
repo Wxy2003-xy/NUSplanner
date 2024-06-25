@@ -2,11 +2,13 @@ import React, { useEffect, useState } from 'react';
 import './App.css';
 import Header from './components/Header';
 import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
-import Home from './pages/home';
-import StudyPlan from './pages/studyPlan';
-import Timetable from './pages/timetable';
+import Home from './pages/home/home';
+import StudyPlan from './pages/studyPlan/studyplan';
+import Timetable from './pages/timetable/timetable';
 import Footer from './components/Footer';
-
+import Feedback from './pages/feedback/feedback';
+import About from './pages/about/about';
+import Community from './pages/community/community';
 function App() {
   const [message, setMessage] = useState<string>('');
 
@@ -18,28 +20,17 @@ function App() {
   }, []);
 
   return (
-    <>
-    <Router>
-      <Header />
-      <div className="appPage-container">
-        <div className="sidebar">
-          <h3>Navigation</h3>
-          <ul>
-            <li><Link to="/home">Home</Link></li>
-            <li><Link to="/studyPlan">Study Plan</Link></li>
-            <li><Link to="/timetable">Timetable</Link></li>
-          </ul>
-        </div>
+      <Router basename="/NUSplanner">
         <Routes>
+          <Route path="/" element={<Home />} /> {/* Default route */}
           <Route path="/home" element={<Home />} />
           <Route path="/studyPlan" element={<StudyPlan />} />
           <Route path="/timetable" element={<Timetable />} />
+          <Route path="/feedback" element={<Feedback />} />
+          <Route path="/about" element={<About />} />
+          <Route path="/community" element={<Community />} />
         </Routes>
-      </div>
-      
-    </Router>
-    <Footer />
-    </>
+      </Router>
   );
 }
 
