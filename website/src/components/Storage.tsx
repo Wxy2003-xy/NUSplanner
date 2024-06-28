@@ -30,13 +30,3 @@ function handleNameChange() {
       setStoredName(newName)
     }
 }
-
-function runTask() {
-    const [tasks, setTasks] = useState(getStoredTasks());
-
-    return (
-        <>
-            <></>
-        </>
-    )
-}

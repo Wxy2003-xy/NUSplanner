@@ -7,10 +7,16 @@
   box-sizing: border-box;
 }
 
-.dropdown-list {
+.dropdown-list-box {
+  display: flex;
+
+}
+
+.semester-dropdown-list, .faculty-dropdown-list, .program-dropdown-list {
   padding: 10px;
   border-radius: 8px; /* Smoother border radius */
   margin-bottom: 15px;
+  margin-right: 20px;
   background-color: #f8f9fa; /* Light grey background */
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
 }
@@ -96,9 +102,10 @@
   align-items: flex-start;
 }
 
-.yes-button, .no-button, .update-grade-button {
+.yes-button, .no-button, .update-grade-button, .update-classification-button {
   text-align: left;  /* Align text inside the button to the left */
   display: block;    /* Make each button a block element */
   width: auto;       /* Let each button size according to its text/content */
   margin: 5px 0;     /* Provide some vertical space between buttons */
 }
+

@@ -2,17 +2,17 @@
     position: relative;
     width: 90%;
     background-color: #88f7c5;
-    border-radius: 5px;
+    border-radius: 2px;
     overflow: hidden;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     transition: transform 0.3s ease, box-shadow 0.3s ease;
     box-sizing: border-box;
     transform: translateX(3px);
-    padding: 10px;
+    padding: 5px;
   }
   
   .card.selected {
-    background-color: #00c99e;
+    background-color: #72e3ca;
   }
   
   .card.prereq-not-satisfied {
@@ -25,22 +25,28 @@
   }
   
   .card-title {
-    font-size: 1em;
+    font-size: 0.8em;
     font-weight: bold;
-    color: #333;
+    color: #5c5c5c;
     margin: 10px 0;
   }
   
   .card-text {
-    font-size: 0.8em;
+    font-size: 0.6em;
     line-height: 1.2;
-    color: #000000;
-    margin: 10px 0;
+    color: #5c5c5c;
+    margin: 5px 0;
     flex-grow: 1;
   }
   
   .card-grade {
-    font-size: 14px;
+    font-size: 0.6em;
+    color: #333;
+    margin: 10px 0;
+  }
+
+  .card-classification {
+    font-size: 0.6em;
     color: #333;
     margin: 10px 0;
   }

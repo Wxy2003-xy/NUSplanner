@@ -1,10 +1,153 @@
-/* Home.css */
-.home-container {
-    display: flex;
-  }
-  
-  .content {
-    flex-grow: 1; /* Takes up the remaining space */
-    padding: 20px;
-  }
-  
+html, body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+}
+body {
+  font-family: Arial, sans-serif;
+}
+header {
+  background-color: #2C3E50;
+  color: white;
+  padding: 10px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.header-left {
+  display: flex;
+  align-items: center;
+}
+
+.logo-link {
+  text-decoration: none;
+  color: inherit; /* Ensures the text color is inherited */
+}
+
+.logo-link :hover {
+  text-decoration: none;
+}
+
+.logo-container {
+  display: flex;
+  align-items: center;
+  margin-right: 20px;
+}
+.logo-container img {
+  height: 60px;
+  margin-right: 10px;
+}
+.logo-container span {
+  font-size: 28px;
+  font-weight: bold;
+  margin-right: 20px;
+  color: white;
+  text-decoration: none;
+}
+.title-container p {
+  margin: 0;
+  font-size: 24px;
+}
+.date-container {
+  font-size: 16px;
+  color: white;
+}
+.content {
+  display: flex;
+  flex-grow: 1;
+  height: 100%;
+}
+nav {
+  display: flex;
+  flex-grow: 1;
+  width: 100%;
+}
+.nav-left {
+  background-color: #f0f0f0; /* Light gray background */
+  padding: 10px;
+  width: 150px;
+  height: 100%;
+  box-sizing: border-box;
+}
+nav ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+nav ul li {
+  margin: 10px 0;
+}
+nav ul li a {
+  color: gray;
+  text-decoration: none;
+  padding: 10px;
+  display: flex;
+  align-items: center;
+}
+
+nav ul li a.active {
+  color: red;
+}
+
+nav ul li a span {
+  margin-left: 8px;
+}
+
+nav ul li a:hover {
+  color: red;
+}
+
+nav ul li a:hover span {
+  text-decoration: underline;
+}
+.nav-right {
+  flex-grow: 1;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  padding: 20px;
+  box-sizing: border-box;
+  color: white; /* Ensure text is readable over the background image */
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.4); /* Add text shadow for readability */
+  height: 100%; /* Ensure it takes full height */
+}
+.nav-right .background {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+  transition: opacity 1s ease-in-out;
+}
+.nav-right .background.hidden {
+  opacity: 0;
+}
+.nav-right .content {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+}
+.content h1 {
+  align-self: flex-start;
+  font-size: 38px;
+  margin-bottom: 20px; /* Add margin to separate the title from the paragraph */
+}
+.centered-paragraph {
+  max-width: 800px;
+  background-color: rgba(255, 255, 224, 0.6); /* Pale yellow background with transparency */
+  padding: 40px;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  margin: 0 auto; /* Horizontally center the paragraph */
+  color: black;
+  font-size: 20px;
+}

@@ -2,6 +2,7 @@ import React, { useState, useEffect, ChangeEvent, Dispatch, SetStateAction } fro
 import './DynamicTable.css';
 import Card from './Card';
 import PrereqTreeVisual from '../../../pages/studyPlan/components/TreeVisualization';
+import ProgramTab from './program'; 
 
 interface CardType {
   id: number;
@@ -12,6 +13,8 @@ interface CardType {
   prereqTree?: PrereqTreeNode | string;  
   prereqNotSatisfied?: boolean;
   color?: string;
+
+  classification?: string;
 }
 
 interface DynamicTableProps {
@@ -31,6 +34,9 @@ interface PrereqTreeNode {
 
 const DynamicTable: React.FC<DynamicTableProps> = ({ tempCard, setTempCard }) => {
   const [columnCount, setColumnCount] = useState<number>(8);
+  const [faculty, setFaculty] = useState<string>(() => localStorage.getItem('faculty') || 'School of Computing');
+  const [program, setProgram] = useState<string>(() => localStorage.getItem('program') || 'School of Computing, single degree');
+
   const [cards, setCards] = useState<Array<Array<CardType>>>(() => {
     const savedCards = localStorage.getItem('cards');
     return savedCards ? JSON.parse(savedCards) : new Array(8).fill([]).map(() => []);
@@ -39,8 +45,16 @@ const DynamicTable: React.FC<DynamicTableProps> = ({ tempCard, setTempCard }) =>
   const [notification, setNotification] = useState<string | null>(null);
   const [selectedCard, setSelectedCard] = useState<SelectedCard | null>(null);
   const [grade, setGrade] = useState<string>('');
+  const [classification, setClassification] = useState<string>('');
 
-  // Handle the no of column change event
+  const handleFacultyChange = (event: ChangeEvent<HTMLSelectElement>) => {
+    setFaculty(event.target.value);
+  }
+
+  const handleProgramChange = (event: ChangeEvent<HTMLSelectElement>) => {
+    setProgram(event.target.value);
+  }
+
   const handleColumnChange = (event: ChangeEvent<HTMLSelectElement>) => {
     const newCount = parseInt(event.target.value);
     const newCards = new Array(newCount + 1).fill([]).map((_, idx) => cards[idx] || []);
@@ -53,7 +67,15 @@ const DynamicTable: React.FC<DynamicTableProps> = ({ tempCard, setTempCard }) =>
     if (JSON.stringify(newCards) !== JSON.stringify(cards)) {
       setCards(newCards);
     }
-  }, [cards]); // Dependency only on `cards`
+  }, [cards]); 
+
+  useEffect(() => {
+    localStorage.setItem('faculty', faculty);
+  }, [faculty]);
+
+  useEffect(() => {
+    localStorage.setItem('program', program);
+  }, [program]);
 
 const calculatePrerequisites = (cards: Array<Array<CardType>>): Array<Array<CardType>> => {
   return cards.map((column, columnIndex) => {
@@ -190,6 +212,22 @@ const calculatePrerequisites = (cards: Array<Array<CardType>>): Array<Array<Card
     }
   };
 
+  const updateClassification = (event: ChangeEvent<HTMLSelectElement>) => {
+    setClassification(event.target.value);
+  };
+
+  const saveClassification = () => {
+    if (selectedCard) {
+      const { columnIndex, id } = selectedCard;
+      const newCards = [...cards];
+      const cardIndex = newCards[columnIndex].findIndex(card => card.id === id);
+      if (cardIndex !== -1) {
+        newCards[columnIndex][cardIndex].classification = classification;
+        setCards(newCards);
+      }
+    }
+  };
+
   // Get the MC count for a column
   const getMCCount = (columnCards: Array<CardType>): number => {
     return columnCards.reduce((total, card) => total + Number(card.courseCredit), 0);
@@ -299,19 +337,15 @@ const calculatePrerequisites = (cards: Array<Array<CardType>>): Array<Array<Card
   };
   // Get a card by its course code
   const getCardByCourseCodeLeft = (courseCode: string, columnIdx: number): boolean => {
-    // Extract the course code before the colon if present
     const cleanCourseCode = courseCode.split(':')[0].trim();
-  
-    // Check each column from 0 to columnIdx-1
     for (let i = 0; i < columnIdx; i++) {
-      // Check if any card in the column matches the clean course code
       if (cards[i].some(card => card.name === cleanCourseCode)) {
         console.log(`${cleanCourseCode} found in column ${i}`);
-        return true;  // Return true if any match found
+        return true;  
       }
     }
     console.log(`${cleanCourseCode} not found`);
-    return false;  // Return false if no matches found
+    return false; 
   };
 
   function isPrereqTreeNode(tree: PrereqTreeNode | string | undefined): tree is PrereqTreeNode {
@@ -338,12 +372,46 @@ const calculatePrerequisites = (cards: Array<Array<CardType>>): Array<Array<Card
   
   return (
     <div>
+{/* notification */}
       {notification && <div className="notification">{notification}</div>}
-      <select className="dropdown-list" value={columnCount} onChange={handleColumnChange}>
-        {[6, 7, 8, 9, 10, 11, 12].map(num => (
-          <option key={num} value={num}>{`${num} Semesters`}</option>
-        ))}
-      </select>
+{/* global state: semester; faculty and program choice */}
+      <div className='dropdown-list-box'>
+        <select className="semester-dropdown-list" value={columnCount} onChange={handleColumnChange}>
+          {[6, 7, 8, 9, 10, 11, 12].map(num => (
+            <option key={num} value={num}>{`${num} Semesters`}</option>
+          ))}
+        </select>
+        <select className="faculty-dropdown-list" value={faculty} onChange={handleFacultyChange}>
+          {['School of Computing', 
+
+            'College of Humanities and Sciences, Asian Studies', 
+            'College of Humanities and Sciences, Humanities', 
+            'College of Humanities and Sciences, Sciences', 
+
+            'College of Design and Engineering',
+            'Business School',
+            'Others'].map(faculty => (
+            <option key={faculty} value={faculty}>{`${faculty}`}</option>
+          ))}
+        </select>
+        <select className="program-dropdown-list" value={program} onChange={handleProgramChange}>
+          {['Single Degree Program', 
+            'Single Degree with 2nd Major Program', 
+            'Double or Concurrent Degree program',
+            'Single Degree Program with Minor(s)', 
+            'Single Degree with 2nd Major Program with Minor(s)', 
+            'Double or Concurrent Degree program with Minor(s)',
+            'Others'
+            ].map(program => (
+            <option key={program} value={program}>{`${program}`}</option>
+          ))}
+        </select> 
+      </div>        
+      <ProgramTab 
+        faculty={faculty}
+        program={program}
+        
+        />
       <div className="counter-box">
         Total MC count: {getTotalMCCount()}
         <hr />
@@ -367,6 +435,7 @@ const calculatePrerequisites = (cards: Array<Array<CardType>>): Array<Array<Card
               prereqTree={card.prereqTree}
               prereqNotSatisfied={card.prereqNotSatisfied}
               color={card.color} // Pass the custom color
+              classification={card.classification}
             />
           ))}
           <button className="add-button" onClick={() => addCard(idx)}>Add Course</button>
@@ -375,6 +444,7 @@ const calculatePrerequisites = (cards: Array<Array<CardType>>): Array<Array<Card
           <div key={idx} className="vcolumns">
             <p className="sem-title">{semesterCount(idx)}</p>
             <p className="sem-mc-count">Total MC this semester: {getMCCount(columnCards)}</p>
+{/* course card display */}
             {columnCards.map(card => (
               <Card
                 key={card.id}
@@ -387,7 +457,8 @@ const calculatePrerequisites = (cards: Array<Array<CardType>>): Array<Array<Card
                 grade={card.grade}
                 prereqTree={card.prereqTree}
                 prereqNotSatisfied={card.prereqNotSatisfied}
-                color={card.color} // Pass the custom color
+                color={card.color} 
+                classification={card.classification}
               />
             ))}
             <button className="add-button" onClick={() => addCard(idx)}>Add Course</button>
@@ -396,9 +467,11 @@ const calculatePrerequisites = (cards: Array<Array<CardType>>): Array<Array<Card
       </div>
       {selectedCard && (
         <div className="confirmation-dialog">
+{/* option to delete course from table */}
           <p>Delete course {selectedCard.name} from {semesterCount(selectedCard.columnIndex)}?</p>
           <button className='yes-button'onClick={removeCard}>Yes</button>
           <button className='no-button'onClick={() => setSelectedCard(null)}>No</button>
+{/* update course grade */}
           <p>Update grade:</p>
           <select value={grade} onChange={updateGrade} required>
             <option value="">Select Grade</option>
@@ -416,6 +489,20 @@ const calculatePrerequisites = (cards: Array<Array<CardType>>): Array<Array<Card
             <option value="F">F</option>
           </select>
           <button className='update-grade-button'onClick={saveGrade}>Update Grade</button>
+{/* update course classification */}
+          <p>Classify course:</p>
+          <select value={classification} onChange={updateClassification} required>
+            <option value="">Classify as:</option>
+            <option value="University level requirement">University level requirement</option>
+            <option value="Faculty level requirement">Faculty level requirement</option>
+            <option value="Major (towards primary degree) requirement">Major {'(towards primary degree)'} requirement</option>
+            <option value="Major (towards 2nd degree/major) requirement">Major {'(towards 2nd degree/major)'} requirement</option>
+            <option value="Minor requirement">Minor requirement</option>
+            <option value="Unrestricted Elective">Unrestricted Elective</option>
+
+          </select>
+          <button className='update-classification-button'onClick={saveClassification}>Update Classification</button>
+{/* course info on selection */}
           <h3>Selected Course Details:</h3>
           {/* <p><strong>ID:</strong> {selectedCard.id}</p> */}
           <h2><strong></strong> {selectedCard.name}</h2>

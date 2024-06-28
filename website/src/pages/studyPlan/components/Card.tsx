@@ -19,12 +19,14 @@ type CardProps = {
   prereqTree?: PrereqTreeNode | string;
   prereqNotSatisfied?: boolean;
   color?: string;
+
+  classification?: string;
 };
 
 const Card: React.FC<CardProps> = ({
-  id, name, courseCredit, content, onClick, isSelected = false, grade, prereqTree, prereqNotSatisfied, color
+  id, name, courseCredit, content, onClick, isSelected = false, grade, prereqTree, 
+  prereqNotSatisfied, color, classification
 }) => {
-  // Use a local variable to determine the background color based on selection or prerequisite status
   const backgroundColor = 
     isSelected 
       ? prereqNotSatisfied 
@@ -44,6 +46,8 @@ const Card: React.FC<CardProps> = ({
       <div className="card-title">{name}</div>
       <div className="card-text">{content}</div>
       <div className="card-grade">{grade || ' '}</div>
+      <div className="card-credit">{courseCredit || ''}</div>
+      <div className="card-classification">{classification || ''}</div>
     </div>
   );
 };
