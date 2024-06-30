@@ -45,8 +45,9 @@ const Card: React.FC<CardProps> = ({
     <div className={cardClass} onClick={onClick} style={{ backgroundColor }}>
       <div className="card-title">{name}</div>
       <div className="card-text">{content}</div>
-      <div className="card-grade">{grade || ' '}</div>
-      <div className="card-credit">{courseCredit || ''}</div>
+      <div className="card-mc-grade">
+        {courseCredit + 'MC ' || ''} {grade?'Grade: ' + grade : ' '}
+      </div>
       <div className="card-classification">{classification || ''}</div>
     </div>
   );

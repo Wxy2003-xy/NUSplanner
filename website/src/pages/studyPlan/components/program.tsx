@@ -55,10 +55,23 @@ const fos = [
 
 const cde = [
     { id: 0, name: ''},
-    { id: 1, name: '' },
-    { id: 2, name: '' },
-    { id: 3, name: '' },
-    { id: 4, name: '' }
+    { id: 1, name: 'Architecture' },
+    { id: 2, name: 'Biomedical Engineering' },
+    { id: 3, name: 'Chemical Engineering' },
+    { id: 4, name: 'Civil Engineering' },
+    { id: 5, name: 'Computer Engineering' },
+    { id: 6, name: 'Electrical Engineering' },
+    { id: 7, name: 'Engineering Science' },
+    { id: 8, name: 'Environmental Engineering' },
+    { id: 9, name: 'Industrial Design' },
+    { id: 10, name: 'Industrial & Systems Engineering' },
+    { id: 11, name: 'Infrastructure & Project Management' },
+    { id: 12, name: 'Landscape Architecture' },
+    { id: 13, name: 'Materials Science & Engineering' },
+    { id: 14, name: 'Mechanical Engineering' }
+
+
+
 ];
 
 const biz = [
@@ -93,13 +106,13 @@ const ProgramTab: React.FC<ProgramProps> = ({ faculty, program}) => {
     useEffect(() => {
       setPrograms(allPrograms[faculty]);
       setSelectedMajor(allPrograms[faculty][0]?.name || 'Not Applicable');
-    }, [faculty, allPrograms]);
-    
-
-    useEffect(() => {
+  }, [faculty, allPrograms]); // Ensure 'faculty' and 'allPrograms' are correct and updated
+  
+  useEffect(() => {
       setSecondPrograms(allPrograms[secondFaculty]);
       setSecondMajor(allPrograms[secondFaculty][0]?.name || 'Not Applicable');
-    }, [secondFaculty, allPrograms]);
+  }, [secondFaculty, allPrograms]); // Ensure 'secondFaculty' and 'allPrograms' are correct and updated
+  
 
     const handleMajorChange = (event: ChangeEvent<HTMLSelectElement>) => {
       console.log("Before updating selectedMajor:", selectedMajor);
@@ -114,6 +127,10 @@ const ProgramTab: React.FC<ProgramProps> = ({ faculty, program}) => {
     const handleSecondMajorChange = (event: ChangeEvent<HTMLSelectElement>) => {
       setSecondMajor(event.target.value);
     };
+
+    useEffect(() => {
+      localStorage.setItem('selectedMajor', selectedMajor);
+    }, [selectedMajor]);
 
     useEffect(() => {
       localStorage.setItem('secondMajor', secondMajor);

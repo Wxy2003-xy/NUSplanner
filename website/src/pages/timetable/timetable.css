@@ -1,11 +1,177 @@
-/* home.css */
-.timetable-container {
-    display: flex;
-    box-sizing: border-box;
-  }
+html, body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+ } body {
+  font-family: Arial, sans-serif;
+ }
+ header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  background-color: #2C3E50;
+  color: white;
+  padding: 10px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  z-index: 1000; /* Ensures header is on top */
+ }
+ .header-left {
+  display: flex;
+  align-items: center;
+ }
+ .logo-link {
+  text-decoration: none;
+  color: inherit;
+ }
+ .logo-container {
+  display: flex;
+  align-items: center;
+  margin-right: 20px;
+ }
+ .logo-container img {
+  height: 60px;
+  margin-right: 10px;
+ }
+ .logo-container span {
+  font-size: 28px;
 
-  
-  .content {
-    flex-grow: 1; /* Takes up the remaining space */
-    padding: 20px;
-  }
+  font-weight: bold;
+ color: white;
+ text-decoration: none;
+}
+.title-container p {
+margin: 0;
+ font-size: 24px;
+}
+.date-container {
+ font-size: 16px;
+ color: white;
+} .content {
+ display: flex;
+ flex-grow: 1;
+ height: 100%;
+ margin-top: 80px; /* Adjusted to account for fixed header */
+}
+nav {
+ display: flex;
+ height: 100%;
+ width: 100%;
+} .nav-left {
+ background-color: #f0f0f0;
+ padding: 10px;
+ width: 150px;
+ height: calc(100% - 80px); /* Adjusted to account for fixed header */
+ box-sizing: border-box;
+ position: fixed;
+ top: 80px; /* Adjusted to account for fixed header */
+ left: 0;
+ z-index: 999; /* Ensures sidebar is above main content */
+}
+.nav-left ul {
+ list-style: none;
+ padding: 0;
+ margin: 0;
+}
+.nav-left ul li {
+ margin: 10px 0;
+}
+.nav-left ul li a {
+ color: gray;
+ text-decoration: none;
+padding: 10px;
+ display: flex;
+ align-items: center;
+}
+.nav-left ul li a span {
+ margin-left: 8px;
+}
+.nav-left ul li a:hover {
+ color: red;
+}
+.nav-left ul li a:hover span {
+ text-decoration: underline;
+}
+.nav-right {
+ flex-grow: 1;
+ background-color: #FFFFFF;
+ display: flex;
+ flex-direction: column;
+ justify-content: flex-start;
+ align-items: center;
+ text-align: center;
+ padding: 20px;
+ overflow: auto;
+ margin-left: 150px; /* Adjusted to account for fixed sidebar */
+}
+.nav-right h2 {
+ margin-bottom: 20px;
+}
+.container {
+ display: flex;
+ flex-direction: column;
+ width: 100%;
+ overflow-x: auto;
+}
+.responsive-table {
+ width: 100%;
+ border-collapse: collapse;
+}
+.responsive-table th,
+.responsive-table td {
+  border: 1px solid black;
+ padding: 5px;
+ font-size: 12px;
+ width: 12.5%; /* Make the cells fit evenly within the table */
+ min-width: 30px; /* Ensure minimum width is also set */
+ text-align: center;
+}
+.responsive-table th {
+ background-color: #f4f4f4;
+ font-weight: bold;
+}
+.responsive-table td {
+ white-space: nowrap; /* Prevent text from wrapping */
+}
+.slot input {
+ width: 100%;
+ height: 100%;
+ border: none;
+ padding: 0;
+ box-sizing: border-box;
+ font-size: 12px;
+ text-align: center;
+}
+.save-button {
+ margin-top: 20px;
+ padding: 10px 20px;
+ font-size: 16px;
+ cursor: pointer;
+ background-color: #2C3E50;
+ color: white;
+ border: none;
+ border-radius: 5px;
+}
+nav ul li a {
+ color: gray;
+ text-decoration: none;
+ padding: 10px;
+ display: flex;
+ align-items: center;
+}
+nav ul li a.active {
+ color: red;
+}
+nav ul li a span {
+ margin-left: 8px;
+}
+nav ul li a:hover {
+ color: red;
+}
+nav ul li a:hover span {
+ text-decoration: underline;
+}

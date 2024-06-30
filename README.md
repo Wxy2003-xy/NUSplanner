@@ -27,71 +27,20 @@ Beyond that, our project would also include relevant QoL features that make the 
 
 
 ## Features and Timeline
-
-Our final product is an online website that allows students to receive recommended course planning schedules over the semesters, as well as to receive recommended timings of courses during each semester, based on their own preference. We might also develop 
-
-1. Feature 1 (foreshadowing): Address the importance of scheduling
-Description: Upon entering the website, users will be automatically directed to several static pages emphasising the importance of scheduling. Users who wish to skip ahead quickly can click on "Next."
-
-2. Feature 2 (core): Recommend course schedule over semesters (4 years)
-Description: Users will first enter their respective majors and their completed courses. Then they will indicate their personal preferences regarding course planning, i,e. Focus on completing all the compulsory courses first, prefer finishing the prerequisites for certain advanced courses first etc.  Then, there will be a personalised recommended schedule provided to them.
-
-3. Feature 3 (core): Recommend timetable over a specific semester
-Description: Besides recommending courses over semesters, the website can further recommend users timetables for any specific semester, based on their preference. For instance, after recommending student X to take courses A,B,C,D,E in semester Y, the website can further recommend a timetable of these 5 courses in semester Y, based on student X’s preference. Examples of preferences could be no courses in early morning, prefer no lessons on Friday, prefer consecutive courses to be located at venues close to each other etc.
-
-4. Feature 4 (extension): QoL features: ‘Reminder’ and ‘Map’.
-Description: After users have fixed their timetables under the help of the recommendation system (note that the ultimate timetable can be different from the recommended one, the ultimate decision-making authority is still with users’ hand), the website has other additional auxiliary features that further enhance users’ experience, convenience, and overall satisfaction. Currently there are 2 such features, namely ‘Reminders’ and ‘Map’.
-
-For feature ‘Reminders’, it will remind users about certain special circumstances that they should take note of (to avoid incidents happening on our acquaintance from happening again). After each recommendation of course schedules, there will be an automatic corresponding reminder message updated at the bottom of the website, stating possible consequences if the recommendation is not followed. For instance, if the recommended courses in Year X Sem 2 are A,B,C,D,E. Then, one of the potential reminders could be “If not taking course A this semester, you cannot take course Y in Year (X+1) Sem 1”.  
-
-For feature ‘Map’, it will automatically generate and present a map to the user. This map will indicate the transportation routes between venues of different (recommended) courses, for the user to visualise their transportation routine should they take the recommended combination. 
-
-Timeline
-1. Lift-off - Setup the website with the foreshadowing feature integrated  
-a. Set up the frontend of the website (static site hosting platform)
-Description: 
-Elements like graphics and photos etc are implemented to enhance visual appeal and convey information.
-b. Set up the backend services
-	Description:
-Use serverless functions to handle user interactions and serve the content. For example, trigger a function when the user clicks "next" to fetch and return the next page of content.
-b. Integrate the foreshadowing feature
-Description:
-Complete the foreshadowing feature 
-
+Our final product is an online website that allows students to receive recommended course planning schedules over the semesters, as well as to receive recommended timings of courses during each semester, based on their own preference. We might also develop
+1.	Feature 1 (core): Recommend course schedule over semesters (4 years) Description: Users will first enter their respective majors and their completed courses. Then they will indicate their personal preferences regarding course planning, i,e. Focus on completing all the compulsory courses first, prefer finishing the prerequisites for certain advanced courses first etc. Then, there will be a personalised recommended schedule provided to them.
+2.	Feature 2 (core): Recommend timetable over a specific semester Description: Besides recommending courses over semesters, the website can further recommend users timetables for any specific semester, based on their preference. For instance, after recommending student X to take courses A,B,C,D,E in semester Y, the website can further recommend a timetable of these 5 courses in semester Y, based on student X’s preference. Examples of preferences could be no courses in early morning, prefer no lessons on Friday, prefer consecutive courses to be located at venues close to each other etc.
+3.	Auxiliary Features: ‘Community’, ‘Feedback’ and ‘About’. Description: ‘Community’ section serves as a platform for users to voice out their thoughts about NUSPlanner and related issues. Users can also make use of the ‘Feedback’ and ‘About’ section to give suggestions/feedback and know more about NUSPlanner.
+4.	Further potential extension Features: QoL features: ‘Reminder’ and ‘Map’. Description: After users have fixed their timetables under the help of the recommendation system, the website has these two features that further enhance users’ experience, convenience, and overall satisfaction.For feature ‘Reminders’, it will remind users about certain special circumstances that they should take note of (to avoid incidents happening on our acquaintance from happening again). After each recommendation of course schedules, there will be an automatic corresponding reminder message updated at the bottom of the website, stating possible consequences if the recommendation is not followed. For instance, if the recommended courses in Year X Sem 2 are A,B,C,D,E. Then, one of the potential reminders could be “If not taking course A this semester, you cannot take course Y in Year (X+1) Sem 1”. For feature ‘Map’, it will automatically generate and present a map to the user. This map will indicate the transportation routes between venues of different (recommended) courses, for the user to visualise their transportation routine should they take the recommended combination.
+Timeline (Subject to change)
+1.	Lift-off - Setup the website (preferably with the foreshadowing feature integrated)
+a. Set up the frontend of the website (static site hosting platform) Description: Elements like graphics and photos etc are implemented to enhance visual appeal and convey information. b. Set up the backend services Description: Use serverless functions to handle user interactions and serve the content. For example, trigger a function when the user clicks "next" to fetch and return the next page of content. b. Integrate the foreshadowing feature Description: Complete the foreshadowing feature
 Lift-off completed by: Mid May (as required)
-
-
-2. Milestone1- Integrate core feature 1 (with self-testing) into the website
-a. Integrate core feature 1 into the website
-Description: 
-Setup the database to store the data, which includes but not limited to the information of courses and majors.
-Complete the recommendation algorithms to generate recommendations for users.
-Implement the backend services to handle data processing, recommendation generation, communication with the database etc.
-Implement the frontend services to handle user interactions such as displaying recommended items to users.
-b. Self-Testing
-	Description:
-Carry out self-testing to debug the feature (if there is any bug).
-
+2.	Milestone1- Integrate core feature 1 (with self-testing) into the website a. Integrate core feature 1 into the website Description: Setup the database to store the data, which includes but not limited to the information of courses and majors. (Preferably Complete the recommendation algorithms to generate recommendations for users.) Implement the backend services to handle data processing, recommendation generation, communication with the database etc. Implement the frontend services to handle user interactions such as displaying recommended items to users. b. Self-Testing Description: Carry out self-testing to debug the feature (if there is any bug).
 Milestone1 completed by: Early June (as required)
-
-3. Milestone 2 - Integrate core feature 2 (with self-testing) into the website
-a. Integrate core feature 2 into the website 
-	Description: Similar to Milestone1 a.
-b. Self-Testing
-	Description: Similar to Milestone1 b.
-
+3.	Milestone 2 - Mostly done with core feature 1 and auxiliary features, with self-testing.  Integrate these features into the website. Starting and partially completed (functionality-wise) core feature 2. a. Self-Testing Description: Similar to Milestone1 b.
 Milestone 2 completed by: Early July (as required)
-
-4. Milestone 3 - Integrate extension feature (with self-testing) into the website, as well as
-carry out user testing
-a. Integrate extension feature into the website
-	Description: 
-Obtain necessary relevant course information and store it in the database
-Extract the data and present it to the user at the frontend. For instance, visualize the route for the user by presenting a transportation map.
-b. User Testing
-	Description: 
-After integrating all the (foreshadowing, core, extension) features, carry out user testing by recruiting representative users from the target audience group. We plan to recruit a group of Year 1 freshmen to test out the course planning recommendation system (core feature 1), and recruit a group of Year 2 sophomore to test out the timetable planning recommendation system (core feature 2).
-
+4.	Milestone 3 - Complete core feature 2 with self-testing and integrate it into the website. Continue polishing core feature 1 and auxiliary features: 1. Self-testing to eliminate any potential service bugs. 2.Beautify UI. If there is sufficient time, integrate extension features (‘Reminder’ and ‘Map’) into the website.  Lastly, carry out user testing. a. Integrate extension feature into the website Description: Obtain necessary relevant course information and store it in the database Extract the data and present it to the user at the frontend. For instance, visualize the route for the user by presenting a transportation map. b. User Testing Description: After integrating all the (core, auxiliary, extension) features, carry out user testing by recruiting representative users from the target audience group. We plan to recruit a group of Year 1 freshmen to test out the course planning recommendation system (core feature 1), and recruit a group of Year 2 sophomore to test out the timetable planning recommendation system (core feature 2).
 
 ## Tech Stack
 

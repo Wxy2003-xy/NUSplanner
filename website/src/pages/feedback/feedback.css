@@ -16,7 +16,8 @@ header {
   padding: 10px 20px;
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: space-between; /* Ensures proper spacing */
+  width: 100%; /* Full width */
 }
 
 .header-left {
@@ -60,6 +61,7 @@ header {
 .date-container {
   font-size: 16px;
   color: white;
+  margin-right: 60px; /* Adjust right margin */
 }
 
 .content {

@@ -36,21 +36,21 @@ const StudyPlan: React.FC = () => {
   return (
     <>
     <header>
-       <div className="header-left">
-       <a href="Home" className="logo-link">
-         <div className="logo-container">
-           <img src={logoImage} alt="Logo" />
-           <span>NUSPlanner</span>
-         </div>
-       </a>
-         <div className="title-container">
-           <p></p>
-         </div>
-       </div>
-       <div className="date-container">
-         <span id="current-date"></span>
-       </div>
-     </header>
+        <div className="header-left">
+          <NavLink to="/" className="logo-link">
+            <div className="logo-container">
+              <img src={logoImage} alt="Logo" />
+              <span>NUSPlanner</span>
+            </div>
+          </NavLink>
+          <div className="title-container">
+            <p></p>
+          </div>
+        </div>
+        <div className="date-container">
+          <span>{currentDate}</span>
+        </div>
+      </header>
     <div className="content" style={{ height: "100vh" }}>
         <nav>
           <div className="nav-left">

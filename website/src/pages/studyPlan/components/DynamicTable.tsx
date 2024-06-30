@@ -2,7 +2,12 @@ import React, { useState, useEffect, ChangeEvent, Dispatch, SetStateAction } fro
 import './DynamicTable.css';
 import Card from './Card';
 import PrereqTreeVisual from '../../../pages/studyPlan/components/TreeVisualization';
-import ProgramTab from './program'; 
+import classNames from 'classnames';
+
+interface MinorDetails {
+  faculty: string;
+  minor: string;
+}
 
 interface CardType {
   id: number;
@@ -32,10 +37,110 @@ interface PrereqTreeNode {
   nOf?: [number, (PrereqTreeNode | string)[]];
 }
 
+const allPrograms = {
+  'School of Computing': [
+    "Computer Science", 
+    "Business Analytics", 
+    "Information System", 
+    "Information Security"
+  ],
+  'College of Humanities and Sciences, Humanities': [
+    "Anthropology",
+    "Communications and New Media",
+    "Economics",
+    "Geography",
+    "Political Science",
+    "Psychology",
+    "Social Work",
+    "Sociology"
+  ],
+  'College of Humanities and Sciences, Sciences': [
+    "Chemistry",
+    "Data Science and Analytics",
+    "Food Science and Technology",
+    "Life Sciences",
+    "Mathematics",
+    "Pharmaceutical Science",
+    "Physics",
+    "Quantitative Finance",
+    "Statistics"
+  ],
+  'College of Design and Engineering': [
+    "Architecture",
+    "Biomedical Engineering",
+    "Chemical Engineering",
+    "Civil Engineering",
+    "Computer Engineering",
+    "Electrical Engineering",
+    "Engineering Science",
+    "Environmental Engineering",
+    "Industrial Design",
+    "Industrial & Systems Engineering",
+    "Infrastructure & Project Management",
+    "Landscape Architecture",
+    "Materials Science & Engineering",
+    "Mechanical Engineering"
+  ],
+  'Business School': [
+    "Business Administration"
+  ],
+  'Others': [
+    "Not Applicable"
+  ]
+};
+
+const programOptions = [
+  'Single Degree Program', 
+  'Single Degree with 2nd Major Program', 
+  'Double or Concurrent Degree program',
+  'Single Degree Program with Minor(s)', 
+  'Single Degree with 2nd Major Program with Minor(s)', 
+  'Double or Concurrent Degree program with Minor(s)',
+  'Others'
+];
+
+
 const DynamicTable: React.FC<DynamicTableProps> = ({ tempCard, setTempCard }) => {
+  const [isCollapsed, setIsCollapsed] = useState(true);  // State to manage the collapse
+  const toggleCollapse = () => {
+    setIsCollapsed(!isCollapsed);
+  };
+  // number of semesters
   const [columnCount, setColumnCount] = useState<number>(8);
-  const [faculty, setFaculty] = useState<string>(() => localStorage.getItem('faculty') || 'School of Computing');
-  const [program, setProgram] = useState<string>(() => localStorage.getItem('program') || 'School of Computing, single degree');
+  const [faculty, setFaculty] = useState(() => localStorage.getItem('faculty') || 'School of Computing');
+  const [programs, setPrograms] = useState(() => localStorage.getItem('programs') || 'Single Degree Program');
+  const [major, setMajor] = useState<string>(() => {
+    const storedMajor = localStorage.getItem('major');
+    return storedMajor && allPrograms[faculty].includes(storedMajor) 
+            ? storedMajor 
+            : allPrograms[faculty][0];
+  });
+  const [secondFaculty, setSecondFaculty] = useState(() => localStorage.getItem('secondFaculty') || 'School of Computing');
+  const [secondMajor, setSecondMajor] = useState(() => localStorage.getItem('secondMajor') || '');
+  const [showSecondMajor, setShowSecondMajor] = useState(() => programs.includes('2nd Major') || programs.includes('Double or Concurrent Degree'));
+  const [showMinors, setShowMinors] = useState(() => programs.includes('Minor(s)'));
+
+  const [minors, setMinors] = useState<MinorDetails[]>(() => {
+    const storedMinors = localStorage.getItem('minors');
+    return storedMinors ? JSON.parse(storedMinors) : [];
+  });
+  const addMinor = () => {
+    if (minors.length < 3) {
+      const newMinors = [...minors, { faculty: '', minor: '' }];
+      setMinors(newMinors);
+      localStorage.setItem('minors', JSON.stringify(newMinors));
+    }
+  };
+  
+  const removeMinor = (index: number) => {
+    const newMinors = minors.filter((_, i) => i !== index);
+    setMinors(newMinors);
+    localStorage.setItem('minors', JSON.stringify(newMinors));
+  };
+
+  const [headerTitle, setHeaderTitle] = useState('');
+  const [headerSub, setHeaderSub] = useState('');
+  
 
   const [cards, setCards] = useState<Array<Array<CardType>>>(() => {
     const savedCards = localStorage.getItem('cards');
@@ -47,20 +152,55 @@ const DynamicTable: React.FC<DynamicTableProps> = ({ tempCard, setTempCard }) =>
   const [grade, setGrade] = useState<string>('');
   const [classification, setClassification] = useState<string>('');
 
-  const handleFacultyChange = (event: ChangeEvent<HTMLSelectElement>) => {
-    setFaculty(event.target.value);
-  }
-
-  const handleProgramChange = (event: ChangeEvent<HTMLSelectElement>) => {
-    setProgram(event.target.value);
-  }
-
   const handleColumnChange = (event: ChangeEvent<HTMLSelectElement>) => {
     const newCount = parseInt(event.target.value);
     const newCards = new Array(newCount + 1).fill([]).map((_, idx) => cards[idx] || []);
     setColumnCount(newCount);
     setCards(newCards);
   };
+
+  const handleFacultyChange = (event: ChangeEvent<HTMLSelectElement>) => {
+    const newFaculty = event.target.value;
+    setFaculty(newFaculty);
+    localStorage.setItem('faculty', newFaculty);
+    const firstMajor = allPrograms[newFaculty][0];
+    setMajor(firstMajor);
+    localStorage.setItem('major', firstMajor);
+  }
+
+  const handleProgramChange = (event: ChangeEvent<HTMLSelectElement>) => {
+    const newProgram = event.target.value;
+    setPrograms(newProgram);
+    localStorage.setItem('programs', newProgram);
+    setShowSecondMajor(newProgram.includes('2nd Major') || newProgram.includes('Double or Concurrent Degree'));
+    setShowMinors(newProgram.includes('Minor(s)'));
+  }
+
+  const handleMajorChange = (event: ChangeEvent<HTMLSelectElement>) => {
+    const newMajor = event.target.value;
+    setMajor(newMajor);
+  }
+
+  const handleSecondMajorChange = (event: ChangeEvent<HTMLSelectElement>, type: 'faculty' | 'major') => {
+    const value = event.target.value;
+    if (type === 'faculty') {
+      setSecondFaculty(value);
+      localStorage.setItem('secondFaculty', value);
+      // Reset the second major when the faculty changes
+      setSecondMajor('');
+    } else if (type === 'major') {
+      setSecondMajor(value);
+      localStorage.setItem('secondMajor', value);
+    }
+  };
+  
+  const handleMinorChange = (index: number, type: 'faculty' | 'minor', value: string) => {
+    let newMinors = [...minors];
+    newMinors[index][type] = value;
+    setMinors(newMinors);
+    localStorage.setItem(`minor${type}${index + 1}`, value);
+    console.log('minor info set');
+  } 
 
   useEffect(() => {
     const newCards = calculatePrerequisites(cards);
@@ -70,24 +210,44 @@ const DynamicTable: React.FC<DynamicTableProps> = ({ tempCard, setTempCard }) =>
   }, [cards]); 
 
   useEffect(() => {
-    localStorage.setItem('faculty', faculty);
-  }, [faculty]);
+    localStorage.setItem('programs', programs);
+  }, [programs]);
 
   useEffect(() => {
-    localStorage.setItem('program', program);
-  }, [program]);
+    localStorage.setItem('major', major);
+  }, [major]);
 
-const calculatePrerequisites = (cards: Array<Array<CardType>>): Array<Array<CardType>> => {
-  return cards.map((column, columnIndex) => {
-    return column.map(card => {
-      const isSatisfied = checkPrerequisites(card.prereqTree, columnIndex); // Ensure this function is also optimized
-      return { ...card, prereqNotSatisfied: !isSatisfied, color: isSatisfied ? '#88f7c5' : '#ff9999' };
+  useEffect(() => {
+    if (minors.length > 0) {
+      localStorage.setItem('minors', JSON.stringify(minors));
+    }
+  }, [minors]);
+
+  useEffect(() => {
+    // Construct the header title based on the presence of a second major and the type of program
+    const title = `Study Plan for ${major}` + (secondMajor && (
+      programs.includes('Double') || programs.includes('2nd')
+    ) ? ` and ${secondMajor}` : '');
+
+    setHeaderTitle(title);
+  }, [major, secondMajor, programs]);
+
+  useEffect(() => {
+    const sub = (minors.length < 1 ? '' : programs.includes('Minor(s)') 
+    ? '   with minor(s) in ' + minors.map(m => m.minor).join(', ')
+    : '');
+    setHeaderSub(sub);
+  }, [minors, programs])
+
+  const calculatePrerequisites = (cards: Array<Array<CardType>>): Array<Array<CardType>> => {
+    return cards.map((column, columnIndex) => {
+      return column.map(card => {
+        const isSatisfied = checkPrerequisites(card.prereqTree, columnIndex); 
+        return { ...card, prereqNotSatisfied: !isSatisfied, color: isSatisfied ? '#88f7c5' : '#ff9999' };
+      });
     });
-  });
-};
+  };
 
-
-  // Add a card to the table
   const addCard = (columnIndex: number) => {
     if (tempCard) {
       let prereqNotSatisfied = false;
@@ -371,47 +531,92 @@ const calculatePrerequisites = (cards: Array<Array<CardType>>): Array<Array<Card
   
   
   return (
-    <div>
-{/* notification */}
+    <div className='global-container'>
       {notification && <div className="notification">{notification}</div>}
-{/* global state: semester; faculty and program choice */}
-      <div className='dropdown-list-box'>
-        <select className="semester-dropdown-list" value={columnCount} onChange={handleColumnChange}>
+    <button className="collapse-button"onClick={toggleCollapse}>Major Setting</button>
+    <div>
+      <div className="collapsible-content" style={{ display: isCollapsed ? 'none' : 'block' }}>
+      <div className="dropdown-row">
+        {' '}Plan for {'       '}
+        <select className="dropdown-select" value={columnCount} onChange={handleColumnChange}>
           {[6, 7, 8, 9, 10, 11, 12].map(num => (
-            <option key={num} value={num}>{`${num} Semesters`}</option>
+            <option key={num} value={num}>{num} Semesters</option>
           ))}
         </select>
-        <select className="faculty-dropdown-list" value={faculty} onChange={handleFacultyChange}>
-          {['School of Computing', 
-
-            'College of Humanities and Sciences, Asian Studies', 
-            'College of Humanities and Sciences, Humanities', 
-            'College of Humanities and Sciences, Sciences', 
-
-            'College of Design and Engineering',
-            'Business School',
-            'Others'].map(faculty => (
-            <option key={faculty} value={faculty}>{`${faculty}`}</option>
-          ))}
-        </select>
-        <select className="program-dropdown-list" value={program} onChange={handleProgramChange}>
-          {['Single Degree Program', 
-            'Single Degree with 2nd Major Program', 
-            'Double or Concurrent Degree program',
-            'Single Degree Program with Minor(s)', 
-            'Single Degree with 2nd Major Program with Minor(s)', 
-            'Double or Concurrent Degree program with Minor(s)',
-            'Others'
-            ].map(program => (
-            <option key={program} value={program}>{`${program}`}</option>
-          ))}
-        </select> 
-      </div>        
-      <ProgramTab 
-        faculty={faculty}
-        program={program}
-        
-        />
+      </div>
+      {/* global state: semester; faculty and program choice */}
+      <div className='dropdown-list-box'> 
+        <div className="dropdown-row">
+          {' '}Programme:{'    '}
+          <select className="dropdown-select" value={programs} onChange={handleProgramChange}>
+            {programOptions.map(option => (
+              <option key={option} value={option}>{option}</option>
+            ))}
+          </select>
+        </div>
+        <div className="dropdown-row">
+          {' '}Home faculty:{' '}
+          <select className="dropdown-select" value={faculty} onChange={handleFacultyChange}>
+            {Object.keys(allPrograms).map(key => (
+              <option key={key} value={key}>{key}</option>
+            ))}
+          </select>
+        </div>
+        <div className="dropdown-row">
+          {' ——'} Primary Major:{' '}
+          <select className="dropdown-select" value={major} onChange={handleMajorChange}>
+            {allPrograms[faculty].map((name:string, index:number) => (
+              <option key={index} value={name}>{name}</option>
+            ))}
+          </select>   
+        </div>
+    {/* Second Row: Second Faculty, Second Major, and Minors if rendered */}
+    {showSecondMajor && (
+      <div className='dropdown-list-box'>
+        <div className="dropdown-row">
+          {' ———— '} Second Major/Degree Faculty:{' '}
+          <select className="dropdown-select" value={secondFaculty} onChange={e => handleSecondMajorChange(e, 'faculty')}>
+            {Object.keys(allPrograms).map(key => (
+              <option key={key} value={key}>{key}</option>
+            ))}
+          </select>
+        </div>
+        <div className="dropdown-row">
+          {' ———————— '} Second Major/Degree:{' '}
+          <select className="dropdown-select" value={secondMajor} onChange={e => handleSecondMajorChange(e, 'major')}>
+            {allPrograms[secondFaculty].map((major, index) => (
+              <option key={index} value={major}>{major}</option>
+            ))}
+          </select>
+        </div>
+      </div>
+    )}
+    {/* Minors Section */}
+    {showMinors && (
+      <div className='dropdown-list-box'>
+        {minors.map((minor, index) => (
+          <div key={index} className="dropdown-row-minor">
+            {' '}Minor {index + 1} :{' '}
+            <select className="dropdown-select-minor" value={minor.faculty} onChange={e => handleMinorChange(index, 'faculty', e.target.value)}>
+              {Object.keys(allPrograms).map(key => (
+                <option key={key} value={key}>{key}</option>
+              ))}
+            </select>
+            <select className="dropdown-select-minor" value={minor.minor} onChange={e => handleMinorChange(index, 'minor', e.target.value)}>
+              {allPrograms[minor.faculty] ? allPrograms[minor.faculty].map((minorName) => (
+                <option key={minorName} value={minorName}>{minorName}</option>
+                )) : null}
+            </select>
+            <button className="remove-minor-button" onClick={() => removeMinor(index)}>Remove</button>
+          </div>
+        ))}
+        {minors.length < 3 && <button onClick={addMinor}>Add Minor {'(up to 3)'}</button>}
+      </div>
+    )}
+  </div>
+</div>
+  <h1 className='headerline'>{headerTitle}</h1>
+  <h3 className='subline'>{headerSub}</h3>
       <div className="counter-box">
         Total MC count: {getTotalMCCount()}
         <hr />
@@ -473,7 +678,7 @@ const calculatePrerequisites = (cards: Array<Array<CardType>>): Array<Array<Card
           <button className='no-button'onClick={() => setSelectedCard(null)}>No</button>
 {/* update course grade */}
           <p>Update grade:</p>
-          <select value={grade} onChange={updateGrade} required>
+          <select className="grade-dropdown-list"value={grade} onChange={updateGrade} required>
             <option value="">Select Grade</option>
             <option value="A+">A+</option>
             <option value="A">A</option>
@@ -491,7 +696,7 @@ const calculatePrerequisites = (cards: Array<Array<CardType>>): Array<Array<Card
           <button className='update-grade-button'onClick={saveGrade}>Update Grade</button>
 {/* update course classification */}
           <p>Classify course:</p>
-          <select value={classification} onChange={updateClassification} required>
+          <select className="classification-dropdown-list"value={classification} onChange={updateClassification} required>
             <option value="">Classify as:</option>
             <option value="University level requirement">University level requirement</option>
             <option value="Faculty level requirement">Faculty level requirement</option>
@@ -499,7 +704,8 @@ const calculatePrerequisites = (cards: Array<Array<CardType>>): Array<Array<Card
             <option value="Major (towards 2nd degree/major) requirement">Major {'(towards 2nd degree/major)'} requirement</option>
             <option value="Minor requirement">Minor requirement</option>
             <option value="Unrestricted Elective">Unrestricted Elective</option>
-
+            <option value="Specialisation Primary">Specialisation Primary</option>
+            <option value="Specialisation Elective">Specialisation Elective</option>
           </select>
           <button className='update-classification-button'onClick={saveClassification}>Update Classification</button>
 {/* course info on selection */}
@@ -519,6 +725,7 @@ const calculatePrerequisites = (cards: Array<Array<CardType>>): Array<Array<Card
         </div>
         
       )}
+    </div>
     </div>
   );
 };

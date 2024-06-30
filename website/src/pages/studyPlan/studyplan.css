@@ -1,9 +1,13 @@
-/* src/pages/studyPlan/studyplan.css */
 .studyplan-container {
   width: 100%;  /* Adjust width as needed */
   margin: 0 auto;  /* Center align if needed */
   padding: 20px;
   box-sizing: border-box;
+  height: 100%;
+  text-align: left;  /* Aligns text and inline elements to the left */
+  display: flex;  /* Makes the container a flex container */
+  flex-direction: column;  /* Aligns children vertically */
+  align-items: flex-start;
 }
 
 .dynamic-table-container {
@@ -12,4 +16,6 @@
   margin-bottom: 20px;
   padding: 20px;
   box-sizing: border-box;
+  height: 100%;
 }
+

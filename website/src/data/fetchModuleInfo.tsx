@@ -122,6 +122,8 @@ const ModuleForm: React.FC<ModuleFormProps> = ({ setTempCard }) => {
                     Academic Year (e.g., 2023):
                     <input
                         type="text"
+                        id="acadYear"  // Added id attribute
+                        name="acadYear"  // Added name attribute
                         value={acadYear}
                         onChange={e => setAcadYear(e.target.value)}
                         required
@@ -132,6 +134,8 @@ const ModuleForm: React.FC<ModuleFormProps> = ({ setTempCard }) => {
                     Module Code (e.g., CS1101S):
                     <input
                         type="text"
+                        id="moduleCode"  // Added id attribute
+                        name="moduleCode"  // Added name attribute
                         value={moduleCode}
                         onChange={e => setModuleCode(e.target.value.toLocaleUpperCase())}
                         required
