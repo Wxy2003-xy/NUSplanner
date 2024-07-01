@@ -3,6 +3,7 @@ import { NavLink } from 'react-router-dom';
 import emailjs from 'emailjs-com';
 import './timetable.css';
 import logoImage from '../../images/nusplannerLogo.png';
+import Layout from '../../components/Layout';
 const Timetable = () => {
    useEffect(() => {
        updateDate();
@@ -56,46 +57,7 @@ const saveNotes = () => {
 };
 return (
     <div>
-        <header>
-            <div className="header-left">
-                <NavLink to="/" className="logo-link">
-                <div className="logo-container">
-                    <img src={logoImage} alt="Logo" />
-                    <span>NUSPlanner</span>
-                </div>
-                </NavLink>
-                <div className="title-container">
-                    <p></p>
-                </div>
-            </div>
-            <div className="date-container">
-                <span id="current-date"></span>
-            </div>
-        </header>
-        <div className="content">
-            <nav>
-                <div className="nav-left">
-                <ul>
-              <li className="home">
-                <NavLink to="/" className={({ isActive }) => isActive ? "active" : ""}>🏠<span>Home</span></NavLink>
-              </li>
-              <li>
-                <NavLink to="/studyplan" className={({ isActive }) => isActive ? "active" : ""}>📘<span>Study Plan</span></NavLink>
-              </li>
-              <li className="timetable">
-                <NavLink to="/timetable" className={({ isActive }) => isActive ? "active" : ""}>📋<span>Timetable</span></NavLink>
-              </li>
-              <li className="community">
-                <NavLink to="/community" className={({ isActive }) => isActive ? "active" : ""}>👥️<span>Community</span></NavLink>
-              </li>
-              <li className="feedback">
-                <NavLink to="/feedback" className={({ isActive }) => isActive ? "active" : ""}>✏️<span>Feedback</span></NavLink>
-              </li>
-              <li className="about">
-                <NavLink to="/about" className={({ isActive }) => isActive ? "active" : ""}>ℹ️<span>About us</span></NavLink>
-              </li>
-            </ul>
-                   </div>
+        <Layout/>
                    <div className="nav-right">
                        <h2>Timetable</h2>
                        <div className="container">
@@ -106,8 +68,6 @@ return (
                        <button className="save-button"
 onClick={saveNotes}>Save</button>
                    </div>
-               </nav>
-           </div>
        </div>
 ); };
 export default Timetable;

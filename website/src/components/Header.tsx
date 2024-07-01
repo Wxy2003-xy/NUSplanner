@@ -1,6 +1,7 @@
 // src/components/Header.js
 import './Header.css'; // Ensure this path is correct
 import nusplannerLogo from '../images/nusplannerLogo.png'; // Adjust the path if necessary
+import React from 'react';
 
 function Header() {
   const monthInLetter = new Intl.DateTimeFormat('en-US', { month: 'short' }).format(new Date());

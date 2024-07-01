@@ -4,7 +4,8 @@ import ModuleForm from '../../data/fetchModuleInfo';
 import { useState , ReactDOM, useEffect} from 'react';
 import React from 'react'
 import { NavLink } from 'react-router-dom';
-import logoImage from '../../images/nusplannerLogo.png';
+import logoImage from '../../assets/nusplannerLogo.png';
+import Layout from '../../components/Layout';
 
 interface PrereqTreeNode {
   and?: (PrereqTreeNode | string)[];
@@ -34,58 +35,15 @@ const StudyPlan: React.FC = () => {
   }, []);
 
   return (
-    <>
-    <header>
-        <div className="header-left">
-          <NavLink to="/" className="logo-link">
-            <div className="logo-container">
-              <img src={logoImage} alt="Logo" />
-              <span>NUSPlanner</span>
-            </div>
-          </NavLink>
-          <div className="title-container">
-            <p></p>
-          </div>
-        </div>
-        <div className="date-container">
-          <span>{currentDate}</span>
-        </div>
-      </header>
-    <div className="content" style={{ height: "100vh" }}>
-        <nav>
-          <div className="nav-left">
-            <ul>
-              <li className="home">
-                <NavLink to="/" className={({ isActive }) => isActive ? "active" : ""}>🏠<span>Home</span></NavLink>
-              </li>
-              <li>
-                <NavLink to="/studyplan" className={({ isActive }) => isActive ? "active" : ""}>📘<span>Study Plan</span></NavLink>
-              </li>
-              <li className="timetable">
-                <NavLink to="/timetable" className={({ isActive }) => isActive ? "active" : ""}>📋<span>Timetable</span></NavLink>
-              </li>
-              <li className="community">
-                <NavLink to="/community" className={({ isActive }) => isActive ? "active" : ""}>👥️<span>Community</span></NavLink>
-              </li>
-              <li className="feedback">
-                <NavLink to="/feedback" className={({ isActive }) => isActive ? "active" : ""}>✏️<span>Feedback</span></NavLink>
-              </li>
-              <li className="about">
-                <NavLink to="/about" className={({ isActive }) => isActive ? "active" : ""}>ℹ️<span>About us</span></NavLink>
-              </li>
-            </ul>
-          </div>
+    <div>
+      <Layout/>
           <div className="nav-right">
             <div className="studyplan-container">
               <DynamicTable tempCard={tempCard} setTempCard={setTempCard} />
               <ModuleForm setTempCard={setTempCard}/>
             </div>
-          </div>
-        </nav>
-      </div>
-
-      
-    </>
+          </div>      
+    </div>
   );
 }
 
