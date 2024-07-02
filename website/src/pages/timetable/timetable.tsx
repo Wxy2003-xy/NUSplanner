@@ -2,7 +2,6 @@ import React, { useEffect } from 'react';
 import { NavLink } from 'react-router-dom';
 import emailjs from 'emailjs-com';
 import './timetable.css';
-import logoImage from '../../images/nusplannerLogo.png';
 import Layout from '../../components/Layout';
 const Timetable = () => {
    useEffect(() => {

@@ -1,7 +1,5 @@
 import React, { useEffect } from 'react';
 import './home.css';
-import logoImage from '../../images/nusplannerLogo.png';
-import { NavLink } from 'react-router-dom';
 import Layout from '../../components/Layout';
 
 

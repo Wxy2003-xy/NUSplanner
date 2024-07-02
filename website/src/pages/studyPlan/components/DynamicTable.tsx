@@ -2,40 +2,8 @@ import React, { useState, useEffect, ChangeEvent, Dispatch, SetStateAction } fro
 import './DynamicTable.css';
 import Card from './Card';
 import PrereqTreeVisual from '../../../pages/studyPlan/components/TreeVisualization';
-import classNames from 'classnames';
-
-interface MinorDetails {
-  faculty: string;
-  minor: string;
-}
-
-interface CardType {
-  id: number;
-  name: string;
-  content: string;
-  courseCredit: number;
-  grade?: string | null;
-  prereqTree?: PrereqTreeNode | string;  
-  prereqNotSatisfied?: boolean;
-  color?: string;
-
-  classification?: string;
-}
-
-interface DynamicTableProps {
-  tempCard: CardType | null;
-  setTempCard: Dispatch<SetStateAction<CardType | null>>;
-}
-
-interface SelectedCard extends CardType {
-  columnIndex: number;
-}
-
-interface PrereqTreeNode {
-  and?: (PrereqTreeNode | string)[];
-  or?: (PrereqTreeNode | string)[];
-  nOf?: [number, (PrereqTreeNode | string)[]];
-}
+import { MinorDetails, CardType, DynamicTableProps, SelectedCard, PrereqTreeNode } from '../../../types/studyplan';
+import MCbreakDown from './MCbreakDown';
 
 const allPrograms = {
   'School of Computing': [
@@ -393,15 +361,6 @@ const DynamicTable: React.FC<DynamicTableProps> = ({ tempCard, setTempCard }) =>
     return columnCards.reduce((total, card) => total + Number(card.courseCredit), 0);
   };
 
-  // Get the total MC count
-  const getTotalMCCount = (): number => {
-    // Start from the second column, assuming columns are 0-indexed
-    return cards.slice(1).reduce((total, column) => {
-      return total + column.reduce((colTotal, card) => colTotal + Number(card.courseCredit), 0);
-    }, 0);
-  };
-  
-
   // Semester descriptions
   const semesterDescriptions = [
     'Exemptions',
@@ -421,13 +380,7 @@ const DynamicTable: React.FC<DynamicTableProps> = ({ tempCard, setTempCard }) =>
   }, [cards]);
 
   // Iterate over all cards (for debugging purposes)
-  const iterateAllCards = () => {
-    cards.forEach((column, columnIndex) => {
-      column.forEach(card => {
-        console.log(`Column ${columnIndex}:`, card);
-      });
-    });
-  };
+  
 
   // Check if prerequisites are satisfied
   const checkPrerequisites = (prereqTree: PrereqTreeNode | string | undefined, columnIdx: number): boolean => {
@@ -441,21 +394,17 @@ const DynamicTable: React.FC<DynamicTableProps> = ({ tempCard, setTempCard }) =>
         return getCardByCourseCodeLeft(prereqTree, columnIdx);
       }
     }
-  
     if (!prereqTree) return true;  // If no prereqTree, return true (no prerequisites)
-  
     // Handling 'and' logic
     if (prereqTree.and) {
       return prereqTree.and.reduce((acc, prereq) => 
         acc && checkPrerequisites(prereq, columnIdx), true);
     }
-  
     // Handling 'or' logic
     if (prereqTree.or) {
       return prereqTree.or.reduce((acc, prereq) => 
         acc || checkPrerequisites(prereq, columnIdx), false);
     }
-  
     // Handling 'nOf' logic
     if (prereqTree.nOf) {
       const [n, requirements] = prereqTree.nOf;
@@ -463,12 +412,10 @@ const DynamicTable: React.FC<DynamicTableProps> = ({ tempCard, setTempCard }) =>
         checkPrerequisites(prereq, columnIdx) ? count + 1 : count, 0);
       return countSatisfied >= n;
     }
-  
     // Unrecognized structure, log and return false
     console.error('Invalid prerequisite structure:', prereqTree);
     return false;
   };
-  
 
   const updateAllPrerequisites = () => {
     cards.forEach((column, columnIndex) => {
@@ -617,11 +564,7 @@ const DynamicTable: React.FC<DynamicTableProps> = ({ tempCard, setTempCard }) =>
 </div>
   <h1 className='headerline'>{headerTitle}</h1>
   <h3 className='subline'>{headerSub}</h3>
-      <div className="counter-box">
-        Total MC count: {getTotalMCCount()}
-        <hr />
-        <p className="counter-box-breakdown">Total MC breakdown:</p>
-      </div>
+      <MCbreakDown cards={cards}/>
       <div className="table">
         {cards.map((columnCards, idx) => (idx === 0 ? 
           <div key={idx} className="vcolumns">

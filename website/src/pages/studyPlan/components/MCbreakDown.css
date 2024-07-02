@@ -1,0 +1,53 @@
+
+.mc-count-container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: -16px;
+    margin-bottom: -16px;
+
+  }
+
+.counter-box {
+    position: relative; 
+    background-color: #ffffff;
+    color: #333;
+    padding: 2px;
+    text-align: left;
+    border-radius: 5px;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.2);
+  }
+  
+  .counter-box-breakdown {
+    background-color: rgba(50, 50, 50, 0.7);
+    color: white;
+    padding: 5px;
+    text-align: left;
+    border-radius: 3px;
+    margin-top: 2px; /* Space between toggle button and breakdown */
+  }
+
+.counter-box:hover {
+    transform: scale(1.01); /* Subtle growth on hover for interaction feedback */
+    z-index: 4; /* Ensures it stays above other elements */
+}
+
+.counter-box:hover .counter-box-breakdown {
+    display: flex;
+    justify-content: flex-start; /* Align content to the start */
+}
+
+.toggle-button {
+    margin-right: 40px;
+    padding: 4px 8px;
+    font-size: 12px;
+    background-color: #45d3a1;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+  
+  .toggle-button:hover {
+    background-color: #269374;
+  }

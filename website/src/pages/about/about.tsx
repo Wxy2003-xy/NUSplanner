@@ -1,7 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { NavLink } from 'react-router-dom';
 import './about.css';
-import logoImage from '../../images/nusplannerLogo.png';
 import image1 from '../../images/NUS.jpeg';
 import image2 from '../../images/nusScience.jpeg';
 import image3 from '../../images/nusSoc.jpg';

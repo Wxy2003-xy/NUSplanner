@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import { NavLink } from 'react-router-dom';
 import './community.css';
 import logoImage from '../../images/nusplannerLogo.png';
 import pencilIcon from '../../images/pencilicon.jpeg';

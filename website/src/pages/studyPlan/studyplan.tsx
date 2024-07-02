@@ -1,10 +1,8 @@
 import './studyplan.css'; 
 import DynamicTable from './components/DynamicTable';
 import ModuleForm from '../../data/fetchModuleInfo';
-import { useState , ReactDOM, useEffect} from 'react';
+import { useState , useEffect} from 'react';
 import React from 'react'
-import { NavLink } from 'react-router-dom';
-import logoImage from '../../assets/nusplannerLogo.png';
 import Layout from '../../components/Layout';
 
 interface PrereqTreeNode {

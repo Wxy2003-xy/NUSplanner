@@ -1,27 +1,7 @@
 import React from 'react';
 import './Card.css';
 import classnames from 'classnames';
-
-interface PrereqTreeNode {
-  and?: (PrereqTreeNode | string)[];
-  or?: (PrereqTreeNode | string)[];
-  nOf?: [number, (PrereqTreeNode | string)[]];
-}
-
-type CardProps = {
-  id: number;
-  name: string;
-  courseCredit: number;
-  content: string;
-  onClick: () => void;
-  isSelected?: boolean | null;
-  grade?: string | null;
-  prereqTree?: PrereqTreeNode | string;
-  prereqNotSatisfied?: boolean;
-  color?: string;
-
-  classification?: string;
-};
+import { PrereqTreeNode, CardProps } from '../../../types/studyplan';
 
 const Card: React.FC<CardProps> = ({
   id, name, courseCredit, content, onClick, isSelected = false, grade, prereqTree, 
