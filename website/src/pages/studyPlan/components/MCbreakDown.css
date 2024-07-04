@@ -38,7 +38,7 @@
 }
 
 .toggle-button {
-    margin-right: 40px;
+    margin-left: 20px;
     padding: 4px 8px;
     font-size: 12px;
     background-color: #45d3a1;
@@ -48,6 +48,14 @@
     cursor: pointer;
   }
   
+  .toggle-button.expand {
+    background-color: #4CAF50; /* Green for Expand */
+  }
+  
+  .toggle-button.collapse {
+    background-color: #f44336; /* Red for Collapse */
+  }
+  
   .toggle-button:hover {
-    background-color: #269374;
+    opacity: 0.8; /* Slightly dim the button on hover */
   }

@@ -4,7 +4,10 @@ import Card from './Card';
 import PrereqTreeVisual from '../../../pages/studyPlan/components/TreeVisualization';
 import { MinorDetails, CardType, DynamicTableProps, SelectedCard, PrereqTreeNode } from '../../../types/studyplan';
 import MCbreakDown from './MCbreakDown';
-
+import { DndProvider } from 'react-dnd';
+import { HTML5Backend } from 'react-dnd-html5-backend';
+import DraggableCard from './DraggableCard';
+import DroppableColumn from './DropColumn';
 const allPrograms = {
   'School of Computing': [
     "Computer Science", 
@@ -66,6 +69,8 @@ const programOptions = [
   'Double or Concurrent Degree program with Minor(s)',
   'Others'
 ];
+
+
 
 
 const DynamicTable: React.FC<DynamicTableProps> = ({ tempCard, setTempCard }) => {
@@ -169,6 +174,32 @@ const DynamicTable: React.FC<DynamicTableProps> = ({ tempCard, setTempCard }) =>
     localStorage.setItem(`minor${type}${index + 1}`, value);
     console.log('minor info set');
   } 
+
+  const handleMoveCard = (fromColumn: number, fromIndex: number, toColumn: number, toIndex = null) => {
+    if (fromColumn === undefined || fromIndex === undefined || toColumn === undefined || toIndex === undefined) {
+      console.error("Invalid move parameters", {fromColumn, fromIndex, toColumn, toIndex});
+      return;
+    }
+    if (fromColumn === toColumn && toIndex !== null) {
+      const updatedCards = Array.from(cards[fromColumn]);
+      const [removed] = updatedCards.splice(fromIndex, 1);
+      updatedCards.splice(toIndex, 0, removed);
+      const newCards = [...cards];
+      newCards[fromColumn] = updatedCards;
+      setCards(newCards);
+    } else {
+    
+    const card = cards[fromColumn][fromIndex];
+    if (card === undefined) {return;}
+    console.log("movin card ID: " + card.id)
+    const newCards = [...cards];
+    newCards[fromColumn] = newCards[fromColumn].filter((_, index) => index !== fromIndex);
+    newCards[toColumn] = [...newCards[toColumn], card];
+    setCards(newCards);
+    updateAllPrerequisites();
+    }
+  };
+  
 
   useEffect(() => {
     const newCards = calculatePrerequisites(cards);
@@ -303,10 +334,9 @@ const DynamicTable: React.FC<DynamicTableProps> = ({ tempCard, setTempCard }) =>
     }
 };
 
-  
-
   // Handle card click event
   const handleCardClick = (columnIndex: number, cardId: number) => {
+    console.log("ID: " + cardId)
     const card = cards[columnIndex].find(card => card.id === cardId);
     const isSelected = selectedCard && selectedCard.id === cardId;
     if (isSelected) {
@@ -316,8 +346,6 @@ const DynamicTable: React.FC<DynamicTableProps> = ({ tempCard, setTempCard }) =>
         ...card,
         columnIndex
       });
-      console.log(card.prereqTree)
-      console.log(typeof(card.prereqTree))
       setGrade(card.grade || '');
     }
   };
@@ -447,11 +475,11 @@ const DynamicTable: React.FC<DynamicTableProps> = ({ tempCard, setTempCard }) =>
     const cleanCourseCode = courseCode.split(':')[0].trim();
     for (let i = 0; i < columnIdx; i++) {
       if (cards[i].some(card => card.name === cleanCourseCode)) {
-        console.log(`${cleanCourseCode} found in column ${i}`);
+        // console.log(`${cleanCourseCode} found in column ${i}`);
         return true;  
       }
     }
-    console.log(`${cleanCourseCode} not found`);
+    // console.log(`${cleanCourseCode} not found`);
     return false; 
   };
 
@@ -478,6 +506,7 @@ const DynamicTable: React.FC<DynamicTableProps> = ({ tempCard, setTempCard }) =>
   
   
   return (
+    
     <div className='global-container'>
       {notification && <div className="notification">{notification}</div>}
     <button className="collapse-button"onClick={toggleCollapse}>Major Setting</button>
@@ -565,54 +594,38 @@ const DynamicTable: React.FC<DynamicTableProps> = ({ tempCard, setTempCard }) =>
   <h1 className='headerline'>{headerTitle}</h1>
   <h3 className='subline'>{headerSub}</h3>
       <MCbreakDown cards={cards}/>
-      <div className="table">
-        {cards.map((columnCards, idx) => (idx === 0 ? 
-          <div key={idx} className="vcolumns">
-          <p className="sem-title">{semesterCount(idx)}</p>
-          <p className="sem-mc-count">Courses exempted from:</p>
-          {columnCards.map(card => (
-            <Card
+    <DndProvider backend={HTML5Backend}>
+    <div className='table'>
+      {cards.map((columnCards, columnIndex) => (
+        <DroppableColumn key={columnIndex}
+        columnIndex={columnIndex}
+        columnCards={columnCards}
+        handleMoveCard={handleMoveCard}
+        getMCCount={getMCCount}
+        semesterCount={semesterCount}>
+          {columnCards.map((card, index) => (
+            <DraggableCard
               key={card.id}
-              id={card.id}
+              id={card.id? card.id : Date.now()}
               name={card.name}
               courseCredit={card.courseCredit}
               content={card.content}
-              onClick={() => handleCardClick(idx, card.id)}
-              isSelected={selectedCard && selectedCard.columnIndex === idx && selectedCard.id === card.id}
+              columnIndex={columnIndex}
+              index={index}
+              handleMoveCard={handleMoveCard}
+              handleCardClick={handleCardClick}
+              selectedCard={selectedCard}
               grade={card.grade}
               prereqTree={card.prereqTree}
               prereqNotSatisfied={card.prereqNotSatisfied}
-              color={card.color} // Pass the custom color
+              color={card.color}
               classification={card.classification}
             />
           ))}
-          <button className="add-button" onClick={() => addCard(idx)}>Add Course</button>
-      </div>
-        :
-          <div key={idx} className="vcolumns">
-            <p className="sem-title">{semesterCount(idx)}</p>
-            <p className="sem-mc-count">Total MC this semester: {getMCCount(columnCards)}</p>
-{/* course card display */}
-            {columnCards.map(card => (
-              <Card
-                key={card.id}
-                id={card.id}
-                name={card.name}
-                courseCredit={card.courseCredit}
-                content={card.content}
-                onClick={() => handleCardClick(idx, card.id)}
-                isSelected={selectedCard && selectedCard.columnIndex === idx && selectedCard.id === card.id}
-                grade={card.grade}
-                prereqTree={card.prereqTree}
-                prereqNotSatisfied={card.prereqNotSatisfied}
-                color={card.color} 
-                classification={card.classification}
-              />
-            ))}
-            <button className="add-button" onClick={() => addCard(idx)}>Add Course</button>
-          </div>
-        ))}
-      </div>
+          <button className="add-button" onClick={() => addCard(columnIndex)}>Add Course</button>
+        </DroppableColumn>
+      ))}
+    </div>
       {selectedCard && (
         <div className="confirmation-dialog">
 {/* option to delete course from table */}
@@ -668,7 +681,8 @@ const DynamicTable: React.FC<DynamicTableProps> = ({ tempCard, setTempCard }) =>
         </div>
         
       )}
-    </div>
+      </DndProvider>
+      </div>
     </div>
   );
 };

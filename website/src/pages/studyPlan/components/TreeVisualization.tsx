@@ -18,7 +18,6 @@ const parsePrereqTree = (data: PrereqTreeNode | string | undefined): any => {
   }
 
   if (typeof data === 'string') {
-    console.log('leaf reached ' + data)
     return { name: data };
   }
 

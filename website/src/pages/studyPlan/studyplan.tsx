@@ -24,13 +24,6 @@ interface CardType {
 
 const StudyPlan: React.FC = () => {
   const [tempCard, setTempCard] = useState<CardType | null>(null);
-  const [currentDate, setCurrentDate] = useState('');
-
-  useEffect(() => {
-    const options: Intl.DateTimeFormatOptions = { year: 'numeric', month: 'long', day: 'numeric' };
-    const today = new Date();
-    setCurrentDate(today.toLocaleDateString(undefined, options));
-  }, []);
 
   return (
     <div>
