@@ -9,7 +9,7 @@ interface PrereqTreeNode {
 }
 
 interface PrereqTreeProps {
-  data?: PrereqTreeNode | undefined;
+  data?: PrereqTreeNode | string | undefined;
 }
 
 const parsePrereqTree = (data: PrereqTreeNode | string | undefined): any => {
@@ -23,21 +23,21 @@ const parsePrereqTree = (data: PrereqTreeNode | string | undefined): any => {
 
   if (data.and) {
     return {
-      name: 'all of',
+      name: 'AND',
       children: data.and.map(parsePrereqTree),
     };
   }
 
   if (data.or) {
     return {
-      name: 'one of',
+      name: 'OR',
       children: data.or.map(parsePrereqTree),
     };
   }
 
   if (data.nOf) {
     return {
-      name: `at least ${data.nOf[0]} of`,
+      name: `At least ${data.nOf[0]} of`,
       children: data.nOf[1].map(parsePrereqTree),
     };
   }
@@ -57,7 +57,7 @@ const PrereqTreeVisual: React.FC<PrereqTreeProps> = ({ data }) => {
     const height = 600 - margin.top - margin.bottom;
 
     const treeLayout = d3.tree().size([height, width]);
-    const root = d3.hierarchy(parsePrereqTree(data));
+    const root = d3.hierarchy(parsePrereqTree(data), d => d.children);
     treeLayout(root);
 
     svg.selectAll('*').remove();
@@ -65,16 +65,17 @@ const PrereqTreeVisual: React.FC<PrereqTreeProps> = ({ data }) => {
     const g = svg.append('g').attr('transform', `translate(${margin.left},${margin.top})`);
 
     const link = g.append('g')
-      .selectAll('.link')
+      .attr('class', 'link')
+      .selectAll('path')
       .data(root.links())
       .enter().append('path')
-      .attr('class', 'link')
       .attr('d', d3.linkHorizontal()
         .x(d => d.y)
         .y(d => d.x));
 
     const node = g.append('g')
-      .selectAll('.node')
+      .attr('class', 'node')
+      .selectAll('g')
       .data(root.descendants())
       .enter().append('g')
       .attr('class', d => `node ${d.children ? 'node--internal' : 'node--leaf'}`)
@@ -101,7 +102,7 @@ const PrereqTreeVisual: React.FC<PrereqTreeProps> = ({ data }) => {
 
   return (
     <div className="svg-container">
-      <svg className='graph' ref={svgRef} width="800" height="600"></svg>
+      <svg ref={svgRef} width="800" height="600"></svg>
     </div>
   );
 };

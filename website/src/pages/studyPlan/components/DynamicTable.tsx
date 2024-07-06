@@ -1,6 +1,5 @@
-import React, { useState, useEffect, ChangeEvent, Dispatch, SetStateAction } from 'react';
+import React, { useState, useEffect, ChangeEvent } from 'react';
 import './DynamicTable.css';
-import Card from './Card';
 import PrereqTreeVisual from '../../../pages/studyPlan/components/TreeVisualization';
 import { MinorDetails, CardType, DynamicTableProps, SelectedCard, PrereqTreeNode } from '../../../types/studyplan';
 import MCbreakDown from './MCbreakDown';
@@ -14,6 +13,20 @@ const allPrograms = {
     "Business Analytics", 
     "Information System", 
     "Information Security"
+  ],
+  'College of Humanities and Sciences, Asian Studies': [
+      "Chinese Language", 
+      "Chinese Studies",
+      "English Language and Linguistics",
+      "English Literature",
+      "Global Studies",
+      "History",
+      "Japanese Studies",
+      "Malay Studies",
+      "Philosophy",
+      "South Asian Studie",
+      "Southeast Asian Studies",
+      "Theatre and Performance Studie",
   ],
   'College of Humanities and Sciences, Humanities': [
     "Anthropology",
@@ -70,33 +83,111 @@ const programOptions = [
   'Others'
 ];
 
-
-
-
 const DynamicTable: React.FC<DynamicTableProps> = ({ tempCard, setTempCard }) => {
-  const [isCollapsed, setIsCollapsed] = useState(true);  // State to manage the collapse
-  const toggleCollapse = () => {
-    setIsCollapsed(!isCollapsed);
-  };
-  // number of semesters
-  const [columnCount, setColumnCount] = useState<number>(8);
+  // State to manage the collapse of major setting, default hidden
+  const [isCollapsed, setIsCollapsed] = useState(true);  
+  // State to manage the number of columns of the table, default 8 semesters
+  const [columnCount, setColumnCount] = useState<number>(8);  
+  // home faculty, default soc, cached
   const [faculty, setFaculty] = useState(() => localStorage.getItem('faculty') || 'School of Computing');
+  // programme, default single degree, cached
   const [programs, setPrograms] = useState(() => localStorage.getItem('programs') || 'Single Degree Program');
+  // primary major, default empty (first option), cached
   const [major, setMajor] = useState<string>(() => {
     const storedMajor = localStorage.getItem('major');
     return storedMajor && allPrograms[faculty].includes(storedMajor) 
             ? storedMajor 
-            : allPrograms[faculty][0];
+            : allPrograms[faculty][0];  // default empty
   });
+  // second major faculty, default soc, cached
   const [secondFaculty, setSecondFaculty] = useState(() => localStorage.getItem('secondFaculty') || 'School of Computing');
+  // second major, default empty, cached
   const [secondMajor, setSecondMajor] = useState(() => localStorage.getItem('secondMajor') || '');
+  // state to manage if second major is shown in title, only when programme includes 2nd major or double degree etc
   const [showSecondMajor, setShowSecondMajor] = useState(() => programs.includes('2nd Major') || programs.includes('Double or Concurrent Degree'));
+  // state to manage if minors are shown in title, only when programme includes minors
   const [showMinors, setShowMinors] = useState(() => programs.includes('Minor(s)'));
 
+  // minor array, default empty, cached; type MinorDetail from website/src/types/studyplan.ts
   const [minors, setMinors] = useState<MinorDetails[]>(() => {
     const storedMinors = localStorage.getItem('minors');
     return storedMinors ? JSON.parse(storedMinors) : [];
   });
+  
+  // Title, rendered with useEffect 
+  const [headerTitle, setHeaderTitle] = useState('');
+  // Sub-title(to show minor), rendered with useEffect
+  const [headerSub, setHeaderSub] = useState('');
+  // 2D array representing the card table, using type CardType from website/src/types/studyplan.ts; cached
+  const [cards, setCards] = useState<Array<Array<CardType>>>(() => {
+    const savedCards = localStorage.getItem('cards');
+    // default to 8 width table
+    return savedCards ? JSON.parse(savedCards) : new Array(8).fill([]).map(() => []);
+  });
+  // notification, default nothing
+  const [notification, setNotification] = useState<string | null>(null);
+  // selected card, temproraily hold selected card object; type SelectedCard from website/src/types/studyplan.ts
+  const [selectedCard, setSelectedCard] = useState<SelectedCard | null>(null);
+  // grade to be set of the selected card, default empty
+  const [grade, setGrade] = useState<string>('');
+  // classification to be set of the selected card, default empty
+  const [classification, setClassification] = useState<string>('');
+
+  // major setting toggle visibility function
+  const toggleCollapse = () => {    
+    setIsCollapsed(!isCollapsed);
+  };
+
+  // handle number of columns change
+  const handleColumnChange = (event: ChangeEvent<HTMLSelectElement>) => {
+    const newCount = parseInt(event.target.value);   
+    const newCards = new Array(newCount + 1)
+        .fill([])
+        .map((_, idx) => cards[idx] || []);  // preserve existing arrays, adding new empty arrays
+    setColumnCount(newCount);   // update column count state
+    setCards(newCards);         // update card table state
+  };
+
+  // handle faculty change
+  const handleFacultyChange = (event: ChangeEvent<HTMLSelectElement>) => {
+    const newFaculty = event.target.value;
+    setFaculty(newFaculty);
+    localStorage.setItem('faculty', newFaculty);
+    const firstMajor = allPrograms[newFaculty][0];
+    setMajor(firstMajor);
+    localStorage.setItem('major', firstMajor);
+  }
+
+  // handle program change
+  const handleProgramChange = (event: ChangeEvent<HTMLSelectElement>) => {
+    const newProgram = event.target.value;
+    setPrograms(newProgram);
+    localStorage.setItem('programs', newProgram);
+    setShowSecondMajor(newProgram.includes('2nd Major') 
+        || newProgram.includes('Double or Concurrent Degree'));
+    setShowMinors(newProgram.includes('Minor(s)'));
+  }
+
+  // handle primary major change
+  const handleMajorChange = (event: ChangeEvent<HTMLSelectElement>) => {
+    const newMajor = event.target.value;
+    setMajor(newMajor);
+  }
+
+  // handle second major change
+  const handleSecondMajorChange = (event: ChangeEvent<HTMLSelectElement>, type: 'faculty' | 'major') => {
+    const value = event.target.value;
+    if (type === 'faculty') {
+      setSecondFaculty(value);
+      localStorage.setItem('secondFaculty', value);
+      // Reset the second major when the faculty changes
+      setSecondMajor('');
+    } else if (type === 'major') {
+      setSecondMajor(value);
+      localStorage.setItem('secondMajor', value);
+    }
+  };
+
   const addMinor = () => {
     if (minors.length < 3) {
       const newMinors = [...minors, { faculty: '', minor: '' }];
@@ -109,62 +200,6 @@ const DynamicTable: React.FC<DynamicTableProps> = ({ tempCard, setTempCard }) =>
     const newMinors = minors.filter((_, i) => i !== index);
     setMinors(newMinors);
     localStorage.setItem('minors', JSON.stringify(newMinors));
-  };
-
-  const [headerTitle, setHeaderTitle] = useState('');
-  const [headerSub, setHeaderSub] = useState('');
-  
-
-  const [cards, setCards] = useState<Array<Array<CardType>>>(() => {
-    const savedCards = localStorage.getItem('cards');
-    return savedCards ? JSON.parse(savedCards) : new Array(8).fill([]).map(() => []);
-  });
-
-  const [notification, setNotification] = useState<string | null>(null);
-  const [selectedCard, setSelectedCard] = useState<SelectedCard | null>(null);
-  const [grade, setGrade] = useState<string>('');
-  const [classification, setClassification] = useState<string>('');
-
-  const handleColumnChange = (event: ChangeEvent<HTMLSelectElement>) => {
-    const newCount = parseInt(event.target.value);
-    const newCards = new Array(newCount + 1).fill([]).map((_, idx) => cards[idx] || []);
-    setColumnCount(newCount);
-    setCards(newCards);
-  };
-
-  const handleFacultyChange = (event: ChangeEvent<HTMLSelectElement>) => {
-    const newFaculty = event.target.value;
-    setFaculty(newFaculty);
-    localStorage.setItem('faculty', newFaculty);
-    const firstMajor = allPrograms[newFaculty][0];
-    setMajor(firstMajor);
-    localStorage.setItem('major', firstMajor);
-  }
-
-  const handleProgramChange = (event: ChangeEvent<HTMLSelectElement>) => {
-    const newProgram = event.target.value;
-    setPrograms(newProgram);
-    localStorage.setItem('programs', newProgram);
-    setShowSecondMajor(newProgram.includes('2nd Major') || newProgram.includes('Double or Concurrent Degree'));
-    setShowMinors(newProgram.includes('Minor(s)'));
-  }
-
-  const handleMajorChange = (event: ChangeEvent<HTMLSelectElement>) => {
-    const newMajor = event.target.value;
-    setMajor(newMajor);
-  }
-
-  const handleSecondMajorChange = (event: ChangeEvent<HTMLSelectElement>, type: 'faculty' | 'major') => {
-    const value = event.target.value;
-    if (type === 'faculty') {
-      setSecondFaculty(value);
-      localStorage.setItem('secondFaculty', value);
-      // Reset the second major when the faculty changes
-      setSecondMajor('');
-    } else if (type === 'major') {
-      setSecondMajor(value);
-      localStorage.setItem('secondMajor', value);
-    }
   };
   
   const handleMinorChange = (index: number, type: 'faculty' | 'minor', value: string) => {
@@ -188,7 +223,6 @@ const DynamicTable: React.FC<DynamicTableProps> = ({ tempCard, setTempCard }) =>
       newCards[fromColumn] = updatedCards;
       setCards(newCards);
     } else {
-    
     const card = cards[fromColumn][fromIndex];
     if (card === undefined) {return;}
     console.log("movin card ID: " + card.id)
@@ -199,7 +233,6 @@ const DynamicTable: React.FC<DynamicTableProps> = ({ tempCard, setTempCard }) =>
     updateAllPrerequisites();
     }
   };
-  
 
   useEffect(() => {
     const newCards = calculatePrerequisites(cards);
@@ -223,7 +256,6 @@ const DynamicTable: React.FC<DynamicTableProps> = ({ tempCard, setTempCard }) =>
   }, [minors]);
 
   useEffect(() => {
-    // Construct the header title based on the presence of a second major and the type of program
     const title = `Study Plan for ${major}` + (secondMajor && (
       programs.includes('Double') || programs.includes('2nd')
     ) ? ` and ${secondMajor}` : '');
@@ -292,49 +324,43 @@ const DynamicTable: React.FC<DynamicTableProps> = ({ tempCard, setTempCard }) =>
         if (prereqNotSatisfied) {
           setNotification(`Course: ${newCard.name} does not have all its prerequisites satisfied`);
         } else {
-          setNotification(null); // Clear notification
+          setNotification(null); 
         }
         setSelectedCard({ ...newCard, columnIndex });
-        // Check prerequisites for all existing cards in columns left to the newly added card
         updateAllPrerequisites()
         setCards(newCards);
       }
     }
   };
   
-
-  // Remove a card from the table
   const removeCard = () => {
     if (selectedCard) {
-        console.log('Removing card:', selectedCard);
-        const { columnIndex, id } = selectedCard;
-        const newCards = [...cards];
-        const filteredCards = newCards[columnIndex].filter(card => card.id !== id);
+      console.log('Removing card:', selectedCard);
+      const { columnIndex, id } = selectedCard;
+      const newCards = [...cards];
+      const filteredCards = newCards[columnIndex].filter(card => card.id !== id);
 
-        if (newCards[columnIndex].length === filteredCards.length) {
-            console.log('No card found to remove with id:', id);
-        } else {
-            console.log('Card removed, updating state.');
-            newCards[columnIndex] = filteredCards;
-            setCards(newCards);
-            setSelectedCard(null);
-
-            // Update prerequisites for all remaining cards in the affected and subsequent columns
-            for (let i = columnIndex; i < newCards.length; i++) {
-                newCards[i].forEach(card => {
-                    const isSatisfied = checkPrerequisites(card.prereqTree, i);
-                    card.prereqNotSatisfied = !isSatisfied;
-                    card.color = isSatisfied ? '#88f7c5' : '#ff9999';
-                });
-            }
-            setCards(newCards);
+      if (newCards[columnIndex].length === filteredCards.length) {
+        console.log('No card found to remove with id:', id);
+      } else {
+        console.log('Card removed, updating state.');
+        newCards[columnIndex] = filteredCards;
+        setCards(newCards);
+        setSelectedCard(null);
+        for (let i = columnIndex; i < newCards.length; i++) {
+          newCards[i].forEach(card => {
+            const isSatisfied = checkPrerequisites(card.prereqTree, i);
+            card.prereqNotSatisfied = !isSatisfied;
+            card.color = isSatisfied ? '#88f7c5' : '#ff9999';
+          });
+        }
+          setCards(newCards);
         }
     } else {
-        console.log('No selected card to remove.');
+      console.log('No selected card to remove.');
     }
-};
+  };
 
-  // Handle card click event
   const handleCardClick = (columnIndex: number, cardId: number) => {
     console.log("ID: " + cardId)
     const card = cards[columnIndex].find(card => card.id === cardId);
@@ -350,12 +376,10 @@ const DynamicTable: React.FC<DynamicTableProps> = ({ tempCard, setTempCard }) =>
     }
   };
 
-  // Update the grade state
   const updateGrade = (event: ChangeEvent<HTMLSelectElement>) => {
     setGrade(event.target.value);
   };
 
-  // Save the updated grade
   const saveGrade = () => {
     if (selectedCard) {
       const { columnIndex, id } = selectedCard;
@@ -384,7 +408,6 @@ const DynamicTable: React.FC<DynamicTableProps> = ({ tempCard, setTempCard }) =>
     }
   };
 
-  // Get the MC count for a column
   const getMCCount = (columnCards: Array<CardType>): number => {
     return columnCards.reduce((total, card) => total + Number(card.courseCredit), 0);
   };
@@ -411,15 +434,19 @@ const DynamicTable: React.FC<DynamicTableProps> = ({ tempCard, setTempCard }) =>
   
 
   // Check if prerequisites are satisfied
-  const checkPrerequisites = (prereqTree: PrereqTreeNode | string | undefined, columnIdx: number): boolean => {
+  const checkPrerequisites = (prereqTree: PrereqTreeNode | string | undefined, 
+                              columnIdx: number): boolean => {
     if (typeof prereqTree === 'string') {
       try {
         // Attempt to parse the string as JSON to handle complex prereq structures
         const parsedTree = JSON.parse(prereqTree);
         return checkPrerequisites(parsedTree, columnIdx);
-      } catch {
-        // If parsing fails, assume it's a single course code string
-        return getCardByCourseCodeLeft(prereqTree, columnIdx);
+      } catch {   // If parsing fails, assume it's a single course code string
+        // if contains no numerics: check inclusion of prefix
+        // if (prereqTree.search(/\d/) !== -1) {
+        //   return
+        // }
+        return iterateCardByCourseCodeLeft(prereqTree, columnIdx);
       }
     }
     if (!prereqTree) return true;  // If no prereqTree, return true (no prerequisites)
@@ -436,9 +463,16 @@ const DynamicTable: React.FC<DynamicTableProps> = ({ tempCard, setTempCard }) =>
     // Handling 'nOf' logic
     if (prereqTree.nOf) {
       const [n, requirements] = prereqTree.nOf;
-      const countSatisfied = requirements.reduce((count, prereq) => 
+      if (requirements.length === 1 
+        && typeof requirements[0] === 'string' 
+        && requirements[0].search(/\d/) === -1) {
+        const countSatisfied = countCardByCourseCodeLeft(requirements[0], columnIdx);
+        return countSatisfied >= n;
+      } else {
+        const countSatisfied = requirements.reduce((count, prereq) => 
         checkPrerequisites(prereq, columnIdx) ? count + 1 : count, 0);
-      return countSatisfied >= n;
+        return countSatisfied >= n;
+      }
     }
     // Unrecognized structure, log and return false
     console.error('Invalid prerequisite structure:', prereqTree);
@@ -470,24 +504,53 @@ const DynamicTable: React.FC<DynamicTableProps> = ({ tempCard, setTempCard }) =>
     }
     return undefined;
   };
-  // Get a card by its course code
-  const getCardByCourseCodeLeft = (courseCode: string, columnIdx: number): boolean => {
+
+  const iterateCardByCourseCodeLeft = (courseCode: string, columnIdx: number): boolean => {
     const cleanCourseCode = courseCode.split(':')[0].trim();
-    for (let i = 0; i < columnIdx; i++) {
-      if (cards[i].some(card => card.name === cleanCourseCode)) {
-        // console.log(`${cleanCourseCode} found in column ${i}`);
-        return true;  
+    console.log(cleanCourseCode);
+    if (cleanCourseCode.search(/\d/) !== -1) {
+      console.log('specific code')
+      for (let i = 0; i < columnIdx; i++) {
+        if (cards[i].some(card => card.name === cleanCourseCode)) {
+          console.log('found: ' + cleanCourseCode)
+          return true;  
+        }
+      }
+    } else {
+      console.log('prefix only')
+      for (let i = 0; i < columnIdx; i++) {
+        if (cards[i].some(card => card.name.includes(cleanCourseCode))) {
+          console.log('found: ' + cleanCourseCode)
+          return true;  
+        }
       }
     }
-    // console.log(`${cleanCourseCode} not found`);
     return false; 
   };
+
+  const countCardByCourseCodeLeft = (courseCode: string, columnIdx: number): number => {
+    console.log('prefix only')
+    const cleanCourseCode = courseCode.split('%')[0].trim();
+    console.log(cleanCourseCode)
+    let count:number = 0;
+    for (let i = 0; i < columnIdx; i++) {
+      if (cards[i].some(card => card.name.includes(cleanCourseCode))) {
+        console.log('found: ' + cleanCourseCode)
+        count++; 
+      }
+    }
+    console.log(count);
+    return count;
+  }
 
   function isPrereqTreeNode(tree: PrereqTreeNode | string | undefined): tree is PrereqTreeNode {
     return (typeof tree !== 'string') && (tree !== undefined);
   }
 
   const renderPrereqTreeVisual = (prereqData: PrereqTreeNode | string | undefined) => {
+    // console.log('tree: ' + prereqData)
+    // console.log('string: ' + JSON.stringify(prereqData))
+
     if (typeof prereqData === 'string') {
       try {
         const treeData = JSON.parse(prereqData);
@@ -495,8 +558,10 @@ const DynamicTable: React.FC<DynamicTableProps> = ({ tempCard, setTempCard }) =>
           return <PrereqTreeVisual data={treeData} />;
         }
       } catch (error) {
-        console.error("Failed to parse prerequisite data:", error);
-        return <p>Error displaying prerequisites. Invalid data format.</p>;
+        return <p>The only prerequisite is {prereqData}</p>
+      } finally {
+        console.log('parsing error')
+        return <h3 style={{ textAlign: 'center' }}>{prereqData}</h3>
       }
     } else if (isPrereqTreeNode(prereqData)) {
       return <PrereqTreeVisual data={prereqData} />;
