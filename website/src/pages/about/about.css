@@ -45,9 +45,10 @@ html, body {
     color: white;
     text-decoration: none;
   }
-  .title-container p {
+  .about-title-container {
     margin: 0;
     font-size: 24px;
+    color:rgba(0, 0, 0, 0.1)
   }
   .date-container {
     font-size: 16px;
@@ -101,18 +102,19 @@ html, body {
   nav ul li a:hover span {
     text-decoration: underline;
   }
-  .nav-right {
+  .about-nav-right {
+    margin-left: 180px;
     flex-grow: 1;
     position: relative;
     display: flex;
     flex-direction: column;
     padding: 0px;
     box-sizing: border-box;
-    color: white; /* Ensure text is readable over the background image */
+    color: black; /* Ensure text is readable over the background image */
     text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.4); /* Add text shadow for readability */
     height: 100%; /* Ensure it takes full height */
   }
-  .nav-right .background {
+  .about-nav-right .background {
     position: absolute;
     top: 0;
     left: 0;
@@ -123,10 +125,10 @@ html, body {
     background-position: center;
     transition: opacity 1s ease-in-out;
   }
-  .nav-right .background.hidden {
+  .about-nav-right .background.hidden {
     opacity: 0;
   }
-  .nav-right .content {
+  .about-nav-right .content {
     position: relative;
     z-index: 1;
     display: flex;
@@ -139,8 +141,8 @@ html, body {
     font-size: 38px;
     margin-bottom: 20px; /* Add margin to separate the title from the paragraph */
   }
-  .centered-paragraph {
-    max-width: 800px;
+  .about-centered-paragraph {
+    max-width: 80%;
     background-color: rgba(255, 255, 224, 0.6); /* Pale yellow background with transparency */
     padding: 40px;
     border-radius: 8px;

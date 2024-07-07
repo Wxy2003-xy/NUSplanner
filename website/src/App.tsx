@@ -9,6 +9,8 @@ import Footer from './components/Footer';
 import Feedback from './pages/feedback/feedback';
 import About from './pages/about/about';
 import Community from './pages/community/community';
+import Reminder from './pages/reminder/reminder';
+import Map from './pages/map/map';
 function App() {
   const [message, setMessage] = useState<string>('');
 
@@ -29,6 +31,8 @@ function App() {
           <Route path="/feedback" element={<Feedback />} />
           <Route path="/about" element={<About />} />
           <Route path="/community" element={<Community />} />
+          <Route path="/reminder" element={<Reminder />} />
+          <Route path="/map" element={<Map />} />
         </Routes>
       </Router>
   );

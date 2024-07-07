@@ -38,9 +38,9 @@ const DroppableColumn = ({ columnIndex, children, columnCards, handleMoveCard, g
   });
 
   return (
-    <div ref={drop} className="vcolumns">
+    <div ref={drop} className="vcolumns"> 
       <p className="sem-title">{semesterCount(columnIndex)}</p>
-      <p className="sem-mc-count">{columnIndex === 0 ? 'Courses exempted from:' : `Total MC this semester: ${getMCCount(columnCards)}`}</p>
+      <p className="sem-mc-count">{columnIndex === 0 ? 'Exempted:' : `Semester MC: ${getMCCount(columnCards)}`}</p>
       {children}
     </div>
   );

@@ -1,8 +1,8 @@
 .studyplan-container {
   width: 80%;  /* Adjust width as needed */
   max-width: 100%;
-  margin: 0 auto;  /* Center align if needed */
-  padding: 20px;
+  padding-top: 25px;
+  padding-left: 5px;
   box-sizing: border-box;
   height: 100%;
   text-align: left;  /* Aligns text and inline elements to the left */
@@ -17,9 +17,9 @@
   width: 100%;  /* Adjust width as needed */
   margin-top: 20px;  /* Space between ModuleForm and DynamicTable */
   margin-bottom: 20px;
-  padding: 20px;
+  padding: -5px;
   box-sizing: border-box;
   height: 100%;
-  overflow: auto;
+  overflow:visible;
 }
 

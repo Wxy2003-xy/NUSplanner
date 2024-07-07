@@ -105,10 +105,7 @@ html, body {
   .nav-right {
     flex-grow: 1;
     background-color: #f9f9f9; /* Light background color */
-    background-image: url('path/to/your/pattern.png'); /* Pattern background */
     background-size: cover;
-    display: flex;
-    flex-direction: column;
     padding: 20px;
     box-sizing: border-box;
     border-left: 0px solid #ddd;

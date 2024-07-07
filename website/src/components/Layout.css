@@ -77,10 +77,11 @@ html, body {
   
   .nav-left {
     background-color: #f0f0f0;
-    padding: 10px;
+    padding: 0px;
     width: 150px;
     height: 100%;
     box-sizing: border-box;
+    margin-right: -20px;
   }
   
   nav ul {
@@ -116,18 +117,6 @@ html, body {
   
   nav ul li a:hover span {
     text-decoration: underline;
-  }
-  
-  
-  .nav-right {
-    flex-grow: 1;
-    background-color: #FFFFFF;
-    display: flex;
-    justify-content: flex-start;
-    align-items: flex-start;
-    padding: 0px;
-    /* box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.1); */
-    box-sizing: border-box;
   }
   
   .nav-right > div {

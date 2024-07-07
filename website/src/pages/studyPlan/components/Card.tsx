@@ -10,7 +10,7 @@ const Card: React.FC<CardProps> = ({
   const backgroundColor = 
     isSelected 
       ? prereqNotSatisfied 
-        ? '#f06969'
+        ? '#f06969' 
         : '#00c99e' 
       : prereqNotSatisfied 
         ? '#ff9999' 
@@ -21,7 +21,7 @@ const Card: React.FC<CardProps> = ({
     'prereq-not-satisfied': prereqNotSatisfied,
   });
 
-  return (
+  return (<div className='container'>
     <div className={cardClass} onClick={onClick} style={{ backgroundColor }}>
       <div className="card-title">{name}</div>
       <div className="card-text">{content}</div>
@@ -29,6 +29,7 @@ const Card: React.FC<CardProps> = ({
         {courseCredit + 'MC ' || ''} {grade?'Grade: ' + grade : ' '}
       </div>
       <div className="card-classification">{classification || ''}</div>
+    </div>
     </div>
   );
 };

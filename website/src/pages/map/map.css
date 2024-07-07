@@ -1,0 +1,9 @@
+html, body {
+    align-self: flex-start;
+    height: 100%; /* Ensures that the root elements take full height of the viewport */
+    margin: 0;    /* Removes default margin */
+  }
+  
+  .map-container {
+    height: 100%; /* Now this works because its parent (body) has a defined height */
+  }

@@ -658,46 +658,43 @@ const DynamicTable: React.FC<DynamicTableProps> = ({ tempCard, setTempCard }) =>
 </div>
   <h1 className='headerline'>{headerTitle}</h1>
   <h3 className='subline'>{headerSub}</h3>
-      <MCbreakDown cards={cards}/>
+    <MCbreakDown cards={cards}/>
     <DndProvider backend={HTML5Backend}>
-    <div className='table'>
-      {cards.map((columnCards, columnIndex) => (
-        <DroppableColumn key={columnIndex}
-        columnIndex={columnIndex}
-        columnCards={columnCards}
-        handleMoveCard={handleMoveCard}
-        getMCCount={getMCCount}
-        semesterCount={semesterCount}>
-          {columnCards.map((card, index) => (
-            <DraggableCard
-              key={card.id}
-              id={card.id? card.id : Date.now()}
-              name={card.name}
-              courseCredit={card.courseCredit}
-              content={card.content}
-              columnIndex={columnIndex}
-              index={index}
-              handleMoveCard={handleMoveCard}
-              handleCardClick={handleCardClick}
-              selectedCard={selectedCard}
-              grade={card.grade}
-              prereqTree={card.prereqTree}
-              prereqNotSatisfied={card.prereqNotSatisfied}
-              color={card.color}
-              classification={card.classification}
-            />
-          ))}
-          <button className="add-button" onClick={() => addCard(columnIndex)}>Add Course</button>
-        </DroppableColumn>
-      ))}
-    </div>
+      <div className='table'>
+        {cards.map((columnCards, columnIndex) => (
+          <DroppableColumn key={columnIndex}
+                           columnIndex={columnIndex}
+                           columnCards={columnCards}
+                           handleMoveCard={handleMoveCard}
+                           getMCCount={getMCCount}
+                           semesterCount={semesterCount}>
+            {columnCards.map((card, index) => (
+              <DraggableCard
+                key={card.id}
+                id={card.id? card.id : Date.now()}
+                name={card.name}
+                courseCredit={card.courseCredit}
+                content={card.content}
+                columnIndex={columnIndex}
+                index={index}
+                handleMoveCard={handleMoveCard}
+                handleCardClick={handleCardClick}
+                selectedCard={selectedCard}
+                grade={card.grade}
+                prereqTree={card.prereqTree}
+                prereqNotSatisfied={card.prereqNotSatisfied}
+                color={card.color}
+                classification={card.classification}/>
+            ))}
+            <button className="add-button" onClick={() => addCard(columnIndex)}>Add Course</button>
+          </DroppableColumn>
+        ))}
+      </div>
       {selectedCard && (
         <div className="confirmation-dialog">
-{/* option to delete course from table */}
           <p>Delete course {selectedCard.name} from {semesterCount(selectedCard.columnIndex)}?</p>
           <button className='yes-button'onClick={removeCard}>Yes</button>
           <button className='no-button'onClick={() => setSelectedCard(null)}>No</button>
-{/* update course grade */}
           <p>Update grade:</p>
           <select className="grade-dropdown-list"value={grade} onChange={updateGrade} required>
             <option value="">Select Grade</option>
@@ -715,7 +712,6 @@ const DynamicTable: React.FC<DynamicTableProps> = ({ tempCard, setTempCard }) =>
             <option value="F">F</option>
           </select>
           <button className='update-grade-button'onClick={saveGrade}>Update Grade</button>
-{/* update course classification */}
           <p>Classify course:</p>
           <select className="classification-dropdown-list"value={classification} onChange={updateClassification} required>
             <option value="">Classify as:</option>
@@ -729,9 +725,7 @@ const DynamicTable: React.FC<DynamicTableProps> = ({ tempCard, setTempCard }) =>
             <option value="Specialisation Elective">Specialisation Elective</option>
           </select>
           <button className='update-classification-button'onClick={saveClassification}>Update Classification</button>
-{/* course info on selection */}
           <h3>Selected Course Details:</h3>
-          {/* <p><strong>ID:</strong> {selectedCard.id}</p> */}
           <h2><strong></strong> {selectedCard.name}</h2>
           <p><strong>Course Name:</strong> {selectedCard.content}</p>
           <p><strong>Course Credit:</strong> {selectedCard.courseCredit}</p>
@@ -743,12 +737,11 @@ const DynamicTable: React.FC<DynamicTableProps> = ({ tempCard, setTempCard }) =>
           </div>
           <p><strong>Prerequisites Satisfied:</strong> {selectedCard.prereqNotSatisfied ? 'No' : 'Yes'}</p>
           <button onClick={() => setSelectedCard(null)}>Close Details</button>
-        </div>
-        
+        </div> 
       )}
-      </DndProvider>
-      </div>
-    </div>
+    </DndProvider>
+  </div>
+</div>
   );
 };
 
