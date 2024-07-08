@@ -1,6 +1,7 @@
 import React, { useState, useEffect, ChangeEvent } from "react";
-import { GenericTimeSlot, Day } from '../../../types/timetable';
-
+import { GenericTimeSlot, Day, ClassTimeSlotType } from '../../../types/timetable';
+import { useLocation } from 'react-router-dom';
+import { getYear } from 'date-fns';
 // Utility to map index to day names (assuming Monday start)
 const dayNames: { [key: number]: Day } = {
   0: 'Monday',
@@ -10,67 +11,89 @@ const dayNames: { [key: number]: Day } = {
   4: 'Friday',
   5: 'Saturday',
   6: 'Sunday'
-};
+}
 
 const START_TIME = 8 * 60;  // 8:00 AM in minutes
 const END_TIME = 18 * 60;   // 6:00 PM in minutes
-const INTERVAL = 10;        // 10 minutes
+const INTERVAL = 10; 
+
+export function fetchTimeSlotInfo(acadYear: string, moduleCode: string, semesterArg: number): [ClassTimeSlotType | null, string] {
+  const [courseTimeInfo, setTimeInfo] = useState<ClassTimeSlotType | null>(null);
+  const [error, setError] = useState<string>('');
+  if (semesterArg === 0) {
+    throw new Error('Invalid semester data');
+  }
+  useEffect(() => {
+    const nextYear = parseInt(acadYear, 10) + 1;
+    const apiUrl = `https://api.nusmods.com/v2/${acadYear}-${nextYear}/modules/${moduleCode}.json`;
+
+    fetch(apiUrl)
+      .then(response => {
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+        return response.json();
+      })
+      .then(data => {
+        const semesterSpecificInfo = data.semesterData.find((semester: any) => semester.semester === semesterArg);
+        if (semesterSpecificInfo) {
+          const slot: ClassTimeSlotType = {
+            classNo: semesterSpecificInfo.classNo,
+            startTime: semesterSpecificInfo.startTime,
+            endTime: semesterSpecificInfo.endTime,
+            weeks: semesterSpecificInfo.weeks,
+            venue: semesterSpecificInfo.venue,
+            day: semesterSpecificInfo.day,
+            lessonType: semesterSpecificInfo.lessonType,
+            title: 'lesson'
+          };
+          setTimeInfo(slot);
+        } else {
+          throw new Error('Semester information not found');
+        }
+      })
+      .catch(err => {
+        console.error('Error fetching data:', err);
+        setError(err.message);
+        setTimeInfo(null);
+      });
+  }, [acadYear, moduleCode, semesterArg]); // Dependencies for useEffect
+
+  return [courseTimeInfo, error];
+}
 
 
 const DynamicTimeTable = () => {
+  const location = useLocation();
+  const { courseList, semester} = location.state || {courseList: [], semster: 0}
+  const currentYear = new Date().getFullYear();
+  const toArrange:ClassTimeSlotType[] = courseList.map(
+    course => fetchTimeSlotInfo(JSON.stringify(currentYear), course, semester));
+
+
   const [numOfDays, setNumOfDays] = useState<number>(() => {
-    const savedDays = localStorage.getItem('numOfDays');
+  const savedDays = localStorage.getItem('numOfDays');
     return savedDays ? parseInt(savedDays) : 5;
   });
-
-
-  const generateTimeSlots = () => {
-    const slots = [];
-    for (let time = START_TIME; time < END_TIME; time += INTERVAL) {
-      const hours = Math.floor(time / 60);
-      const minutes = time % 60;
-      const timeString = `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}`;
-      slots.push({ startTime: timeString, endTime: `${(hours).toString().padStart(2, '0')}
-      :${(minutes + INTERVAL).toString().padStart(2, '0')}`, title: 'Free Slot' });
-    }
-    return slots;
-  };
-  
-  const [timetable, setTimeTable] = useState<Array<Array<GenericTimeSlot>>>(() => {
-    const savedTable = localStorage.getItem('timetable');
-    return savedTable ? JSON.parse(savedTable) : Array.from({ length: numOfDays }, () => generateTimeSlots());
-  });
-  
 
   const handleSettingDays = (event: ChangeEvent<HTMLSelectElement>) => {
     const rows = parseInt(event.target.value);
     setNumOfDays(rows);
     localStorage.setItem('numOfDays', rows.toString());
   };
-  useEffect(() => {
-    const newTable = Array.from({ length: numOfDays }, (_, idx) => timetable[idx] || generateTimeSlots());
-    setTimeTable(newTable);
-    localStorage.setItem('timetable', JSON.stringify(newTable));
-  }, [numOfDays]);
-  
   return (
-    <>
+    <div>
       <select className="dropdown-select-days" value={numOfDays} onChange={handleSettingDays}>
         {[4, 5, 6, 7].map(num => (<option key={num} value={num}>{num + ' Days'}</option>))}
       </select>
-      <div className="time-table">
-        {timetable.map((daySlots, idx) => (
-          <div key={idx} className="hrows">
-            <h3>{dayNames[idx]}</h3>
-            {daySlots.map((slot, index) => (
-              <div key={index} className="time-slot">
-                {slot.title} from {slot.startTime} to {slot.endTime}
-              </div>
-            ))}
-          </div>
+      <h1>Timetable</h1>
+      <h2>Semester: {semester}</h2>
+      <ul>
+        {courseList.map((course, index) => (
+          <li key={index}>{course}</li>
         ))}
-      </div>
-    </>
+      </ul>
+    </div>
   );
   
 };

@@ -47,7 +47,7 @@ const About = () => {
             <div className="background hidden" style={{ backgroundImage: `url(${image4})` }}></div>
             <div className="background hidden" style={{ backgroundImage: `url(${image5})` }}></div> */}
             <div className="about-title-container">
-            <h1 >About Us</h1>
+              <h1 >About Us</h1>
             </div>
             <div className="about-content">
               <div className="about-centered-paragraph">

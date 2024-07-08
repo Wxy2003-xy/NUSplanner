@@ -1,4 +1,5 @@
 import React, { useState, useEffect, ChangeEvent } from 'react';
+import { useNavigate } from 'react-router-dom';
 import './DynamicTable.css';
 import PrereqTreeVisual from '../../../pages/studyPlan/components/TreeVisualization';
 import { MinorDetails, CardType, DynamicTableProps, SelectedCard, PrereqTreeNode } from '../../../types/studyplan';
@@ -233,7 +234,12 @@ const DynamicTable: React.FC<DynamicTableProps> = ({ tempCard, setTempCard }) =>
     updateAllPrerequisites();
     }
   };
-
+  const navigate = useNavigate();
+  const handleToTimetable = (columnIndex: number) => {
+    const column = cards[columnIndex].map(card => card.name);
+    const semester = (columnIndex % 2 === 0 ? 1 : 2);
+    navigate("/timetable", { state: { courseList: column, semester: semester } });
+  };
   useEffect(() => {
     const newCards = calculatePrerequisites(cards);
     if (JSON.stringify(newCards) !== JSON.stringify(cards)) {
@@ -687,6 +693,7 @@ const DynamicTable: React.FC<DynamicTableProps> = ({ tempCard, setTempCard }) =>
                 classification={card.classification}/>
             ))}
             <button className="add-button" onClick={() => addCard(columnIndex)}>Add Course</button>
+            <button className="to-timetable-button" onClick={() => handleToTimetable(columnIndex)}></button>
           </DroppableColumn>
         ))}
       </div>
