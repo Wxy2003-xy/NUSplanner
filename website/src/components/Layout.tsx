@@ -1,17 +1,19 @@
 import React, { useEffect, useState } from 'react';
 import { NavLink } from 'react-router-dom';
 import logoImage from '../images/nusplannerLogo.png';
+import './Layout.css';
 
-const Layout = () => {
-    const [currentDate, setCurrentDate] = useState('');
-    useEffect(() => {
-        const options: Intl.DateTimeFormatOptions = { year: 'numeric', month: 'long', day: 'numeric' };
-        const today = new Date();
-        setCurrentDate(today.toLocaleDateString(undefined, options));
-      }, []);
-    return (
-      <>
-        <header>
+const Layout = ({ children }) => {
+  const [currentDate, setCurrentDate] = useState('');
+  useEffect(() => {
+    const options: Intl.DateTimeFormatOptions = { year: 'numeric', month: 'long', day: 'numeric' };
+    const today = new Date();
+    setCurrentDate(today.toLocaleDateString(undefined, options));
+  }, []);
+
+  return (
+    <div className="layout">
+      <header>
         <div className="header-left">
           <NavLink to="/" className="logo-link">
             <div className="logo-container">
@@ -27,10 +29,10 @@ const Layout = () => {
           <span>{currentDate}</span>
         </div>
       </header>
-         <div className="content">
-           <nav>
-             <div className="nav-left" style={{ height: "100vh" }}>
-             <ul>
+      <div className="content">
+        <nav>
+          <div className="nav-left">
+            <ul>
               <li className="home">
                 <NavLink to="/" className={({ isActive }) => isActive ? "active" : ""}>🏠<span>Home</span></NavLink>
               </li>
@@ -56,12 +58,14 @@ const Layout = () => {
                 <NavLink to="/map" className={({ isActive }) => isActive ? "active" : ""}>🗺️<span>Map</span></NavLink>
               </li>
             </ul>
-         </div>
-       </nav>
-     </div>
-    </>
-    );
-}
+          </div>
+        </nav>
+        <div className="page-content">
+          {children}
+        </div>
+      </div>
+    </div>
+  );
+};
 
 export default Layout;
-

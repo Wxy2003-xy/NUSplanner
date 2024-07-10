@@ -1,3 +1,7 @@
 .map-container {
    display: flex;
 }
+
+.reminder-nav-right {
+   padding: 20px;
+}

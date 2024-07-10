@@ -67,6 +67,7 @@ const allPrograms = {
     "Mechanical Engineering"
   ],
   'Business School': [
+    " ",
     "Business Administration"
   ],
   'Others': [
@@ -578,24 +579,33 @@ const DynamicTable: React.FC<DynamicTableProps> = ({ tempCard, setTempCard }) =>
   };
 
   const iterateCardByCourseCodeLeft = (courseCode: string, columnIdx: number): boolean => {
-    const cleanCourseCode = courseCode.split(':')[0].trim();
-    if (cleanCourseCode.search(/\d/) !== -1) {
-      for (let i = 0; i < columnIdx; i++) {
-        if (cards[i].some(card => card.name === cleanCourseCode)) {
-          // console.log('found: ' + cleanCourseCode)
-          return true;  
+    const hasWildcard = courseCode.includes('%');
+    let cleanCourseCode = courseCode.split(':')[0].trim(); // Strip the ":D" suffix if present
+
+    // If there's a wildcard, remove it and any subsequent characters for matching
+    if (hasWildcard) {
+        cleanCourseCode = cleanCourseCode.split('%')[0].trim();
+    }
+
+    console.log('Checking course:', cleanCourseCode);
+
+    // Check for exact matches or prefix matches based on wildcard presence
+    for (let i = 0; i <= columnIdx; i++) {
+        if (hasWildcard) {
+            if (cards[i].some(card => card.name.startsWith(cleanCourseCode))) {
+                console.log('Found match with wildcard:', cleanCourseCode);
+                return true;  
+            }
+        } else {
+            if (cards[i].some(card => card.name === cleanCourseCode)) {
+                console.log('Found exact match:', cleanCourseCode);
+                return true;
+            }
         }
-      }
-    } else {
-      for (let i = 0; i < columnIdx; i++) {
-        if (cards[i].some(card => card.name.includes(cleanCourseCode))) {
-          // console.log('found: ' + cleanCourseCode)
-          return true;  
-        }
-      }
     }
     return false; 
-  };
+};
+
 
   const countCardByCourseCodeLeft = (courseCode: string, columnIdx: number): number => {
     const cleanCourseCode = courseCode.split('%')[0].trim();

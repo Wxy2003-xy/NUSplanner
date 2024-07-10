@@ -6,9 +6,8 @@ import UnderConstruction from '../../components/UnderConstruction';
 const Timetable = () => {
    
 return (
-  <div>
-    <Layout/>
-    <div className='nav-right'>
+    <Layout>
+    <div className='timetable-nav-right'>
       <UnderConstruction/>
         <div >
 
@@ -16,6 +15,6 @@ return (
 
         </div>
     </div>
-  </div>
+    </Layout>
 ); };
 export default Timetable;

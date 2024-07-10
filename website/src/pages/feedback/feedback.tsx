@@ -55,27 +55,23 @@ day: 'numeric' };
       setIsModalOpen(false);
     };
     
-    return (
-      <div>
-        <Layout/>
+    return (  
+      <Layout>        
         <div className="feedback-nav-right">
-          <div>
+            <div className="form-group">
             <h2>Feedback Form</h2>
+
             <form id="feedback-form" onSubmit={handleSubmit}>
-              <div className="form-group">
                 <textarea
                   id="message"
                   name="message"
                   placeholder="Write your feedback here..."
                   value={message}
-                  onChange={(e) => setMessage(e.target.value)}/> </div>
-                <button type="submit">Submit</button>
+                  onChange={(e) => setMessage(e.target.value)}/> 
+              <button type="submit">Submit</button>
             </form>
-            <div id="response-message"></div>
-          </div>
-          <div className="new-line">
-        </div>
-        </div>
+            </div>
+
         {isModalOpen && (
           <div id="myModal" className="modal show" ref={modalRef}>
             <div className="modal-content">
@@ -83,7 +79,8 @@ day: 'numeric' };
               <p id="modal-text">{modalText}</p>
             </div>
           </div> )}
-        
-      </div> );
+        </div>
+
+      </Layout>);
 };
 export default Feedback;

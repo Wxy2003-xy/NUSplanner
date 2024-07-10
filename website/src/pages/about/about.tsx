@@ -38,8 +38,7 @@ const About = () => {
   }, []);
 
   return (
-    <div>
-      <Layout/>
+      <Layout>
           <div className="about-nav-right">
         <UnderConstruction/>
 
@@ -59,7 +58,7 @@ const About = () => {
               </div>
             </div>
           </div>
-    </div>
+      </Layout>
   );
 };
 

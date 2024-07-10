@@ -61,8 +61,9 @@ const Community = () => {
   };
 
   return (
+    <Layout>
+
     <div>
-      <Layout/>
       <div className="community-nav-right">
             <div className="search-box">
               <img src={logoImage} alt="Logo" />
@@ -103,7 +104,9 @@ const Community = () => {
           }}>Submit</button>
         </div>
       </div>
+      
     </div>
+    </Layout>
   );
 };
 

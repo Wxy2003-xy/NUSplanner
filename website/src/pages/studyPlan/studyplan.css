@@ -1,16 +1,18 @@
-.studyplan-container {
-  width: 80%;  /* Adjust width as needed */
-  max-width: 100%;
-  padding-top: 25px;
-  padding-left: 5px;
-  box-sizing: border-box;
-  height: 100%;
-  text-align: left;  /* Aligns text and inline elements to the left */
-  display: flex;  /* Makes the container a flex container */
-  flex-direction: column;  /* Aligns children vertically */
-  align-items: flex-start;
-  overflow: auto;
+.studyplan-nav-right {
+  margin-top: 40px;
+  margin-left: 20px;
+    flex-grow: 1;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    padding: 0px;
+    box-sizing: border-box;
+    color: black; /* Ensure text is readable over the background image */
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.4); /* Add text shadow for readability */
+    height: 100%; /* Ensure it takes full height */
 }
+
+
 
 .dynamic-table-container {
   max-width: 100%;

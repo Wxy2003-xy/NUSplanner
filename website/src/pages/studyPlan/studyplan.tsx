@@ -10,15 +10,14 @@ const StudyPlan: React.FC = () => {
   const [tempCard, setTempCard] = useState<CardType | null>(null);
 
   return (
-    <div>
-      <Layout/>
-          <div className="nav-right">
+    <Layout>
+          <div className="studyplan-nav-right">
             <div className="studyplan-container">
               <DynamicTable tempCard={tempCard} setTempCard={setTempCard} />
               <ModuleForm setTempCard={setTempCard}/>
             </div>
           </div>      
-    </div>
+    </Layout>
   );
 }
 
