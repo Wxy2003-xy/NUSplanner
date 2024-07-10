@@ -62,7 +62,7 @@ const Community = () => {
   return (
     <div>
       <Layout/>
-      <div className="nav-right">
+      <div className="community-nav-right">
             <div className="search-box">
               <img src={logoImage} alt="Logo" />
               <input 
