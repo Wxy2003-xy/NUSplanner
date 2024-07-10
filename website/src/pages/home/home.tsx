@@ -27,7 +27,7 @@ const Home: React.FC = () => {
          <span id="current-date"></span>
        </div>
 
-         <div className="nav-right">
+         <div className="home-nav-right">
            <div>
              <h2>NUSPlanner</h2>
              <p>Your Smart StudyPlan & TimeTable Designer</p>
