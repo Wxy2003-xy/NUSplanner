@@ -58,7 +58,7 @@ day: 'numeric' };
     return (
       <div>
         <Layout/>
-        <div className="nav-right">
+        <div className="feedback-nav-right">
           <div>
             <h2>Feedback Form</h2>
             <form id="feedback-form" onSubmit={handleSubmit}>

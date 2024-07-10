@@ -102,7 +102,7 @@ nav ul li a:hover {
 nav ul li a:hover span {
   text-decoration: underline;
 }
-.nav-right {
+.home-nav-right {
   flex-grow: 1;
   position: relative;
   display: flex;
@@ -113,7 +113,7 @@ nav ul li a:hover span {
   text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.4); /* Add text shadow for readability */
   height: 100%; /* Ensure it takes full height */
 }
-.nav-right .background {
+.home-nav-right .background {
   position: absolute;
   top: 0;
   left: 0;
@@ -124,10 +124,10 @@ nav ul li a:hover span {
   background-position: center;
   transition: opacity 1s ease-in-out;
 }
-.nav-right .background.hidden {
+.home-nav-right .background.hidden {
   opacity: 0;
 }
-.nav-right .content {
+.home-nav-right .content {
   position: relative;
   z-index: 1;
   display: flex;

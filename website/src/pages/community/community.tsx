@@ -63,8 +63,7 @@ const Community = () => {
   return (
     <div>
       <Layout/>
-      <div className="nav-right">
-        <UnderConstruction/>
+      <div className="community-nav-right">
             <div className="search-box">
               <img src={logoImage} alt="Logo" />
               <input 
@@ -85,7 +84,7 @@ const Community = () => {
                 </div>
               ))}
             </div>
-          </div>
+      </div>
 
       <div id="postModal" className="modal">
         <div className="modal-content">

@@ -120,7 +120,7 @@ nav ul li a:hover span {
 }
 
 
-.nav-right {
+.feedback-nav-right {
   flex-grow: 1;
   background-color: #FFFFFF;
   display: flex;
@@ -132,11 +132,11 @@ nav ul li a:hover span {
   box-sizing: border-box;
 }
 
-.nav-right > div {
+.feedback-nav-right > div {
   width: 100%;
 }
 
-.nav-right h2 {
+.feedback-nav-right h2 {
   text-align: left;
   margin-top: 0;
   color: #2C3E50;
