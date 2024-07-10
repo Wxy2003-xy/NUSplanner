@@ -127,6 +127,19 @@ const DynamicTable: React.FC<DynamicTableProps> = ({ tempCard, setTempCard }) =>
   });
   // notification, default nothing
   const [notification, setNotification] = useState<string | null>(null);
+  useEffect(() => { 
+    let timer;
+    if (notification) {
+      // Set a timer to clear the notification after 2 seconds
+      timer = setTimeout(() => {
+        setNotification(null);
+      }, 2000); // 2000 milliseconds = 2 seconds
+    }
+  
+    // Cleanup function to clear the timer if the component unmounts or the effect reruns
+    return () => clearTimeout(timer);
+  }, [notification]); // Dependency array ensures effect runs only when `notification` changes
+  
   // selected card, temproraily hold selected card object; type SelectedCard from website/src/types/studyplan.ts
   const [selectedCard, setSelectedCard] = useState<SelectedCard | null>(null);
   // grade to be set of the selected card, default empty
@@ -237,9 +250,11 @@ const DynamicTable: React.FC<DynamicTableProps> = ({ tempCard, setTempCard }) =>
   const navigate = useNavigate();
   const handleToTimetable = (columnIndex: number) => {
     const column = cards[columnIndex].map(card => card.name);
-    const semester = (columnIndex % 2 === 0 ? 1 : 2);
+    const semester = (columnIndex % 2 === 1 ? 1 : 2);
     navigate("/timetable", { state: { courseList: column, semester: semester } });
   };
+
+  
   useEffect(() => {
     const newCards = calculatePrerequisites(cards);
     if (JSON.stringify(newCards) !== JSON.stringify(cards)) {
@@ -288,7 +303,21 @@ const DynamicTable: React.FC<DynamicTableProps> = ({ tempCard, setTempCard }) =>
   const addCard = (columnIndex: number) => {
     if (tempCard) {
       let prereqNotSatisfied = false;
-  
+      const sem = columnIndex % 2 === 1 ? 1 : 2;
+      if (!tempCard.semester.includes(sem)) {
+        setNotification(`${tempCard.name} is not offered in current semester`);
+        setTempCard(null);
+        return;
+      }
+      // Assuming tempCard.preclusion is an array of course codes that preclude the tempCard
+      if (tempCard.preclusionRule && checkPreclusion(tempCard.preclusionRule, columnIndex)) {
+        const existingCourse = findPreclusion(tempCard.preclusionRule, columnIndex);
+        setNotification(`Course: ${tempCard.name} is precluded by ${existingCourse} in your plan.`);
+
+        setTempCard(null);
+        return; // Stop adding the course if it's precluded
+      }
+
       if (tempCard.prereqTree) {
         try {
           const prereqTree:PrereqTreeNode | string = tempCard.prereqTree;
@@ -435,11 +464,41 @@ const DynamicTable: React.FC<DynamicTableProps> = ({ tempCard, setTempCard }) =>
   useEffect(() => {
     localStorage.setItem('cards', JSON.stringify(cards));
   }, [cards]);
-
-  // Iterate over all cards (for debugging purposes)
   
+  /**
+  * Checks if a given course is precluded by any courses already in the timetable up to a specified semester index.
+  * @param {string[]} preclusionList - List of course codes that preclude the current course.
+  * @param {number} columnIdx - The current column index which represents the semester.
+  * @returns {boolean} - True if the course is precluded, false otherwise.
+  */
+  const checkPreclusion = (preclusionList:string[], columnIdx:number):boolean => {
+    // Flatten all courses up to the current semester into a single array of course names
+    console.log('check preclusion')
+    console.log(preclusionList)
+    const takenCourses = cards.slice(0, columnIdx + 1).flat().map(card => card.name);
+    console.log(takenCourses);
+    // Check if any course in the taken courses list is in the preclusion list
+    console.log(takenCourses.some(course => preclusionList.includes(course)))
+    return takenCourses.some(course => preclusionList.includes(course));
+  };
 
-  // Check if prerequisites are satisfied
+  /**
+  * Checks if a given course is precluded by any courses already in the timetable up to a specified semester index.
+  * @param {string[]} preclusionList - List of course codes that preclude the current course.
+  * @param {number} columnIdx - The current column index which represents the semester.
+  * @returns {boolean} - True if the course is precluded, false otherwise.
+  */
+   const findPreclusion = (preclusionList:string[], columnIdx:number):string | undefined => {
+    const takenCourses = cards.slice(0, columnIdx + 1).flat().map(card => card.name);
+    return takenCourses.find(course => preclusionList.includes(course));
+  };
+
+  /**
+  * Check if courses prior the semester new course being added to satisfy all prerequisites of the new course 
+  * @param {PrereqTreeNode | string | undefined} prereqTree - prereqTree tree, allows recursive check
+  * @param {number} columnIdx - the column new card to be added, right bound of prerequisite check
+  * @returns {boolean} - if all prerequisites are satisfied 
+  */
   const checkPrerequisites = (prereqTree: PrereqTreeNode | string | undefined, 
                               columnIdx: number): boolean => {
     if (typeof prereqTree === 'string') {
@@ -447,11 +506,7 @@ const DynamicTable: React.FC<DynamicTableProps> = ({ tempCard, setTempCard }) =>
         // Attempt to parse the string as JSON to handle complex prereq structures
         const parsedTree = JSON.parse(prereqTree);
         return checkPrerequisites(parsedTree, columnIdx);
-      } catch {   // If parsing fails, assume it's a single course code string
-        // if contains no numerics: check inclusion of prefix
-        // if (prereqTree.search(/\d/) !== -1) {
-        //   return
-        // }
+      } catch { 
         return iterateCardByCourseCodeLeft(prereqTree, columnIdx);
       }
     }
@@ -485,6 +540,9 @@ const DynamicTable: React.FC<DynamicTableProps> = ({ tempCard, setTempCard }) =>
     return false;
   };
 
+  /**
+  * Update all cards statue of prerequisite completion
+  */
   const updateAllPrerequisites = () => {
     cards.forEach((column, columnIndex) => {
       column.forEach(card => {
@@ -493,13 +551,21 @@ const DynamicTable: React.FC<DynamicTableProps> = ({ tempCard, setTempCard }) =>
     });
   };
   
-  // Called after a card is removed or added to update its display based on prerequisites
+  /**
+  * Update prerequisite statue if a single card
+  * @param {CardType} card - the card to update
+  * @param {number} columnIndex - the column the card to update, right bound of prerequisite check
+  */
   const updateCardPrerequisites = (card:CardType, columnIndex:number) => {
     const isSatisfied = checkPrerequisites(card.prereqTree, columnIndex);
     card.prereqNotSatisfied = !isSatisfied;
     card.color = isSatisfied ? '#88f7c5' : '#ff9999';
 };
-  // Get a card by its ID
+  /**
+  * Find a card by ID
+  * @param {number} id - card ID
+  * @returns {CardType} - Card if found
+  */
   const getCardById = (id: number): CardType | undefined => {
     for (let column of cards) {
       for (let card of column) {
@@ -513,20 +579,17 @@ const DynamicTable: React.FC<DynamicTableProps> = ({ tempCard, setTempCard }) =>
 
   const iterateCardByCourseCodeLeft = (courseCode: string, columnIdx: number): boolean => {
     const cleanCourseCode = courseCode.split(':')[0].trim();
-    console.log(cleanCourseCode);
     if (cleanCourseCode.search(/\d/) !== -1) {
-      console.log('specific code')
       for (let i = 0; i < columnIdx; i++) {
         if (cards[i].some(card => card.name === cleanCourseCode)) {
-          console.log('found: ' + cleanCourseCode)
+          // console.log('found: ' + cleanCourseCode)
           return true;  
         }
       }
     } else {
-      console.log('prefix only')
       for (let i = 0; i < columnIdx; i++) {
         if (cards[i].some(card => card.name.includes(cleanCourseCode))) {
-          console.log('found: ' + cleanCourseCode)
+          // console.log('found: ' + cleanCourseCode)
           return true;  
         }
       }
@@ -535,17 +598,16 @@ const DynamicTable: React.FC<DynamicTableProps> = ({ tempCard, setTempCard }) =>
   };
 
   const countCardByCourseCodeLeft = (courseCode: string, columnIdx: number): number => {
-    console.log('prefix only')
     const cleanCourseCode = courseCode.split('%')[0].trim();
-    console.log(cleanCourseCode)
+    // console.log(cleanCourseCode)
     let count:number = 0;
     for (let i = 0; i < columnIdx; i++) {
       if (cards[i].some(card => card.name.includes(cleanCourseCode))) {
-        console.log('found: ' + cleanCourseCode)
+        // console.log('found: ' + cleanCourseCode)
         count++; 
       }
     }
-    console.log(count);
+    // console.log(count);
     return count;
   }
 
@@ -693,7 +755,7 @@ const DynamicTable: React.FC<DynamicTableProps> = ({ tempCard, setTempCard }) =>
                 classification={card.classification}/>
             ))}
             <button className="add-button" onClick={() => addCard(columnIndex)}>Add Course</button>
-            <button className="to-timetable-button" onClick={() => handleToTimetable(columnIndex)}></button>
+            <button className="to-timetable-button" onClick={() => handleToTimetable(columnIndex)}>View Timetable for Current Academic Year</button>
           </DroppableColumn>
         ))}
       </div>

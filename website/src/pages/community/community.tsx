@@ -3,6 +3,7 @@ import './community.css';
 import logoImage from '../../images/nusplannerLogo.png';
 import pencilIcon from '../../images/pencilicon.jpeg';
 import Layout from '../../components/Layout'
+import UnderConstruction from '../../components/UnderConstruction';
 
 interface Post {
   title: string;
@@ -63,6 +64,7 @@ const Community = () => {
     <div>
       <Layout/>
       <div className="nav-right">
+        <UnderConstruction/>
             <div className="search-box">
               <img src={logoImage} alt="Logo" />
               <input 

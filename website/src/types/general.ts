@@ -1,0 +1,23 @@
+import { PrereqTreeNode } from "./studyplan";
+export interface ModuleInfo {
+    courseCode: string;
+    courseName: string;
+    courseSemester: number[];
+    courseCredit: number;
+    preclusions: string;
+    preclusionRule: string[];
+    prerequisites: string;
+    prerequisiteRule: string;
+    prereqTree?: PrereqTreeNode; // Optional detailed prerequisite tree visualization
+}
+
+export interface ModuleFormProps {
+    setTempCard: (card: { 
+        id: number; 
+        name: string; 
+        semester: number[];
+        content: string; 
+        courseCredit: number; 
+        preclusionRule: string[];
+        prereqTree?: PrereqTreeNode}) => void;
+}

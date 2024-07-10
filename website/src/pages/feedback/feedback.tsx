@@ -74,7 +74,6 @@ day: 'numeric' };
             <div id="response-message"></div>
           </div>
           <div className="new-line">
-          <h1>sjhw</h1>
         </div>
         </div>
         {isModalOpen && (
