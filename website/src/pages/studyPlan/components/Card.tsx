@@ -4,7 +4,7 @@ import classnames from 'classnames';
 import { PrereqTreeNode, CardProps } from '../../../types/studyplan';
 
 const Card: React.FC<CardProps> = ({
-  id, name, courseCredit, content, onClick, isSelected = false, grade, prereqTree, 
+  id, name, semester, courseCredit, content, onClick, isSelected = false, grade, prereqTree, 
   prereqNotSatisfied, color, classification
 }) => {
   const backgroundColor = 
@@ -25,6 +25,8 @@ const Card: React.FC<CardProps> = ({
     <div className={cardClass} onClick={onClick} style={{ backgroundColor }}>
       <div className="card-title">{name}</div>
       <div className="card-text">{content}</div>
+      <div className="card-text">{JSON.stringify(semester)}</div>
+
       <div className="card-mc-grade">
         {courseCredit + 'MC ' || ''} {grade?'Grade: ' + grade : ' '}
       </div>

@@ -6,7 +6,7 @@ import image3 from '../../images/nusSoc.jpg';
 import image4 from '../../images/nusCde.jpeg';
 import image5 from '../../images/nusFass.jpeg';
 import Layout from '../../components/Layout';
-
+import UnderConstruction from '../../components/UnderConstruction';
 const About = () => {
   const [currentDate, setCurrentDate] = useState('');
 
@@ -41,13 +41,15 @@ const About = () => {
     <div>
       <Layout/>
           <div className="about-nav-right">
+        <UnderConstruction/>
+
             {/* <div className="background" style={{ backgroundImage: `url(${image1})` }}></div>
             <div className="background hidden" style={{ backgroundImage: `url(${image2})` }}></div>
             <div className="background hidden" style={{ backgroundImage: `url(${image3})` }}></div>
             <div className="background hidden" style={{ backgroundImage: `url(${image4})` }}></div>
             <div className="background hidden" style={{ backgroundImage: `url(${image5})` }}></div> */}
             <div className="about-title-container">
-            <h1 >About Us</h1>
+              <h1 >About Us</h1>
             </div>
             <div className="about-content">
               <div className="about-centered-paragraph">

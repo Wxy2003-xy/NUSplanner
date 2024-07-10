@@ -35,9 +35,9 @@ export type WeekRange = {
 
 export interface GenericTimeSlot {
     title: string;
-    startTime: StartTime;
-    endTime: EndTime;
-    day: Day;
+    startTime?: StartTime;
+    endTime?: EndTime;
+    day?: Day;
     color?: string;
 }
 
@@ -50,13 +50,13 @@ export interface CustomizableTimeSlot extends GenericTimeSlot {
 }
 
 export interface ClassTimeSlotType extends GenericTimeSlot {
-    classNo: ClassNo;
+    classNo?: ClassNo;
     // startTime: StartTime;
     // endTime: EndTime;
-    weeks: Weeks;
-    venue: Venue;
+    weeks?: Weeks;
+    venue?: Venue;
     // day: Day;
-    lessonType: LessonType 
+    lessonType?: LessonType 
 }
 
 export type CourseSlotGroupType = {

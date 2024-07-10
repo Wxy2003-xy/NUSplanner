@@ -3,6 +3,7 @@ import './community.css';
 import logoImage from '../../images/nusplannerLogo.png';
 import pencilIcon from '../../images/pencilicon.jpeg';
 import Layout from '../../components/Layout'
+import UnderConstruction from '../../components/UnderConstruction';
 
 interface Post {
   title: string;
@@ -83,7 +84,7 @@ const Community = () => {
                 </div>
               ))}
             </div>
-          </div>
+      </div>
 
       <div id="postModal" className="modal">
         <div className="modal-content">

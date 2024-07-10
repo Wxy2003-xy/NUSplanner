@@ -2,6 +2,7 @@ import React, { useEffect, useRef } from 'react';
 import { MapContainer, TileLayer, useMap, ZoomControl } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
 import Layout from '../../components/Layout';
+import UnderConstruction from '../../components/UnderConstruction';
 
 const MapComponent = () => {
   const map = useMap();
@@ -17,6 +18,8 @@ const Map = () => {
   return (
     <div>
       <Layout />
+      <div className='nav-right'>
+        <UnderConstruction/>
       <div className="map-container"style={{ height: '100%' }}>
         <MapContainer style={{ height: '100%' }} center={[1.29495055860437, 103.77447075499941]} zoom={16} style={{ height: '625px', width: '100%' }} zoomControl={false}>
           <TileLayer
@@ -26,6 +29,7 @@ const Map = () => {
           <ZoomControl position="topright" />
           <MapComponent />
         </MapContainer>
+        </div>
       </div>
     </div>
   );

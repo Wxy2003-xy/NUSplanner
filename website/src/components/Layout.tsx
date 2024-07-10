@@ -50,10 +50,10 @@ const Layout = () => {
                 <NavLink to="/about" className={({ isActive }) => isActive ? "active" : ""}>ℹ️<span>About us</span></NavLink>
               </li>
               <li className="reminder">
-                <NavLink to="/reminder" className={({ isActive }) => isActive ? "active" : ""}>ℹ️<span>Reminder</span></NavLink>
+                <NavLink to="/reminder" className={({ isActive }) => isActive ? "active" : ""}>🗓️<span>Reminder</span></NavLink>
               </li>
               <li className="map">
-                <NavLink to="/map" className={({ isActive }) => isActive ? "active" : ""}>ℹ️<span>Map</span></NavLink>
+                <NavLink to="/map" className={({ isActive }) => isActive ? "active" : ""}>🗺️<span>Map</span></NavLink>
               </li>
             </ul>
          </div>
