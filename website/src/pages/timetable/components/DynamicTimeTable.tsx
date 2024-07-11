@@ -17,7 +17,7 @@ const START_TIME = 8 * 60;  // 8:00 AM in minutes
 const END_TIME = 18 * 60;   // 6:00 PM in minutes
 const INTERVAL = 10; 
 
-export function fetchTimeSlotInfo(acadYear: string, moduleCode: string, semesterArg: number): [ClassTimeSlotType | null, string] {
+function fetchTimeSlotInfo(acadYear: string, moduleCode: string, semesterArg: number): [ClassTimeSlotType | null, string] {
   const [courseTimeInfo, setTimeInfo] = useState<ClassTimeSlotType | null>(null);
   const [error, setError] = useState<string>('');
   if (semesterArg === 0) {
@@ -45,11 +45,23 @@ export function fetchTimeSlotInfo(acadYear: string, moduleCode: string, semester
             venue: semesterSpecificInfo.venue,
             day: semesterSpecificInfo.day,
             lessonType: semesterSpecificInfo.lessonType,
-            title: 'lesson'
+            title: moduleCode
           };
           setTimeInfo(slot);
         } else {
-          throw new Error('Semester information not found');
+          const slot: ClassTimeSlotType = {
+            classNo: undefined,
+            startTime: undefined,
+            endTime: undefined,
+            weeks: undefined,
+            venue: undefined,
+            day: undefined,
+            lessonType: undefined,
+            title: moduleCode
+          };
+          // setTimeInfo(slot);
+          console.log(moduleCode + 'has no time slot info')
+          throw new Error('Semester information  not found');
         }
       })
       .catch(err => {
@@ -58,7 +70,8 @@ export function fetchTimeSlotInfo(acadYear: string, moduleCode: string, semester
         setTimeInfo(null);
       });
   }, [acadYear, moduleCode, semesterArg]); // Dependencies for useEffect
-
+  console.log(courseTimeInfo);
+  
   return [courseTimeInfo, error];
 }
 
@@ -76,6 +89,19 @@ const DynamicTimeTable = () => {
     return savedDays ? parseInt(savedDays) : 5;
   });
 
+  useEffect(() => {
+    const existingCourses = localStorage.getItem('courseList');
+    console.log();
+    
+    if (!existingCourses || existingCourses === "[]") {
+      console.log("Setting new course list in local storage.");
+      localStorage.setItem('courseList', JSON.stringify(courseList));
+    } else if (JSON.stringify(courseList) !== existingCourses) {
+      console.log("Clearing old course list and setting new one.");
+      localStorage.removeItem('courseList'); // Clear existing
+      localStorage.setItem('courseList', JSON.stringify(courseList)); // Set new
+    }
+  }, [courseList]);
   const handleSettingDays = (event: ChangeEvent<HTMLSelectElement>) => {
     const rows = parseInt(event.target.value);
     setNumOfDays(rows);

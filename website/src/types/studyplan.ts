@@ -9,9 +9,11 @@ export interface MinorDetails {
 export interface CardType {
   id: number;
   name: string;
+  semester: number[];
   content: string;
   courseCredit: number;
   grade?: string | null;
+  preclusionRule?: string[];
   prereqTree?: PrereqTreeNode | string;  
   prereqNotSatisfied?: boolean;
   color?: string;
@@ -22,11 +24,13 @@ export interface CardType {
 export type CardProps = {
     id: number;
     name: string;
+    semester: number[];
     courseCredit: number;
     content: string;
     onClick: () => void;
     isSelected?: boolean | null;
     grade?: string | null;
+    preclusionRule?: string[];
     prereqTree?: PrereqTreeNode | string;
     prereqNotSatisfied?: boolean;
     examInfo?: ExamInfo[];

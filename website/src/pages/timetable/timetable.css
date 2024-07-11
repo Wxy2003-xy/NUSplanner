@@ -1,125 +1,15 @@
-html, body {
-  height: 100%;
-  margin: 0;
-  padding: 0;
-  display: flex;
-  flex-direction: row;
- } body {
-  font-family: Arial, sans-serif;
- }
- header {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  background-color: #2C3E50;
-  color: white;
-  padding: 10px 20px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  z-index: 1000; /* Ensures header is on top */
- }
- .header-left {
-  display: flex;
-  align-items: center;
- }
- .logo-link {
-  text-decoration: none;
-  color: inherit;
- }
- .logo-container {
-  display: flex;
-  align-items: center;
-  margin-right: 20px;
- }
- .logo-container img {
-  height: 60px;
-  margin-right: 10px;
- }
- .logo-container span {
-  font-size: 28px;
 
-  font-weight: bold;
- color: white;
- text-decoration: none;
+.timetable-nav-right {
+    flex-grow: 1;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    padding: 20px;
+    box-sizing: border-box;
+    color: black; /* Ensure text is readable over the background image */
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.4); /* Add text shadow for readability */
+    height: 100%; /* Ensure it takes full height */
 }
-.title-container p {
-margin: 0;
- font-size: 24px;
-}
-.date-container {
- font-size: 16px;
- color: white;
-} .content {
- display: flex;
- flex-grow: 1;
- height: 100%;
- margin-top: 80px; /* Adjusted to account for fixed header */
-}
-nav {
- display: flex;
- height: 100%;
- width: 100%;
-} .nav-left {
- background-color: #f0f0f0;
- padding: 10px;
- width: 150px;
- height: calc(100% - 80px); /* Adjusted to account for fixed header */
- box-sizing: border-box;
- position: fixed;
- top: 80px; /* Adjusted to account for fixed header */
- left: 0;
- z-index: 999; /* Ensures sidebar is above main content */
-}
-.nav-left ul {
- list-style: none;
- padding: 0;
- margin: 0;
-}
-.nav-left ul li {
- margin: 10px 0;
-}
-.nav-left ul li a {
- color: gray;
- text-decoration: none;
-padding: 10px;
- display: flex;
- align-items: center;
-}
-.nav-left ul li a span {
- margin-left: 8px;
-}
-.nav-left ul li a:hover {
- color: red;
-}
-.nav-left ul li a:hover span {
- text-decoration: underline;
-}
-.nav-right {
- margin-left: 150px; /* Adjusted to account for fixed sidebar */
- color: black;
-}
-.nav-right h2 {
+.timetable-nav-right h2 {
  margin-bottom: 20px;
-}
-
-nav ul li a {
- color: gray;
- text-decoration: none;
- padding: 10px;
- display: flex;
- align-items: center;
-}
-nav ul li a.active {
- color: red;
-}
-nav ul li a span {
- margin-left: 8px;
-}
-nav ul li a:hover {
- color: red;
-}
-nav ul li a:hover span {
- text-decoration: underline;
 }

@@ -3,6 +3,7 @@ import './community.css';
 import logoImage from '../../images/nusplannerLogo.png';
 import pencilIcon from '../../images/pencilicon.jpeg';
 import Layout from '../../components/Layout'
+import UnderConstruction from '../../components/UnderConstruction';
 
 interface Post {
   title: string;
@@ -61,14 +62,9 @@ const Community = () => {
   };
 
   return (
-<<<<<<< Updated upstream
-=======
     <Layout notice={notice ? <div className="notice-message">{notice}</div> : null}>
-
->>>>>>> Stashed changes
     <div>
-      <Layout/>
-      <div className="nav-right">
+      <div className="community-nav-right">
             <div className="search-box">
               <img src={logoImage} alt="Logo" />
               <input 
@@ -89,7 +85,7 @@ const Community = () => {
                 </div>
               ))}
             </div>
-          </div>
+      </div>
 
       <div id="postModal" className="modal">
         <div className="modal-content">
@@ -108,7 +104,9 @@ const Community = () => {
           }}>Submit</button>
         </div>
       </div>
+      
     </div>
+    </Layout>
   );
 };
 

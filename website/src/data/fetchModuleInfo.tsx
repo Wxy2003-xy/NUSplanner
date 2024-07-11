@@ -1,34 +1,7 @@
 import React, { useState, FormEvent, useEffect } from 'react';
 import PrereqTreeVisual from '../pages/studyPlan/components/TreeVisualization';
-<<<<<<< Updated upstream
 
-interface PrereqTreeNode {
-    and?: (PrereqTreeNode | string)[];
-    or?: (PrereqTreeNode | string)[];
-  }
-
-interface ModuleInfo {
-    courseCode: string;
-    courseName: string;
-    courseCredit: number;
-    preclusions: string;
-    preclusionRule: string;
-    prerequisites: string;
-    prerequisiteRule: string;
-    prereqTree?: PrereqTreeNode; // Optional detailed prerequisite tree visualization
-}
-
-interface ModuleFormProps {
-    setTempCard: (card: { 
-        id: number; 
-        name: string; 
-        content: string; 
-        courseCredit: number; 
-        prereqTree?: PrereqTreeNode}) => void;
-}
-=======
 import { ModuleInfo, ModuleFormProps, ExamInfo } from '../types/general';
->>>>>>> Stashed changes
 
 const ModuleForm: React.FC<ModuleFormProps> = ({ setTempCard }) => {
     const [acadYear, setAcadYear] = useState<string>(() => {
@@ -46,6 +19,26 @@ const ModuleForm: React.FC<ModuleFormProps> = ({ setTempCard }) => {
     useEffect(() => {
         localStorage.setItem('acadYear', acadYear);
     }, [acadYear]);
+    /**
+    * parse preclusion rule to structured form for eazy access in preclusion check when add card
+    * @param {string} rule - original data form
+    * @returns {string[]} return array of strings of course codes
+    */
+    function extractCourseCodes(rule: string): string[] {
+        // Define the pattern with a capturing group for the course code part before any ':'
+        const coursePattern: RegExp = /\b([A-Z]{2,}[0-9]{4}[A-Z]{0,2}):[A-Z]\b/g;
+        let matches: string[] = [];
+        let match: RegExpExecArray | null;
+    
+        // Loop to extract all matches
+        while ((match = coursePattern.exec(rule)) !== null) {
+            if (match[1]) { // Ensure the capturing group is not undefined
+                matches.push(match[1]); // Push the first capture group, the course code
+            }
+        }
+    
+        return matches; // Return the array of course codes
+    }
 
     const fetchModuleInfo = (acadYear: string, moduleCode: string): void => {
         if (!validateAcadYear(acadYear)) {
@@ -55,10 +48,10 @@ const ModuleForm: React.FC<ModuleFormProps> = ({ setTempCard }) => {
         }
 
         const nextYear = parseInt(acadYear, 10) + 1;
-        const apiUrl = `https://api.nusmods.com/v2/${acadYear}-${nextYear}/modules/${moduleCode}.json`;
+        const apiUrl_moduleinfo = `https://api.nusmods.com/v2/${acadYear}-${nextYear}/modules/${moduleCode}.json`;
         setIsLoading(true);
 
-        fetch(apiUrl)
+        fetch(apiUrl_moduleinfo)
             .then(response => {
                 if (!response.ok) {
                     throw new Error('Network response was not ok');
@@ -70,9 +63,10 @@ const ModuleForm: React.FC<ModuleFormProps> = ({ setTempCard }) => {
                 setModuleInfo({
                     courseCode: data.moduleCode,
                     courseName: data.title,
+                    courseSemester: data.semesterData.map(data => data.semester),
                     courseCredit: data.moduleCredit,
                     preclusions: data.preclusion,
-                    preclusionRule: data.preclusionRule,
+                    preclusionRule: extractCourseCodes(data.preclusionRule),
                     prerequisites: data.prerequisite,
                     prerequisiteRule: data.prerequisiteRule,
                     prereqTree: data.prereqTree,
@@ -86,11 +80,11 @@ const ModuleForm: React.FC<ModuleFormProps> = ({ setTempCard }) => {
                 const card = {
                     id: Date.now(),
                     name: data.moduleCode,
+                    semester: data.semesterData.map(data => data.semester),
                     content: data.title,
                     courseCredit: data.moduleCredit,
-<<<<<<< Updated upstream
+                    preclusionRule: extractCourseCodes(data.preclusionRule),
                     prereqTree: data.prereqTree 
-=======
                     preclusionRule: extractCourseCodes(data.preclusionRule),
                     prereqTree: data.prereqTree, 
                     examInfo: data.semesterData.map(data => {
@@ -99,7 +93,6 @@ const ModuleForm: React.FC<ModuleFormProps> = ({ setTempCard }) => {
                             examDuration: data.examDuration
                         }
                     })
->>>>>>> Stashed changes
                 };
                 console.log("Setting tempCard:", card);
                 setTempCard(card);
@@ -131,9 +124,6 @@ const ModuleForm: React.FC<ModuleFormProps> = ({ setTempCard }) => {
         borderRadius: '10px',
         boxShadow: '0 10px 20px rgba(0,0,0,0.1)',
     };
-
-    console.log('log: ' + typeof(moduleInfo?.prereqTree));
-
     return (
         <div style={infoBlockStyle}>
             <h1>Fetch Module Information</h1>

@@ -57,35 +57,24 @@ const Feedback = () => {
       setIsModalOpen(false);
     };
     
-<<<<<<< Updated upstream
-    return (
-      <div>
-        <Layout/>
-        <div className="nav-right">
-          <div>
-=======
     return (  
       <Layout notice={notice ? <div className="notice-message">{notice}</div> : null}>      
         <div className="feedback-nav-right">
             <div className="form-group">
->>>>>>> Stashed changes
+
             <h2>Feedback Form</h2>
+
             <form id="feedback-form" onSubmit={handleSubmit}>
-              <div className="form-group">
                 <textarea
                   id="message"
                   name="message"
                   placeholder="Write your feedback here..."
                   value={message}
-                  onChange={(e) => setMessage(e.target.value)}/> </div>
-                <button type="submit">Submit</button>
+                  onChange={(e) => setMessage(e.target.value)}/> 
+              <button type="submit">Submit</button>
             </form>
-            <div id="response-message"></div>
-          </div>
-          <div className="new-line">
-          <h1>sjhw</h1>
-        </div>
-        </div>
+            </div>
+
         {isModalOpen && (
           <div id="myModal" className="modal show" ref={modalRef}>
             <div className="modal-content">
@@ -93,7 +82,8 @@ const Feedback = () => {
               <p id="modal-text">{modalText}</p>
             </div>
           </div> )}
-        
-      </div> );
+        </div>
+
+      </Layout>);
 };
 export default Feedback;
