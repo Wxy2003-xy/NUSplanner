@@ -26,6 +26,9 @@ const Map = () => {
                             center={[1.29495055860437, 103.77447075499941]} 
                             zoom={16} style={{ height: '625px', width: '100%' }} 
                             zoomControl={false}>
+       </MapContainer>
+       </div>
+       </div>
 
       </Layout>
   );
