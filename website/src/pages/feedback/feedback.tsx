@@ -2,28 +2,30 @@ import React, { useState, useEffect, useRef } from 'react';
 import emailjs from 'emailjs-com';
 import './feedback.css';
 import Layout from '../../components/Layout';
+
 const Feedback = () => {
+  const [notice, setNotice] = useState<string | null>('');  
  const [message, setMessage] = useState('');
  const [modalText, setModalText] = useState('');
  const [isModalOpen, setIsModalOpen] = useState(false);
  const [currentDate, setCurrentDate] = useState('');
+
  const modalRef = useRef<HTMLDivElement>(null);
- useEffect(() => {
-   const options: Intl.DateTimeFormatOptions = { year: 'numeric', month: 'long',
-day: 'numeric' };
-   const today = new Date();
-   setCurrentDate(today.toLocaleDateString(undefined, options));
-}, []);
- useEffect(() => {
+  useEffect(() => {
+    const options: Intl.DateTimeFormatOptions = { year: 'numeric', month: 'long', day: 'numeric' };
+    const today = new Date();
+    setCurrentDate(today.toLocaleDateString(undefined, options));
+  }, []);
+  useEffect(() => {
    const handleClickOutside = (event: MouseEvent) => {
      if (modalRef.current && event.target === modalRef.current) {
        setIsModalOpen(false);
-} };
+   }};
    window.addEventListener('click', handleClickOutside);
    return () => {
      window.removeEventListener('click', handleClickOutside);
    };
-}, []);
+  }, []);
  const sendFeedback = (feedbackContent: string) => {
    const serviceID = 'service_j372can';
    const templateID = 'template_apwji5m';
@@ -56,9 +58,10 @@ day: 'numeric' };
     };
     
     return (  
-      <Layout>        
+      <Layout notice={notice ? <div className="notice-message">{notice}</div> : null}>      
         <div className="feedback-nav-right">
             <div className="form-group">
+
             <h2>Feedback Form</h2>
 
             <form id="feedback-form" onSubmit={handleSubmit}>

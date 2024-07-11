@@ -1,4 +1,5 @@
 import { Dispatch, SetStateAction } from 'react';
+import { ExamInfo } from './general';
 
 export interface MinorDetails {
   faculty: string;
@@ -17,6 +18,7 @@ export interface CardType {
   prereqNotSatisfied?: boolean;
   color?: string;
   classification?: string;
+  examInfo?: ExamInfo[];
 }
 
 export type CardProps = {
@@ -31,6 +33,7 @@ export type CardProps = {
     preclusionRule?: string[];
     prereqTree?: PrereqTreeNode | string;
     prereqNotSatisfied?: boolean;
+    examInfo?: ExamInfo[];
     color?: string;
   
     classification?: string;

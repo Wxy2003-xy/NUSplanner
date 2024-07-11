@@ -1,4 +1,9 @@
 import { PrereqTreeNode } from "./studyplan";
+export interface ExamInfo {
+    examTime?: string;
+    examDuration?: number;
+}
+
 export interface ModuleInfo {
     courseCode: string;
     courseName: string;
@@ -9,6 +14,7 @@ export interface ModuleInfo {
     prerequisites: string;
     prerequisiteRule: string;
     prereqTree?: PrereqTreeNode; // Optional detailed prerequisite tree visualization
+    examInfo?: ExamInfo[];
 }
 
 export interface ModuleFormProps {
@@ -20,4 +26,5 @@ export interface ModuleFormProps {
         courseCredit: number; 
         preclusionRule: string[];
         prereqTree?: PrereqTreeNode}) => void;
+        examInfo?: ExamInfo[];
 }

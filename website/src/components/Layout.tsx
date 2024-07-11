@@ -3,7 +3,7 @@ import { NavLink } from 'react-router-dom';
 import logoImage from '../images/nusplannerLogo.png';
 import './Layout.css';
 
-const Layout = ({ children }) => {
+const Layout = ({ children, notice }) => {
   const [currentDate, setCurrentDate] = useState('');
   useEffect(() => {
     const options: Intl.DateTimeFormatOptions = { year: 'numeric', month: 'long', day: 'numeric' };
@@ -24,6 +24,9 @@ const Layout = ({ children }) => {
           <div className="title-container">
             <p></p>
           </div>
+        </div>
+        <div className="header-notice">
+          {notice ? <div className="notice-content">{notice}</div> : <div className="title-container"><p></p></div>}
         </div>
         <div className="date-container">
           <span>{currentDate}</span>

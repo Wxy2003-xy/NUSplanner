@@ -1,6 +1,7 @@
 import React, { useState, FormEvent, useEffect } from 'react';
 import PrereqTreeVisual from '../pages/studyPlan/components/TreeVisualization';
-import { ModuleInfo, ModuleFormProps } from '../types/general';
+
+import { ModuleInfo, ModuleFormProps, ExamInfo } from '../types/general';
 
 const ModuleForm: React.FC<ModuleFormProps> = ({ setTempCard }) => {
     const [acadYear, setAcadYear] = useState<string>(() => {
@@ -68,9 +69,14 @@ const ModuleForm: React.FC<ModuleFormProps> = ({ setTempCard }) => {
                     preclusionRule: extractCourseCodes(data.preclusionRule),
                     prerequisites: data.prerequisite,
                     prerequisiteRule: data.prerequisiteRule,
-                    prereqTree: data.prereqTree 
+                    prereqTree: data.prereqTree,
+                    examInfo: data.semesterData.map(data => {
+                        return {
+                            examTime: data.examDate,
+                            examDuration: data.examDuration
+                        }
+                    })
                 });
-                console.log(moduleInfo);
                 const card = {
                     id: Date.now(),
                     name: data.moduleCode,
@@ -79,6 +85,14 @@ const ModuleForm: React.FC<ModuleFormProps> = ({ setTempCard }) => {
                     courseCredit: data.moduleCredit,
                     preclusionRule: extractCourseCodes(data.preclusionRule),
                     prereqTree: data.prereqTree 
+                    preclusionRule: extractCourseCodes(data.preclusionRule),
+                    prereqTree: data.prereqTree, 
+                    examInfo: data.semesterData.map(data => {
+                        return {
+                            examTime: data.examDate,    
+                            examDuration: data.examDuration
+                        }
+                    })
                 };
                 console.log("Setting tempCard:", card);
                 setTempCard(card);

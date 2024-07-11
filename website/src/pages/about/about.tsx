@@ -9,6 +9,7 @@ import Layout from '../../components/Layout';
 import UnderConstruction from '../../components/UnderConstruction';
 const About = () => {
   const [currentDate, setCurrentDate] = useState('');
+  const [notice, setNotice] = useState<string | null>('');
 
   useEffect(() => {
     const options: Intl.DateTimeFormatOptions = { year: 'numeric', month: 'long', day: 'numeric' };
@@ -24,10 +25,7 @@ const About = () => {
       const backgrounds = document.querySelectorAll('.about-nav-right .background');
       const currentBackground = backgrounds[currentImageIndex % backgrounds.length] as HTMLElement;
       const nextBackground = backgrounds[(currentImageIndex + 1) % backgrounds.length] as HTMLElement;
-
-      // currentBackground.classList.add('hidden');
       // nextBackground.classList.remove('hidden');
-
       // currentImageIndex = (currentImageIndex + 1) % images.length;
       // nextBackground.style.backgroundImage = `url('${images[currentImageIndex]}')`;
     };
@@ -38,7 +36,7 @@ const About = () => {
   }, []);
 
   return (
-      <Layout>
+    <Layout notice={notice ? <div className="notice-message">{notice}</div> : null}>
           <div className="about-nav-right">
         <UnderConstruction/>
 
