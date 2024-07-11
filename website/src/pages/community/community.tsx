@@ -13,6 +13,7 @@ const Community = () => {
   const [currentDate, setCurrentDate] = useState('');
   const [posts, setPosts] = useState<Post[]>([]);
   const [searchInput, setSearchInput] = useState('');
+  const [notice, setNotice] = useState<string | null>('');
 
   useEffect(() => {
     const options: Intl.DateTimeFormatOptions = { year: 'numeric', month: 'long', day: 'numeric' };
@@ -60,6 +61,11 @@ const Community = () => {
   };
 
   return (
+<<<<<<< Updated upstream
+=======
+    <Layout notice={notice ? <div className="notice-message">{notice}</div> : null}>
+
+>>>>>>> Stashed changes
     <div>
       <Layout/>
       <div className="nav-right">

@@ -9,6 +9,7 @@ import Layout from '../../components/Layout';
 
 const About = () => {
   const [currentDate, setCurrentDate] = useState('');
+  const [notice, setNotice] = useState<string | null>('');
 
   useEffect(() => {
     const options: Intl.DateTimeFormatOptions = { year: 'numeric', month: 'long', day: 'numeric' };
@@ -38,8 +39,12 @@ const About = () => {
   }, []);
 
   return (
+<<<<<<< Updated upstream
     <div>
       <Layout/>
+=======
+    <Layout notice={notice ? <div className="notice-message">{notice}</div> : null}>
+>>>>>>> Stashed changes
           <div className="about-nav-right">
             {/* <div className="background" style={{ backgroundImage: `url(${image1})` }}></div>
             <div className="background hidden" style={{ backgroundImage: `url(${image2})` }}></div>

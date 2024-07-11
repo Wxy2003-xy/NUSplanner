@@ -1,5 +1,6 @@
 import React, { useState, FormEvent, useEffect } from 'react';
 import PrereqTreeVisual from '../pages/studyPlan/components/TreeVisualization';
+<<<<<<< Updated upstream
 
 interface PrereqTreeNode {
     and?: (PrereqTreeNode | string)[];
@@ -25,6 +26,9 @@ interface ModuleFormProps {
         courseCredit: number; 
         prereqTree?: PrereqTreeNode}) => void;
 }
+=======
+import { ModuleInfo, ModuleFormProps, ExamInfo } from '../types/general';
+>>>>>>> Stashed changes
 
 const ModuleForm: React.FC<ModuleFormProps> = ({ setTempCard }) => {
     const [acadYear, setAcadYear] = useState<string>(() => {
@@ -71,15 +75,31 @@ const ModuleForm: React.FC<ModuleFormProps> = ({ setTempCard }) => {
                     preclusionRule: data.preclusionRule,
                     prerequisites: data.prerequisite,
                     prerequisiteRule: data.prerequisiteRule,
-                    prereqTree: data.prereqTree 
+                    prereqTree: data.prereqTree,
+                    examInfo: data.semesterData.map(data => {
+                        return {
+                            examTime: data.examDate,
+                            examDuration: data.examDuration
+                        }
+                    })
                 });
-                console.log(moduleInfo);
                 const card = {
                     id: Date.now(),
                     name: data.moduleCode,
                     content: data.title,
                     courseCredit: data.moduleCredit,
+<<<<<<< Updated upstream
                     prereqTree: data.prereqTree 
+=======
+                    preclusionRule: extractCourseCodes(data.preclusionRule),
+                    prereqTree: data.prereqTree, 
+                    examInfo: data.semesterData.map(data => {
+                        return {
+                            examTime: data.examDate,    
+                            examDuration: data.examDuration
+                        }
+                    })
+>>>>>>> Stashed changes
                 };
                 console.log("Setting tempCard:", card);
                 setTempCard(card);

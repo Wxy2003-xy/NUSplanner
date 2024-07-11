@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { NavLink } from 'react-router-dom';
 import logoImage from '../images/nusplannerLogo.png';
 
+<<<<<<< Updated upstream
 const Layout = () => {
     const [currentDate, setCurrentDate] = useState('');
     useEffect(() => {
@@ -12,6 +13,19 @@ const Layout = () => {
     return (
       <>
         <header>
+=======
+const Layout = ({ children, notice }) => {
+  const [currentDate, setCurrentDate] = useState('');
+  useEffect(() => {
+    const options: Intl.DateTimeFormatOptions = { year: 'numeric', month: 'long', day: 'numeric' };
+    const today = new Date();
+    setCurrentDate(today.toLocaleDateString(undefined, options));
+  }, []);
+
+  return (
+    <div className="layout">
+      <header>
+>>>>>>> Stashed changes
         <div className="header-left">
           <NavLink to="/" className="logo-link">
             <div className="logo-container">
@@ -22,6 +36,9 @@ const Layout = () => {
           <div className="title-container">
             <p></p>
           </div>
+        </div>
+        <div className="header-notice">
+          {notice ? <div className="notice-content">{notice}</div> : <div className="title-container"><p></p></div>}
         </div>
         <div className="date-container">
           <span>{currentDate}</span>
