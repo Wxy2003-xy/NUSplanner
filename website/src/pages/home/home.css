@@ -1,16 +1,94 @@
+html, body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  z-index: 1000;
+}
+
+body {
+  font-family: Arial, sans-serif;
+}
+
+header {  
+  background-color: #2C3E50;
+  color: white;
+  padding: 10px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between; /* Ensures proper spacing */
+  width: 100%; /* Full width */
+}
+
+.header-left {
+  display: flex;
+  align-items: center;
+}
+
+.logo-link {
+  text-decoration: none;
+  color: inherit; /* Ensures the text color is inherited */
+}
+
+.logo-link:hover {
+  text-decoration: none;
+}
+
+.logo-container {
+  display: flex;
+  align-items: center;
+  margin-right: 20px;
+}
+
+.logo-container img {
+  height: 60px;
+  margin-right: 10px;
+}
+
+.logo-container span {
+  font-size: 28px;
+  font-weight: bold;
+  margin-right: 20px;
+  color: white;
+  text-decoration: none;
+}
+
+.title-container p {
+  margin: 0;
+  font-size: 24px;
+}
+
+.date-container {
+  font-size: 16px;
+  color: white;
+  margin-right: 60px; /* Adjust right margin */
+}
+
+.home-layout {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.content {
+  display: flex;
+  flex-grow: 1;
+}
 
 .home-nav-right {
-  margin-left: 20px;
+  margin: 10px; /* Remove margin from left */
+  padding: 10px; /* Remove padding */
   flex-grow: 1;
   position: relative;
   display: flex;
   flex-direction: column;
-  padding: 20px;
   box-sizing: border-box;
   color: white; /* Ensure text is readable over the background image */
   text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.4); /* Add text shadow for readability */
   height: 100%; /* Ensure it takes full height */
 }
+
 .home-nav-right .background {
   position: absolute;
   top: 0;
@@ -22,22 +100,21 @@
   background-position: center;
   transition: opacity 1s ease-in-out;
 }
+
 .home-nav-right .background.hidden {
   opacity: 0;
 }
+
 .home-nav-right .content {
   position: relative;
   z-index: 1;
   display: flex;
   flex-direction: column;
-  align-items: center;
+  align-items: flex-start; /* Align items to the left */
   width: 100%;
+  padding: 0; /* Remove padding */
 }
-.content h1 {
-  align-self: flex-start;
-  font-size: 38px;
-  margin-bottom: 20px; /* Add margin to separate the title from the paragraph */
-}
+
 .centered-paragraph {
   max-width: 800px;
   background-color: rgba(255, 255, 224, 0.6); /* Pale yellow background with transparency */
@@ -48,4 +125,44 @@
   margin: 0 auto; /* Horizontally center the paragraph */
   color: black;
   font-size: 20px;
+}
+
+/* New styles for rectangle boxes */
+.home-nav-right .link-box {
+  width: 300px; /* Set width of the boxes */
+  height: 100px; /* Set height of the boxes */
+  background-color: rgba(101, 171, 195, 0.8); /* Semi-transparent background */
+  margin: 10px 0; /* Spacing between boxes */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  transition: transform 0.3s; /* Smooth hover effect */
+  text-decoration: none; /* Remove underline */
+}
+
+.home-nav-right .link-box:hover {
+  transform: scale(1.05); /* Slightly expand on hover */
+}
+
+.home-nav-right .link-box span {
+  color: white; /* Link color */
+  font-size: 18px;
+}
+
+/* Style for the h2 */
+.home-nav-right h2 {
+  color: black; /* Set color to black */
+  margin: 0; /* Remove default margins */
+  padding: 0; /* Remove padding */
+  align-self: flex-start; /* Align to the left */
+}
+
+.home-nav-right .link-box-container {
+  display: flex;
+  flex-wrap: wrap; /* Allow items to wrap to the next line */
+  gap: 10px; /* Space between boxes */
+  margin: 15px;
+  justify-content: center; /* Center the rows of boxes */
 }
