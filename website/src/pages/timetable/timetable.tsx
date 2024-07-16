@@ -9,12 +9,9 @@ const Timetable = () => {
 return (
   <Layout notice={notice ? <div className="notice-message">{notice}</div> : null}>
     <div className='timetable-nav-right'>
-      <UnderConstruction/>
-        <div >
-
+      <div >
         <DynamicTimeTable/>
-
-        </div>
+      </div>
     </div>
     </Layout>
 ); };
