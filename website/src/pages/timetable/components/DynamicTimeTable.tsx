@@ -46,8 +46,17 @@ const DynamicTimeTable = () => {
     return data ? JSON.parse(data) : {};
   });
   const [errors, setErrors] = useState({});
-  const [selectedDays, setSelectedDays] = useState(["Monday","Tuesday","Wednesday","Thursday", "Friday"]);
-  const [minStartTime, setMinStartTime] = useState('10:00'); 
+  const initialDays = JSON.parse(localStorage.getItem('selectedDays') || '["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"]');
+  const initialStartTime = localStorage.getItem('minStartTime') || '10:00';
+
+  const [selectedDays, setSelectedDays] = useState(initialDays);
+  const [minStartTime, setMinStartTime] = useState(initialStartTime);
+
+  useEffect(() => {
+    // Cache the state to local storage
+    localStorage.setItem('selectedDays', JSON.stringify(selectedDays));
+    localStorage.setItem('minStartTime', minStartTime);
+  }, [selectedDays, minStartTime]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -74,6 +83,29 @@ const DynamicTimeTable = () => {
     console.log(JSON.stringify(arranged))
     localStorage.setItem('cachedTimeSlots', JSON.stringify(arranged));
     alert('Time slots saved successfully!');
+  };
+
+  const handleDayChange = (day) => {
+    const newDays = selectedDays.includes(day)
+      ? selectedDays.filter(d => d !== day)
+      : [...selectedDays, day];
+    setSelectedDays(newDays);
+  };
+
+  const renderDayCheckboxes = () => (
+    ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"].map(day => (
+      <label key={day}>
+        <input
+          type="checkbox"
+          checked={selectedDays.includes(day)}
+          onChange={() => handleDayChange(day)}
+        /> {day}
+      </label>
+    ))
+  );
+
+  const handleStartTimeChange = (event) => {
+    setMinStartTime(event.target.value);
   };
 
   const countLessonTypesPerCourse = (slots: ClassTimeSlotType[]): Map<string, number> => {
@@ -118,10 +150,15 @@ const DynamicTimeTable = () => {
   const getKey = (Slot: ClassTimeSlotType): SlotKey => {
     return Slot.title+Slot.lessonType+Slot.classNo+Slot.day;
   }
-  const filterByDays = (days: string[], slots: ClassTimeSlotType[]): ClassTimeSlotType[] => {
-    // Group slots by key
+
+  const getPartialKey = (Slot: ClassTimeSlotType): SlotKey => {
+    return Slot.title+Slot.lessonType+Slot.classNo;
+  }
+
+const filterByDays = (days: string[], slots: ClassTimeSlotType[]): ClassTimeSlotType[] => {
+    // Group slots by partial key
     const groups = slots.reduce((acc, slot) => {
-        const key = getKey(slot);
+        const key = getPartialKey(slot);
         if (!acc[key]) {
             acc[key] = [];
         }
@@ -129,22 +166,24 @@ const DynamicTimeTable = () => {
         return acc;
     }, {} as Record<string, ClassTimeSlotType[]>);
 
+    // Filter groups where all slots are on the selected days
     const filteredGroups = Object.values(groups).filter(group => 
         group.every(slot => slot.day && days.includes(slot.day))
     );
 
+    // If any slot in a group does not meet the day criteria, exclude the entire group
     return filteredGroups.flat();
 };
 const filterByStartTime = (startTime: string, slots: ClassTimeSlotType[]): ClassTimeSlotType[] => {
   const startTimeInMinutes = timeToMinutes(startTime);
   const groups = slots.reduce((acc, slot) => {
-      const key = getKey(slot);
-      if (!acc[key]) {
-          acc[key] = [];
-      }
-      acc[key].push(slot);
-      return acc;
-  }, {} as Record<string, ClassTimeSlotType[]>);
+    const key = getPartialKey(slot);
+    if (!acc[key]) {
+        acc[key] = [];
+    }
+    acc[key].push(slot);
+    return acc;
+}, {} as Record<string, ClassTimeSlotType[]>);
 
   // Filter the groups based on the condition
   const filteredGroups = Object.values(groups).filter(group =>
@@ -193,7 +232,14 @@ const overlap = (slot1: ClassTimeSlotType, slot2: ClassTimeSlotType): boolean =>
     <div> 
       <h1>Timetable</h1>
       <h2>Semester: {semester}</h2>
-      
+      <div>
+        <h3>Select Days</h3>
+        {renderDayCheckboxes()}
+      </div>
+      <div>
+        <h3>Minimum Start Time</h3>
+        <input type="time" value={minStartTime} onChange={handleStartTimeChange} />
+      </div>
       
       {arranged ? (
       arranged.map(slot => (

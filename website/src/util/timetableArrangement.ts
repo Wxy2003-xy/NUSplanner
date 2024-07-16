@@ -94,7 +94,7 @@ export const arrange = (timeslots: ClassTimeSlotType[]): ClassTimeSlotType[] | n
         });
     }
 
-    const recursiveCliqueFinding = (partition: ClassTimeSlotType[][]): ClassTimeSlotType[] => {
+    const dfsCliqueFinding = (partition: ClassTimeSlotType[][]): ClassTimeSlotType[] => {
         const slotTypes = partition.length;
         // logPartitionDetails(partition)
         const partialSolution: ClassTimeSlotType[] = [];
@@ -141,7 +141,7 @@ export const arrange = (timeslots: ClassTimeSlotType[]): ClassTimeSlotType[] | n
         }
         return partialSolution;
     }
-    const res = recursiveCliqueFinding(partitions)
+    const res = dfsCliqueFinding(partitions)
     // logRow(res)
     return res
 };

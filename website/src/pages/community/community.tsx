@@ -18,6 +18,7 @@ const Community = () => {
   const [posts, setPosts] = useState<Post[]>([]);
   const [searchInput, setSearchInput] = useState('');
   const [filteredPosts, setFilteredPosts] = useState<Post[]>([]);
+  const [notice, setNotice] = useState<string | null>('');
 
   useEffect(() => {
     const options: Intl.DateTimeFormatOptions = { year: 'numeric', month: 'long', day: 'numeric' };
@@ -83,7 +84,7 @@ const Community = () => {
   };
 
   return (
-    <Layout>
+    <Layout notice={notice ? <div className="notice-message">{notice}</div> : null}>
       <div>
         <div className="community-nav-right">
           <div className="search-box">
