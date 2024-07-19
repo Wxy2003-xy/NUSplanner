@@ -51,7 +51,7 @@ const Map = () => {
       {timeSlots ? (
       timeSlots.map(slot => (
         <div key={getKey(slot)}>
-          <p>{`${slot.title} classNo: ${slot.lessonType} ${slot.classNo} on ${slot.day} from ${slot.startTime} to ${slot.endTime} at ${slot.venue} ${loadVenuesX(JSON.stringify(slot.venue))}, ${loadVenuesY(JSON.stringify(slot.venue))}`}</p>
+          <p>{`${slot.title} classNo: ${slot.lessonType} ${slot.classNo} on ${slot.day} from ${slot.startTime} to ${slot.endTime} at ${slot.venue} `}</p>
         </div>
       ))
       ) : <p>No valid arrangement found.</p>}
