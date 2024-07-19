@@ -1,10 +1,14 @@
 import React, { useState, useEffect } from "react";
+import { useNavigate } from 'react-router-dom';
+
 import { useLocation } from 'react-router-dom';
-import { ClassTimeSlotType } from '../../../types/timetable';
-import {arrange, SlotKey, SlotType} from '../../../util/timetableArrangement';
+import { ClassTimeSlotType, ClassTimeSlotTypeUnion, Day } from '../../../types/timetable';
+import { DFSUnionArrange, SlotKey, SlotType, findMaxCliques} from '../../../util/timetableArrangement';
+import { arrange } from "../../../util/timetableArrange";
 import './DynamicTimeTable.css'
 import { size } from 'lodash';
 import { overlap } from "../../../util/timetableArrangement";
+import Timetable from "./table";
 const daysOfWeek = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
 
 const fetchTimeSlotInfo = async (acadYear:string, moduleCode:string, semester:number) => {
@@ -129,9 +133,9 @@ const DynamicTimeTable = () => {
     courseLessonTypeCounts.forEach((types, course) => {
         lessonTypeCountPerCourse.set(course, types.size);
     });
-    console.log("Lesson type counts per course:");
+    // console.log("Lesson type counts per course:");
     lessonTypeCountPerCourse.forEach((count, course) => {
-        console.log(`Course: ${course}, Count of Lesson Types: ${count}`);
+        // console.log(`Course: ${course}, Count of Lesson Types: ${count}`);
     });
     return lessonTypeCountPerCourse;
 };
@@ -147,50 +151,84 @@ const DynamicTimeTable = () => {
     }
     return true;
   }
-  const getKey = (Slot: ClassTimeSlotType): SlotKey => {
-    return Slot.title+Slot.lessonType+Slot.classNo+Slot.day;
-  }
+  const getKeySlot = (slot: ClassTimeSlotType): SlotKey => {
+    const key = `${slot.title}${slot.lessonType}${slot.classNo}${slot.day}${slot.startTime}`;
+    // console.log(key); // Debugging: Log out the keys to check for duplicates
+    return key;
+}
+
+const getKey = (slot: ClassTimeSlotTypeUnion): SlotKey => {
+  const key = `${slot.title}${slot.lessonType}${slot.classNo}${slot.day}${slot.startTime}`;
+  // console.log(key); // Debugging: Log out the keys to check for duplicates
+  return key;
+}
 
   const getPartialKey = (Slot: ClassTimeSlotType): SlotKey => {
     return Slot.title+Slot.lessonType+Slot.classNo;
   }
+  const getPartialKeyUnion = (Slot: ClassTimeSlotTypeUnion): SlotKey => {
+    return Slot.title+Slot.lessonType+Slot.classNo;
+  }
+  function transformSlots(slots: ClassTimeSlotType[]): ClassTimeSlotTypeUnion[] {
+    const grouped = new Map<string, ClassTimeSlotTypeUnion>();
 
-const filterByDays = (days: string[], slots: ClassTimeSlotType[]): ClassTimeSlotType[] => {
-    // Group slots by partial key
-    const groups = slots.reduce((acc, slot) => {
-        const key = getPartialKey(slot);
-        if (!acc[key]) {
-            acc[key] = [];
+    slots.forEach(slot => {
+        const partialKey = `${slot.title}${slot.lessonType}${slot.classNo}`;
+        const existing = grouped.get(partialKey);
+        if (existing) {
+            existing.startTime.push(slot.startTime as string);
+            existing.endTime.push(slot.endTime as string);
+            existing.day.push(slot.day as Day);
+        } else {
+            grouped.set(partialKey, {
+                classNo: slot.classNo,
+                title: slot.title,
+                lessonType: slot.lessonType,
+                startTime: [slot.startTime as string],
+                endTime: [slot.endTime as string],
+                weeks: slot.weeks,
+                venue: slot.venue,
+                day: [slot.day as Day],
+            });
         }
-        acc[key].push(slot);
-        return acc;
-    }, {} as Record<string, ClassTimeSlotType[]>);
+    });
+    return Array.from(grouped.values());
+}
 
-    // Filter groups where all slots are on the selected days
-    const filteredGroups = Object.values(groups).filter(group => 
-        group.every(slot => slot.day && days.includes(slot.day))
-    );
-
-    // If any slot in a group does not meet the day criteria, exclude the entire group
-    return filteredGroups.flat();
-};
-const filterByStartTime = (startTime: string, slots: ClassTimeSlotType[]): ClassTimeSlotType[] => {
-  const startTimeInMinutes = timeToMinutes(startTime);
+const filterByDays = (days: string[], slots: ClassTimeSlotTypeUnion[]): ClassTimeSlotTypeUnion[] => {
+  // Assuming getPartialKey function works with ClassTimeSlotTypeUnion or it is suitably modified
   const groups = slots.reduce((acc, slot) => {
-    const key = getPartialKey(slot);
-    if (!acc[key]) {
-        acc[key] = [];
-    }
-    acc[key].push(slot);
-    return acc;
-}, {} as Record<string, ClassTimeSlotType[]>);
+      const key = getPartialKeyUnion(slot);
+      if (!acc[key]) {
+          acc[key] = [];
+      }
+      acc[key].push(slot);
+      return acc;
+  }, {} as Record<string, ClassTimeSlotTypeUnion[]>);
 
-  // Filter the groups based on the condition
+  // Filter groups where all slots have at least one day that matches the selected days
   const filteredGroups = Object.values(groups).filter(group =>
-      group.every(slot => slot.startTime && timeToMinutes(slot.startTime) >= startTimeInMinutes)
+      group.every(slot => slot.day.some(day => days.includes(day)))
   );
 
-  // Flattening the filtered groups back into a single array
+  return filteredGroups.flat();
+};
+const filterByStartTime = (startTime: string, slots: ClassTimeSlotTypeUnion[]): ClassTimeSlotTypeUnion[] => {
+  const startTimeInMinutes = timeToMinutes(startTime);
+  const groups = slots.reduce((acc, slot) => {
+      const key = getPartialKeyUnion(slot);
+      if (!acc[key]) {
+          acc[key] = [];
+      }
+      acc[key].push(slot);
+      return acc;
+  }, {} as Record<string, ClassTimeSlotTypeUnion[]>);
+
+  // Filter the groups based on the condition that all startTimes in the group are after the given startTime
+  const filteredGroups = Object.values(groups).filter(group =>
+      group.every(slot => slot.startTime.some(time => timeToMinutes(time) >= startTimeInMinutes))
+  );
+
   return filteredGroups.flat();
 };
 
@@ -206,28 +244,25 @@ const timeToMinutes = (time: string): number => {
   return totalMinutes;
 };
 
-const overlap = (slot1: ClassTimeSlotType, slot2: ClassTimeSlotType): boolean => {
-  if (slot1.day !== slot2.day) {
-      return false;
-  }
-  if (!slot1.startTime || !slot1.endTime || !slot2.startTime || !slot2.endTime) {
-      return false;
-  }
-  const start1 = timeToMinutes(slot1.startTime);
-  const end1 = timeToMinutes(slot1.endTime);
-  const start2 = timeToMinutes(slot2.startTime);
-  const end2 = timeToMinutes(slot2.endTime);
-  return !(end1 <= start2 || start1 >= end2);
-};
+
+
 
   const slotsArray = Object.values(timeSlots).flat() as ClassTimeSlotType[];
-  // console.log(JSON.stringify(slotsArray))
-  const filterDays = filterByDays(selectedDays, slotsArray);
+  console.log(JSON.stringify(slotsArray))
+  const slotsArrayUnioned = transformSlots(slotsArray);
+  console.log(JSON.stringify(slotsArrayUnioned))
+
+  const filterDays = filterByDays(selectedDays, slotsArrayUnioned);
   // console.log(JSON.stringify(filterDays))
   const filterStartTime = filterByStartTime(minStartTime, filterDays);
   // console.log('filtered slots info: '+ JSON.stringify(filterStartTime))
+  // const arranged = arrange(filterStartTime)
   const arranged = arrange(filterStartTime)
+  const navigate = useNavigate();
 
+  const handleToMap = () => {
+    navigate('/map', { state: { timeSlots: arranged } });
+  };
   return (
     <div> 
       <h1>Timetable</h1>
@@ -240,15 +275,23 @@ const overlap = (slot1: ClassTimeSlotType, slot2: ClassTimeSlotType): boolean =>
         <h3>Minimum Start Time</h3>
         <input type="time" value={minStartTime} onChange={handleStartTimeChange} />
       </div>
-      
+
+      <div className="timetablecontainer">
+        <div className="timing">{'08:00\n08:20\n08:40\n09:00\n09:20\n09:40\n10:00\n10:20\n10:40\n11:00\n11:20\n11:40\n12:00\n12:20\n12:40\n13:00\n13:20\n13:40\n14:00\n14:20\n14:40\n15:00\n15:20\n15:40\n16:00\n16:20\n16:40\n17:00\n17:20\n17:40\n18:00'}</div>
+        <div>
+          {arranged ? 
+          <Timetable timeSlots={arranged}></Timetable> : <p>No valid arrangement found.</p>} 
+        </div>
+      </div>
+      <button className="to-map-button" onClick={() => handleToMap()}>View Map</button>
       {arranged ? (
       arranged.map(slot => (
         <div key={getKey(slot)}>
-          <p>{`${slot.title} classNo: ${slot.lessonType} ${slot.classNo} on ${slot.day} from ${slot.startTime} to ${slot.endTime}`}</p>
+          <p>{`${slot.title} classNo: ${slot.lessonType} ${slot.classNo} on ${slot.day} from ${slot.startTime} to ${slot.endTime} at ${slot.venue}`}</p>
         </div>
       ))
     ) : <p>No valid arrangement found.</p>}
-    {areMapsEqual(countLessonTypesPerCourse(slotsArray), countLessonTypesPerCourse(filterStartTime))?<p></p>:<p>there are clashing slots</p>}
+    {/* {areMapsEqual(countLessonTypesPerCourse(slotsArray), countLessonTypesPerCourse(filterStartTime))?<p></p>:<p>there are clashing slots</p>} */}
       <button onClick={saveTimeSlots}>Save Timetable</button>
     </div>
   );

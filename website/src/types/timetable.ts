@@ -59,6 +59,17 @@ export interface ClassTimeSlotType extends GenericTimeSlot {
     lessonType?: LessonType 
 }
 
+export interface ClassTimeSlotTypeUnion {
+    classNo?: ClassNo;
+    startTime: StartTime[];
+    endTime: EndTime[];
+    weeks?: Weeks;
+    venue?: Venue;
+    day: Day[];
+    lessonType?: LessonType;
+    title?: string;
+}
+
 export type CourseSlotGroupType = {
     SlotCollection: ClassTimeSlotType[];
 }

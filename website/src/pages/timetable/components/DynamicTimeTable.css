@@ -28,3 +28,20 @@
 .tmp {
   font-size: 5px;
 }
+
+.timetablecontainer {
+  display: flex;
+  flex-direction: row;
+  width: 100%; /* Ensure the container takes full width */
+}
+
+.timetablecontainer > div {
+  flex-grow: 1; /* Makes each child div expand to fill available space */
+}
+
+.timing {
+  /* transform: translateY(-3px); */
+  max-width: 60px;
+  line-height: 1.42;
+  z-index: 100000;
+}

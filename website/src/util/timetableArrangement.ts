@@ -1,5 +1,5 @@
-import { StartTime, EndTime, ClassTimeSlotType, ClassNo, Day, Weeks } from '../types/timetable';
-import { isEqual, partition } from 'lodash';
+import { StartTime, EndTime, ClassTimeSlotType, ClassTimeSlotTypeUnion, ClassNo, Day, Weeks } from '../types/timetable';
+import { isEqual, over, partition } from 'lodash';
 import { Clear } from '@mui/icons-material';
 import { ClassificationType } from "typescript";
 
@@ -12,6 +12,37 @@ const areSlotsEqual = (slot1: ClassTimeSlotType, slot2: ClassTimeSlotType): bool
     return slot1.classNo === slot2.classNo &&
            slot1.lessonType === slot2.lessonType &&
            slot1.title === slot2.title;
+}
+
+function transformSlots(slots: ClassTimeSlotType[]): ClassTimeSlotTypeUnion[] {
+    const grouped = new Map<string, ClassTimeSlotTypeUnion>();
+
+    slots.forEach(slot => {
+        const partialKey = `${slot.title}${slot.lessonType}${slot.classNo}`;
+        const existing = grouped.get(partialKey);
+
+        if (existing) {
+            // Append to existing arrays
+            existing.startTime.push(slot.startTime);
+            existing.endTime.push(slot.endTime);
+            existing.day.push(slot.day);
+        } else {
+            // Create new entry in map
+            grouped.set(partialKey, {
+                classNo: slot.classNo,
+                title: slot.title,
+                lessonType: slot.lessonType,
+                startTime: [slot.startTime],
+                endTime: [slot.endTime],
+                weeks: slot.weeks,
+                venue: slot.venue,
+                day: [slot.day],
+            });
+        }
+    });
+
+    // Convert the map values to an array
+    return Array.from(grouped.values());
 }
 
 export const overlap = (slot1: ClassTimeSlotType, slot2: ClassTimeSlotType): boolean => {
@@ -27,9 +58,33 @@ export const overlap = (slot1: ClassTimeSlotType, slot2: ClassTimeSlotType): boo
     const end2 = timeToMinutes(slot2.endTime);
     return !(end1 <= start2 || start1 >= end2);
 };
+export const overlapUnion = (slot1: ClassTimeSlotTypeUnion, slot2: ClassTimeSlotTypeUnion): boolean => {
+    // Check each day in slot1 against each day in slot2
+    for (const day1 of slot1.day) {
+        for (const day2 of slot2.day) {
+            if (day1 === day2) {
+                // Only check times if days are the same
+                for (let i = 0; i < slot1.startTime.length; i++) {
+                    for (let j = 0; j < slot2.startTime.length; j++) {
+                        const start1 = timeToMinutes(slot1.startTime[i]);
+                        const end1 = timeToMinutes(slot1.endTime[i]);
+                        const start2 = timeToMinutes(slot2.startTime[j]);
+                        const end2 = timeToMinutes(slot2.endTime[j]);
+
+                        // Check for time overlap
+                        if (!(end1 <= start2 || start1 >= end2)) {
+                            return true; // Overlap found
+                        }
+                    }
+                }
+            }
+        }
+    }
+    return false; // No overlap found
+};
+
 export const arrange = (timeslots: ClassTimeSlotType[]): ClassTimeSlotType[] | null => {
     const courses = new Map<string, ClassTimeSlotType[]>();
-    // Organize timeslots by their course title
     timeslots.forEach(slot => {
         const title = `${slot.title} ${slot.lessonType || 'undefined'}`;
         if (!courses.has(title)) {
@@ -37,104 +92,65 @@ export const arrange = (timeslots: ClassTimeSlotType[]): ClassTimeSlotType[] | n
         }
         courses.get(title)?.push(slot);
     });
-    const isConnectedfromSlot = (slot1: ClassTimeSlotType, slot2: ClassTimeSlotType): boolean => {
-         return !overlap(slot1, slot2) && (slot1.title+slot1.lessonType !== slot2.title+slot2.lessonType);
-    }
-
     const partitions: ClassTimeSlotType[][] = Array.from(courses.values());
-    const compatiblefromSlot = (partition: ClassTimeSlotType[][], partialSolution: ClassTimeSlotType[]): ClassTimeSlotType[] => {
-        const compatibleSet: ClassTimeSlotType[] = [];
-        partition.forEach(row => row.forEach(slot1 => {
-            partialSolution.forEach(slot2 => {
-                if (isConnectedfromSlot(slot1, slot2)) {
-                    compatibleSet.push(slot1);
-                }
-            })
-        }))
-        return compatibleSet;
-    }
-
-    const checkCompatible = (slot: ClassTimeSlotType, partialSolution:ClassTimeSlotType[]): boolean => {
-        let res = true;
-        partialSolution.forEach(s => {
-            res = res && isConnectedfromSlot(s, slot);
-        })
-        if (slot.lessonType === "Lecture") {
-            console.log(slot.title+slot.lessonType+slot.classNo+slot.day + '  ' + res)
-        }
-        return res;
-    }
-
-    function findAllSlotsByClassNo(slots:ClassTimeSlotType[], classNo:string): ClassTimeSlotType[] {
-        return slots.filter(slot => slot.classNo === classNo);
-    }
-    const sameClassNo = (slot: ClassTimeSlotType, row: ClassTimeSlotType[]): ClassTimeSlotType[] => {
-        const res: ClassTimeSlotType[] = [];
-        const no = slot.classNo;
-        row.forEach(s => {
-            if (s.classNo === no) {
-                res.push(s)
-            }
-        })
-        return res;
-    }
-
-    function logPartitionDetails(partition) {
-        partition.forEach((row, rowIndex) => {
-            console.log(`Partition ${rowIndex + 1}:`);
-            row.forEach(slot => {
-                console.log(`Title: ${slot.title}, Lesson Type: ${slot.lessonType}, Class No: ${slot.classNo}, Day: ${slot.day}`);
-            });
-        });
-    }
-    function logRow(row) {
-        console.log('result: ')
-        row.forEach(slot => {
-            console.log(`Title: ${slot.title}, Lesson Type: ${slot.lessonType}, Class No: ${slot.classNo}, Day: ${slot.day}`);
-        });
-    }
-
     const dfsCliqueFinding = (partition: ClassTimeSlotType[][]): ClassTimeSlotType[] => {
+        logPartitionDetails(partition)
         const slotTypes = partition.length;
-        // logPartitionDetails(partition)
         const partialSolution: ClassTimeSlotType[] = [];
         let currentTypeIndex = 0;
         let currentSlotIndex = 0;
-        while (currentTypeIndex < slotTypes) {
-            const partialSolutionSize = partialSolution.length;
-            console.log('push (' + currentTypeIndex + ', ' + currentSlotIndex + ')')
+        console.log('push (' + currentTypeIndex + ', ' + currentSlotIndex + ')')
             const sameNo = sameClassNo(partition[currentTypeIndex][currentSlotIndex], partition[currentTypeIndex]);
             sameNo.forEach(s => {
+                console.log('adding before loop: ' + getKey(s))
                 partialSolution.push(s);
             })
-            // partialSolution.push(partition[currentTypeIndex][currentSlotIndex]);
+        currentTypeIndex++;
+        while (currentTypeIndex < slotTypes) {
+            let canProceed = false
+            const partialSolutionSize = partialSolution.length;
+            // console.log('before next iteration: ' + logRow(partialSolution))
             for (let i = currentSlotIndex; i < partition[currentTypeIndex].length; i++) {
+                // console.log('iterating: ' + i)
                 if (checkCompatible(partition[currentTypeIndex][i], partialSolution)) {
                     const sameNo = sameClassNo(partition[currentTypeIndex][i], partition[currentTypeIndex]);
                     console.log(sameNo.length)
-                    if (sameNo.length > 1) {
-                        console.log(sameNo.length)
+                    if (sameNo.length > 0) {
                         currentSlotIndex = i;
                         sameNo.forEach(s => {
+                            console.log('adding inside loop: ' + getKey(s))
                             partialSolution.push(s);
                         })
+                        console.log('add set: ' + sameNo.length)
+                        canProceed = true;
                         break;
                     }
-                    currentSlotIndex = i;
-                    console.log('added')
-                    console.log('push (' + currentTypeIndex + ', ' + currentSlotIndex + ')')
-
-                    partialSolution.push(partition[currentTypeIndex][i]);
-                    break;
+                    // currentSlotIndex = i;
+                    // console.log('added')
+                    // console.log('push (' + currentTypeIndex + ', ' + currentSlotIndex + ')')
+                    // partialSolution.push(partition[currentTypeIndex][i]);
+                    // canProceed = true;
+                    if (i === partition[currentTypeIndex].length - 1) {
+                        canProceed = false;
+                    }
                 }
             }
-            if (partialSolution.length === partialSolutionSize) {       // no addition, backtrack
+            console.log(partialSolution.length +'::'+ partialSolutionSize)
+            if (!canProceed) {  
+                console.log('to remove')     // no addition, backtrack
                 const toRemove = partialSolution.pop();
-                if (toRemove) {
-                    partialSolution.filter(s => s.classNo !== toRemove.classNo)
+                partialSolution.filter(s => 
+                getPartialKey(s) !== getPartialKey(toRemove))
+                console.log('after popping: ' + logRow(partialSolution))
+                
+                if (currentTypeIndex === 0) {
+                    console.log('terminate')
+                    return partialSolution
+                } else {
+                    currentTypeIndex -=1;
                 }
-                currentTypeIndex--;
-            } else {                                                    // success, proceed
+            } else {                    
+                console.log('proceed: ' + currentTypeIndex + ' ++ ')                                // success, proceed
                 currentTypeIndex++;
                 currentSlotIndex = 0;
             }
@@ -147,219 +163,170 @@ export const arrange = (timeslots: ClassTimeSlotType[]): ClassTimeSlotType[] | n
 };
 export type SlotType = string;
 export type SlotKey = string;
-// export const arrange = (SlotSet: ClassTimeSlotType[]): ClassTimeSlotType[] => {
-//     // SlotSet: ClassTimeSlotType[]
-//     const solution: ClassTimeSlotType[] = [];
-//     // dictionary maps a unique string representation to a ClassTimeSlotType;
-//     const getType = (Slot: ClassTimeSlotType): SlotType => {
-//         return Slot.title+Slot.lessonType;
-//     }
-//     const getKey = (Slot: ClassTimeSlotType): SlotKey => {
-//         return Slot.title+Slot.lessonType+Slot.classNo+Slot.day;
-//     }
-//     const dictionary = SlotSet.reduce((acc, slot) => {
-//         const key = getKey(slot);  // Get key using the getKey function
-//         if (!acc.has(key)) {
-//             acc.set(key, slot);
-//         }
-//         return acc;
-//     }, new Map<SlotKey, ClassTimeSlotType>());
-    
-//     const groupByTypes = SlotSet.reduce((acc, slot) => {
-//         const type = getType(slot);  // Get type using the getType function
-//         if (!acc[type]) {
-//             acc[type] = [];
-//         }
-//         acc[type].push(getKey(slot));  // Store keys instead of slots
-//         return acc;
-//     }, {} as Record<SlotType, SlotKey[]>);
-    
-//     // Now, sort and flatten each group by the keys as in the dictionary
-//     const sortedAndFlattenedGroups = Object.entries(groupByTypes).reduce((acc, [groupKey, slotKeys]) => {
-//         slotKeys.sort();  // Optionally sort the keys alphabetically; adjust sorting criteria as needed
-//         acc[groupKey] = slotKeys.map(key => dictionary.get(key)).filter(slot => slot !== undefined) as ClassTimeSlotType[];
-//         return acc;
-//     }, {} as Record<SlotType, ClassTimeSlotType[]>);
-    
-    
-//     // If needed, you can create a single sorted list from all groups:
-//     const allSortedSlots = Object.values(sortedAndFlattenedGroups).flat();
 
-//     const keyToIndexMap = new Map<SlotKey, number>();
-//         allSortedSlots.forEach((slot, index) => {
-//         const key = getKey(slot);
-//         keyToIndexMap.set(key, index);
-//     });
+const isConnectedfromSlot = (slot1: ClassTimeSlotType, slot2: ClassTimeSlotType): boolean => {
+    // console.log(getKey(slot1)+ ' :: ' + getKey(slot2) + ':  ' + !overlap(slot1, slot2) && (getKey(slot1) !== getKey(slot2)))
+     return !overlap(slot1, slot2) && (getPartialKey(slot1) !== getPartialKey(slot2));
+}
 
-//     const numOfSlots = allSortedSlots.length;
+const compatiblefromSlot = (partition: ClassTimeSlotType[][], partialSolution: ClassTimeSlotType[]): ClassTimeSlotType[] => {
+    const compatibleSet: ClassTimeSlotType[] = [];
+    partition.forEach(row => row.forEach(slot1 => {
+        partialSolution.forEach(slot2 => {
+            if (isConnectedfromSlot(slot1, slot2)) {
+                compatibleSet.push(slot1);
+            }
+        })
+    }))
+    return compatibleSet;
+}
 
-//     const adjMatrix = Array.from({length: numOfSlots}, () => new Array(numOfSlots).fill(0));
-//     const isConnectedfromSlot = (slot1: ClassTimeSlotType, slot2: ClassTimeSlotType): boolean => {
-//         return !overlap(slot1, slot2) && (slot1.title+slot1.lessonType !== slot2.title+slot2.lessonType);
-//     }
-//     const isConnected = (key1: string, key2: string): boolean => {
-//         const slot1 = dictionary.get(key1);
-//         const slot2 = dictionary.get(key2);
-//         if (!slot1 || !slot2) return false;
-//         return !overlap(slot1, slot2) && (slot1.title+slot1.lessonType !== slot2.title+slot2.lessonType);
-//     }
-//     // Fill the adjacency matrix
-//     for (let i = 0; i < numOfSlots; i++) {
-//         for (let j = i + 1; j < numOfSlots; j++) {
-//             if (isConnectedfromSlot(allSortedSlots[i], allSortedSlots[j])) {
-//                 adjMatrix[i][j] = 1;
-//                 adjMatrix[j][i] = 1; // Because the matrix is symmetric
-//             }
-//         }
-//     }
+const checkCompatible = (slot: ClassTimeSlotType, partialSolution:ClassTimeSlotType[]): boolean => {
+    partialSolution.forEach(s => {
+        if (!isConnectedfromSlot(slot, s)) {
+            return false;
+        }
+    })
+    return true
+}
 
-//     console.log("Adjacency Matrix:");
-//     for (let i = 0; i < numOfSlots; i++) {
-//         console.log(`Row ${i}: ${adjMatrix[i].join(' ')}`);
-//     }
-    
+const sameClassNo = (slot: ClassTimeSlotType, row: ClassTimeSlotType[]): ClassTimeSlotType[] => {
+    const res: ClassTimeSlotType[] = [];
+    row.forEach(s => {
+        if (getPartialKey(s) === getPartialKey(slot)) {
+            res.push(s)
+        }
+    })
+    return res;
+}
 
-//     const compatiblefromSlot = (partition: ClassTimeSlotType[][], partialSolution: ClassTimeSlotType[]): ClassTimeSlotType[] => {
-//         const compatibleSet: ClassTimeSlotType[] = [];
-//         partition.forEach(row => row.forEach(slot1 => {
-//             partialSolution.forEach(slot2 => {
-//                 if (isConnectedfromSlot(slot1, slot2)) {
-//                     compatibleSet.push(slot1);
-//                 }
-//             })
-//         }))
-//         return compatibleSet;
-//     }
+function logPartitionDetails(partition) {
+    partition.forEach((row, rowIndex) => {
+        console.log(`Partition ${rowIndex + 1}: size ${row.length}`);
+        row.forEach(slot => {
+            console.log(`Title: ${slot.title}, Lesson Type: ${slot.lessonType}, Class No: ${slot.classNo}, Day: ${slot.day}`);
+        });
+    });
+}
+function logRow(row) {
+    console.log('result: ')
+    row.forEach(slot => {
+        console.log(`Title: ${slot.title}, Lesson Type: ${slot.lessonType}, Class No: ${slot.classNo}, Day: ${slot.day}`);
+    });
+}
 
-//     const findCompatibleFromRow = (rowInPartition: ClassTimeSlotType[], partialSolution: ClassTimeSlotType[]): ClassTimeSlotType[] => {
-//         const res: ClassTimeSlotType[] = [];
-//         rowInPartition.forEach(slot => {
-//             partialSolution.forEach(existing => {
-//                 if (isConnectedfromSlot(slot, existing)) {
-//                     res.push(slot);
-//                 }
-//             })
-//         })
-//         return res;
-//     }
+const getKey = (slot: ClassTimeSlotType): SlotKey => {
+    const key = `${slot.title}${slot.lessonType}${slot.classNo}${slot.day}${slot.startTime}`;
+    // console.log(key); // Debugging: Log out the keys to check for duplicates
+    return key;
+}
+  const getPartialKey = (Slot: ClassTimeSlotType): SlotKey => {
+    return Slot.title+Slot.lessonType+Slot.classNo;
+  }
 
-//     const checkCompatible = (slot: ClassTimeSlotType, partialSolution:ClassTimeSlotType[]): boolean => {
-//         let res = true;
-//         partialSolution.forEach(s => {
-//             res = res && isConnectedfromSlot(s, slot);
-//         })
-//         return res;
-//     }
+  export const DFSUnionArrange = (timeSlots: ClassTimeSlotType[]): ClassTimeSlotTypeUnion[] => {
+    const courses = new Map<string, ClassTimeSlotType[]>();
+    timeSlots.forEach(slot => {
+        const title = `${slot.title} ${slot.lessonType || 'undefined'}`;
+        if (!courses.has(title)) {
+            courses.set(title, []);
+        }
+        courses.get(title)?.push(slot);
+    });
+    const partitions: ClassTimeSlotType[][] = Array.from(courses.values());
+    logPartitionDetails(partitions);
+    return DFSUnion(partitions.flat());
+  }
 
-//     const recursiveCliqueFinding = (partition: ClassTimeSlotType[][]): ClassTimeSlotType[] => {
-//         const slotTypes = partition.length;
-//         const partialSolution: ClassTimeSlotType[] = [];
-//         let currentTypeIndex = 0;
-//         let currentSlotIndex = 0;
-//         while (currentTypeIndex < slotTypes) {
-//             const partialSolutionSize = partialSolution.length;
-//             partialSolution.push(partition[currentTypeIndex][currentSlotIndex]);
-//             for (let i = currentSlotIndex; i < partition[currentTypeIndex].length; i++) {
-//                 if (checkCompatible(partition[currentTypeIndex][i], partialSolution)) {
-//                     currentSlotIndex = i;
-//                     partialSolution.push(partition[currentTypeIndex][i]);
-//                     break;
-//                 }
-//             }
-//             if (partialSolution.length === partialSolutionSize) {
-//                 partialSolution.pop();
-//                 currentTypeIndex--;
-//             } else {
-//                 currentTypeIndex++;
-//                 currentSlotIndex = 0;
-//             }
-//         }
-//         return partialSolution;
-//     }
+  export const DFSUnion = (partition: ClassTimeSlotType[]): ClassTimeSlotTypeUnion[] => {
+    // Flatten the partition to get a list of all slots
+    const flatSlots: ClassTimeSlotTypeUnion[] = transformSlots(partition);
 
-//     const compatible = (keysPartition: string[][], partialSolutionKeys: string[]): string[] => {
-//         const compatibleKeys: string[] = [];
-//         keysPartition.forEach(row => row.forEach(key1 => {
-//             partialSolutionKeys.forEach(key2 => {
-//                 if (isConnected(key1, key2)) {
-//                     compatibleKeys.push(key1);
-//                 }
-//             })
-//         }))
-//         return compatibleKeys;
-//     }
+    // Building the adjacency matrix
+    const adjacencyMatrix: number[][] = flatSlots.map(() => new Array(flatSlots.length).fill(0));
+    for (let i = 0; i < flatSlots.length; i++) {
+        for (let j = 0; j < flatSlots.length; j++) {
+            if (i !== j && !overlapUnion(flatSlots[i], flatSlots[j])) {
+                adjacencyMatrix[i][j] = 1;  // Set connection if there is no overlap
+            }
+        }
+    }
 
-//     const adjacentSetfromSlot = (partition: ClassTimeSlotType[][], slot: ClassTimeSlotType): ClassTimeSlotType[] => {
-//         const adjacent: ClassTimeSlotType[] = [];
-//         partition.forEach(row => row.forEach(rowSlot => {
-//             if (isConnectedfromSlot(rowSlot, slot)) {
-//                 adjacent.push(rowSlot);
-//             }
-//         }))
-//         return adjacent;
-//     }
+    console.log("Adjacency Matrix:");
+    console.log(adjacencyMatrix.map(row => `[${row.join(', ')}]`).join(',\n'));
 
-//     const adjacentSet = (keysPartition: string[][], key: string): string[] => {
-//         const adjacentKeys: string[] = [];
-//         keysPartition.forEach(row => row.forEach(rowKey => {
-//             if (isConnected(rowKey, key)) {
-//                 adjacentKeys.push(rowKey);
-//             }
-//         }))
-//         return adjacentKeys;
-//     }
 
-//     const unionfromSlot = (subset1: ClassTimeSlotType[], subset2: ClassTimeSlotType[]): ClassTimeSlotType[] => {
-//         const keyMap = new Map<string, ClassTimeSlotType>();
-//         const getKey = (slot: ClassTimeSlotType) => `${slot.classNo}-${slot.lessonType}-${slot.title}`;
-//         subset1.forEach(slot => {
-//             keyMap.set(getKey(slot), slot);
-//         });
-//         subset2.forEach(slot => {
-//             const key = getKey(slot);
-//             if (!keyMap.has(key)) {
-//                 keyMap.set(key, slot);
-//             }
-//         });
-//         return Array.from(keyMap.values());
-//     }
 
-//     const union = (keys1: string[], keys2: string[]): string[] => {
-//         const uniqueKeys = new Set<string>();
-//         keys1.forEach(key => uniqueKeys.add(key));
-//         keys2.forEach(key => {
-//             if (!uniqueKeys.has(key)) {
-//                 uniqueKeys.add(key);
-//             }
-//         });
-//         return Array.from(uniqueKeys);
-//     }
-    
-//     const intersectionfromSlot = (subset1: ClassTimeSlotType[], subset2: ClassTimeSlotType[]): ClassTimeSlotType[] => {
-//         const map1 = new Map<string, ClassTimeSlotType>();
-//         const result: ClassTimeSlotType[] = [];
-//         const getKey = (slot: ClassTimeSlotType) => `${slot.classNo}-${slot.lessonType}-${slot.title}`;
-//         subset1.forEach(slot => {
-//             map1.set(getKey(slot), slot);
-//         });
-//         subset2.forEach(slot => {
-//             const key = getKey(slot);
-//             if (map1.has(key)) {
-//                 result.push(slot);
-//             }
-//         });
-//         return result;
-//     }
-//     const intersection = (keys1: string[], keys2: string[]): string[] => {
-//         const set1 = new Set(keys1);
-//         const result: string[] = [];
-//         keys2.forEach(key => {
-//             if (set1.has(key)) {
-//                 result.push(key);
-//             }
-//         });
-//         return result;
-//     }
-//     //return allSortedSlots;
-//     return findClique(allSortedSlots, adjMatrix, numOfSlots);
-// }
+    // Array to track visited nodes
+    const visited = new Array(flatSlots.length).fill(false);
+    const result: ClassTimeSlotTypeUnion[] = [];
+    let maxClique: ClassTimeSlotTypeUnion[] = [];
+    // Helper function for DFS
+    const dfs = (nodeIndex: number) => {
+        visited[nodeIndex] = true;
+        result.push(flatSlots[nodeIndex]);  // Store the slot as part of the result
+
+        // Explore adjacent nodes
+        for (let i = 0; i < adjacencyMatrix[nodeIndex].length; i++) {
+            if (adjacencyMatrix[nodeIndex][i] === 1 && !visited[i]) {
+                dfs(i);
+            }
+        }
+    };
+
+    // Start DFS from the first node; modify to start from different nodes if needed
+    for (let i = 0; i < flatSlots.length; i++) {
+        if (!visited[i]) {
+            dfs(i);
+        }
+    }
+    return result;
+};  
+export const findMaxCliques = (slots: ClassTimeSlotType[]): ClassTimeSlotTypeUnion[] => {
+    const flatSlots = transformSlots(slots);
+    // Building the adjacency matrix
+    const adjacencyMatrix: number[][] = flatSlots.map(() => new Array(flatSlots.length).fill(0));
+    for (let i = 0; i < flatSlots.length; i++) {
+        for (let j = 0; j < flatSlots.length; j++) {
+            if (i !== j && !overlapUnion(flatSlots[i], flatSlots[j])) {
+                adjacencyMatrix[i][j] = 1;  // Set connection if there is no overlap
+            }
+        }
+    }
+
+    // Log the adjacency matrix
+    console.log("Adjacency Matrix:");
+    console.log(adjacencyMatrix.map(row => `[${row.join(', ')}]`).join(',\n'));
+
+    // Find maximal cliques using the Bron-Kerbosch algorithm
+    let cliques: Set<number>[] = [];
+    bronKerbosch(new Set<number>(), new Set<number>(adjacencyMatrix.map((_, index) => index)), new Set<number>(), adjacencyMatrix, cliques);
+
+    // Transform cliques from indices to ClassTimeSlotTypeUnion arrays
+    const maximalCliques: ClassTimeSlotTypeUnion[][] = cliques.map(clique => Array.from(clique).map(index => flatSlots[index]));
+
+    return maximalCliques.flat();
+};
+
+function bronKerbosch(R: Set<number>, P: Set<number>, X: Set<number>, adjacencyMatrix: number[][], cliques: Set<number>[]): void {
+    if (P.size === 0 && X.size === 0) {
+        cliques.push(new Set(R));  // R is a maximal clique
+        return;
+    }
+
+    const PArray = Array.from(P);
+    for (let v of PArray) {
+        const neighbors = new Set<number>();
+        adjacencyMatrix[v].forEach((isEdge, index) => {
+            if (isEdge && index !== v) {
+                neighbors.add(index);
+            }
+        });
+
+        bronKerbosch(new Set([...R, v]), new Set([...P].filter(x => neighbors.has(x))), 
+                     new Set([...X].filter(x => neighbors.has(x))), adjacencyMatrix, cliques);
+        P.delete(v);
+        X.add(v);
+    }
+}
+  
