@@ -270,10 +270,15 @@ const DynamicTable: React.FC<DynamicTableProps> = ({ tempCard, setTempCard }) =>
 };
   const navigate = useNavigate();
   const handleToTimetable = (columnIndex: number) => {
-    const column = cards[columnIndex].map(card => card.name);
+    const column:string[] = cards[columnIndex].map(card => card.name);
     const semester = (columnIndex % 2 === 1 ? 1 : 2);
     navigate("/timetable", { state: { courseList: column, semester: semester } });
   };
+
+  const handleToMap = (columnIndex: number) => {
+    const column = cards[columnIndex].map(card => card.name);
+    navigate("/map", { state: { courseList: column} });
+  }
 
   
   useEffect(() => {
@@ -532,6 +537,7 @@ const DynamicTable: React.FC<DynamicTableProps> = ({ tempCard, setTempCard }) =>
 
   // Save the cards state to localStorage whenever it changes
   useEffect(() => {
+    console.log('getting table cache')
     localStorage.setItem('cards', JSON.stringify(cards));
   }, [cards]);
   
@@ -842,7 +848,9 @@ const DynamicTable: React.FC<DynamicTableProps> = ({ tempCard, setTempCard }) =>
                 classification={card.classification}/>
             ))}
             <button className="add-button" onClick={() => addCard(columnIndex)}>Add Course</button>
-            <button className="to-timetable-button" onClick={() => handleToTimetable(columnIndex)}>View Timetable for Current Academic Year</button>
+            <button className="to-timetable-button" onClick={() => handleToTimetable(columnIndex)}>View Timetable</button>
+            <button className="to-map-button" onClick={() => handleToMap(columnIndex)}>View Map</button>
+
           </DroppableColumn>
         ))}
       </div>

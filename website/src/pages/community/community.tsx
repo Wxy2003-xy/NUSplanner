@@ -26,6 +26,9 @@ const Community = () => {
   const [modalText, setModalText] = useState('');
   const modalRef = useRef<HTMLDivElement>(null);
 
+  const [notice, setNotice] = useState<string | null>('');
+
+
   useEffect(() => {
     const options: Intl.DateTimeFormatOptions = { year: 'numeric', month: 'long', day: 'numeric' };
     const today = new Date();
@@ -142,7 +145,7 @@ const Community = () => {
   };
 
   return (
-    <Layout>
+    <Layout notice={notice ? <div className="notice-message">{notice}</div> : null}>
       <div>
         <div className="community-nav-right">
           <div className="search-box">
@@ -209,5 +212,4 @@ const Community = () => {
 };
 
 export default Community;
-
 

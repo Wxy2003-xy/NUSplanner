@@ -1,4 +1,4 @@
-{
+export const venueData = {
   "LT17": {
     "roomName": "Lecture Theatre 17",
     "floor": 1,
