@@ -25,6 +25,7 @@ const Community = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalText, setModalText] = useState('');
   const modalRef = useRef<HTMLDivElement>(null);
+
   const [notice, setNotice] = useState<string | null>('');
 
 
