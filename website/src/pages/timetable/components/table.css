@@ -5,7 +5,7 @@
     grid-template-rows: repeat(10, 1fr); /* Assuming 10 hours a day */
     grid-gap: 5px;
     border-left: 2px solid #ccc;
-    border-top: 2px solid #ccc;
+    border-top: 3px solid black;
     border-right: 2px solid #ccc;
     border-bottom: 2px solid #ccc;
 }

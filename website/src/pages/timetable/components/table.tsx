@@ -31,7 +31,7 @@ interface TimetableProps {
                     }}>
                         {slot.title} - {slot.lessonType} <br/>
                         {formattedStartTime} - {formattedEndTime} <br/>
-                        {slot.venue} <br/>
+                        {slot.venue?.roomName} <br/>
                     </div>
                 );
             })
@@ -47,12 +47,14 @@ interface TimetableProps {
   }
   
   // Utility function to assign colors based on the aclass type
-  function getColor(type) {
+  function getColor(type:string) {
     const typeColors = {
-      Lecture: 'salmon',
-      Tutorial: 'lightgreen',
-      Laboratory: 'lightblue',
-      Recitation: 'orange',
+      Lecture: '#E68A81',
+      Tutorial: '#8FBE6D',
+      Laboratory: '#708FE3',
+      Recitation: '#EEEEA9',
+      "Sectional Teaching": '#E3B571',
+      Seminar: '#EEEEA9'
       // Define more types and colors as needed
     };
     return typeColors[type] || 'grey'; // Default color

@@ -1,10 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from 'react-router-dom';
-
+import { solve } from "../../../util/timetableGeneration";
 import { useLocation } from 'react-router-dom';
 import { ClassTimeSlotType, ClassTimeSlotTypeUnion, Day } from '../../../types/timetable';
 import { DFSUnionArrange, SlotKey, SlotType, findMaxCliques} from '../../../util/timetableArrangement';
-import { arrange } from "../../../util/timetableArrange";
 import './DynamicTimeTable.css'
 import { size } from 'lodash';
 import { overlap } from "../../../util/timetableArrangement";
@@ -257,7 +256,7 @@ const timeToMinutes = (time: string): number => {
   const filterStartTime = filterByStartTime(minStartTime, filterDays);
   // console.log('filtered slots info: '+ JSON.stringify(filterStartTime))
   // const arranged = arrange(filterStartTime)
-  const arranged = arrange(filterStartTime)
+  const arranged = solve(filterStartTime)
   const navigate = useNavigate();
 
   const handleToMap = () => {
@@ -265,17 +264,17 @@ const timeToMinutes = (time: string): number => {
   };
   return (
     <div> 
-      <h1>Timetable</h1>
+      {/* <h1>Timetable</h1> */}
       <h2>Semester: {semester}</h2>
       <div>
         <h3>Select Days</h3>
         {renderDayCheckboxes()}
       </div>
       <div>
-        <h3>Minimum Start Time</h3>
+        <h3>No earlier than:</h3>
         <input type="time" value={minStartTime} onChange={handleStartTimeChange} />
       </div>
-
+      <h2 className="weekday-header">{'Time:__________Monday_________________Tuesday_________________Wednesday________________Thursday__________________Friday___________'}</h2>
       <div className="timetablecontainer">
         <div className="timing">{'08:00\n08:20\n08:40\n09:00\n09:20\n09:40\n10:00\n10:20\n10:40\n11:00\n11:20\n11:40\n12:00\n12:20\n12:40\n13:00\n13:20\n13:40\n14:00\n14:20\n14:40\n15:00\n15:20\n15:40\n16:00\n16:20\n16:40\n17:00\n17:20\n17:40\n18:00'}</div>
         <div>

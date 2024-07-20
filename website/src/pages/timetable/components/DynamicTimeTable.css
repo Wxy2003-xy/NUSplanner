@@ -45,3 +45,8 @@
   line-height: 1.42;
   z-index: 100000;
 }
+.weekday-header{
+  font-size: large;
+  transform: translateY(23px);
+  margin-bottom: -10px;
+}

@@ -48,17 +48,17 @@ const Layout = ({ children, notice }) => {
               <li className="community">
                 <NavLink to="/community" className={({ isActive }) => isActive ? "active" : ""}>👥️<span>Community</span></NavLink>
               </li>
-              <li className="feedback">
-                <NavLink to="/feedback" className={({ isActive }) => isActive ? "active" : ""}>✏️<span>Feedback</span></NavLink>
-              </li>
-              <li className="about">
-                <NavLink to="/about" className={({ isActive }) => isActive ? "active" : ""}>ℹ️<span>About us</span></NavLink>
-              </li>
               <li className="reminder">
                 <NavLink to="/reminder" className={({ isActive }) => isActive ? "active" : ""}>🗓️<span>Reminder</span></NavLink>
               </li>
               <li className="map">
                 <NavLink to="/map" className={({ isActive }) => isActive ? "active" : ""}>🗺️<span>Map</span></NavLink>
+              </li>
+              <li className="feedback">
+                <NavLink to="/feedback" className={({ isActive }) => isActive ? "active" : ""}>✏️<span>Feedback</span></NavLink>
+              </li>
+              <li className="about">
+                <NavLink to="/about" className={({ isActive }) => isActive ? "active" : ""}>ℹ️<span>About us</span></NavLink>
               </li>
             </ul>
           </div>
