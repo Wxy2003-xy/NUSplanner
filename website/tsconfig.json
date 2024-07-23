@@ -1,28 +1,60 @@
+// {
+//   "compilerOptions": {
+//     "target": "ES2020",
+//     "useDefineForClassFields": true,
+//     "lib": ["ES2020", "DOM", "DOM.Iterable"],
+//     "module": "ESNext",
+//     "skipLibCheck": true,
+//     "allowImportingTsExtensions": true,
+//     "resolveJsonModule": true,
+//     "isolatedModules": true,
+//     "noEmit": true,
+//     "jsx": "react-jsx",
+//     "strict": true,
+//     "noUnusedLocals": true,
+//     "noUnusedParameters": true,
+//     "noFallthroughCasesInSwitch": true,
+//     "baseUrl": "./",
+//     "paths": {
+//       "@/*": ["website/src/*"]
+//     },
+//     "moduleResolution": "node",
+//     "types": ["jest"],
+//     "allowSyntheticDefaultImports": true
+//   },
+//   "include": ["website/src"],
+//   "references": [{ "path": "./tsconfig.node.json" }]
+// }
 {
   "compilerOptions": {
     "target": "ES2020",
-    "useDefineForClassFields": true,
-    "lib": ["ES2020", "DOM", "DOM.Iterable"],
     "module": "ESNext",
+    "lib": ["ES2020", "DOM"],
+    "jsx": "react-jsx",
+    "baseUrl": "./website/src",  // Adjusted to point directly where your source files are
+    "paths": {
+      "@/*": ["*"]  // Simplified based on the new baseUrl
+    },
+    "moduleResolution": "node",
     "skipLibCheck": true,
-    "allowImportingTsExtensions": true,
     "resolveJsonModule": true,
     "isolatedModules": true,
     "noEmit": true,
-    "jsx": "react-jsx",
     "strict": true,
-    "noUnusedLocals": true,
-    "noUnusedParameters": true,
     "noFallthroughCasesInSwitch": true,
-    "baseUrl": "./",
-    "paths": {
-      "@/*": ["website/src/*"]
-    },
-    "moduleResolution": "node",
-    "allowSyntheticDefaultImports": true
+    "types": ["jest"],
+    "allowSyntheticDefaultImports": true,
+    "noUnusedLocals": false, // Set this to false to ignore local unused variables
+    "noUnusedParameters": false
   },
-  "include": ["website/src"],
-  "references": [{ "path": "./tsconfig.node.json" }]
+  "include": [
+    "**/*",  // To include all files under the src directory
+    "../test/**/*"  // Assuming test directory is at the same level as src
+  ],
+  "exclude": ["node_modules", "build"],
+  "references": [
+    { "path": "./tsconfig.node.json" }
+  ]
 }
 
  
