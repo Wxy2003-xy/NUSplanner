@@ -3,13 +3,30 @@ import { NavLink } from 'react-router-dom';
 import logoImage from '../images/nusplannerLogo.png';
 import './Layout.css';
 
-const Layout = ({ children, notice }) => {
+const Layout = ({ children }) => {
   const [currentDate, setCurrentDate] = useState('');
+  const [currentSentenceIndex, setCurrentSentenceIndex] = useState(0);
+
+  const sentences = [
+    <>Any upcoming deadlines on <a href="https://canvas.nus.edu.sg" target="_blank" rel="noopener noreferrer">Canvas</a>?</>,
+    <>Have you checked your <a href="https://exchange.nus.edu.sg" target="_blank" rel="noopener noreferrer">email</a> today?</>,
+    <>Anything pressing on <a href="https://myedurec.nus.edu.sg" target="_blank" rel="noopener noreferrer">EduRec</a>?</>,
+    <>Don't forget to check your Reminder!</>
+  ];
+
   useEffect(() => {
     const options: Intl.DateTimeFormatOptions = { year: 'numeric', month: 'long', day: 'numeric' };
     const today = new Date();
     setCurrentDate(today.toLocaleDateString(undefined, options));
   }, []);
+
+  useEffect(() => {
+    const intervalId = setInterval(() => {
+      setCurrentSentenceIndex((prevIndex) => (prevIndex + 1) % sentences.length);
+    }, 5000); // Change sentence every 5 seconds
+
+    return () => clearInterval(intervalId); // Cleanup interval on component unmount
+  }, [sentences.length]);
 
   return (
     <div className="layout">
@@ -25,8 +42,10 @@ const Layout = ({ children, notice }) => {
             <p></p>
           </div>
         </div>
-        <div className="header-notice">
-          {notice ? <div className="notice-content">{notice}</div> : <div className="title-container"><p></p></div>}
+        <div className="scroll-container">
+          <div className="scroll-content">
+            {sentences[currentSentenceIndex]}
+          </div>
         </div>
         <div className="date-container">
           <span>{currentDate}</span>
