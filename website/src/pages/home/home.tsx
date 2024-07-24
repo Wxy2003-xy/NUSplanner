@@ -6,12 +6,28 @@ import logoImage from '../../images/nusplannerLogo.png';
 
 const Home: React.FC = () => {
   const [currentDate, setCurrentDate] = useState<string>('');
+  const [currentSentenceIndex, setCurrentSentenceIndex] = useState(0);
+
+  const sentences = [
+    <>Any upcoming deadlines on <a href="https://canvas.nus.edu.sg" target="_blank" rel="noopener noreferrer">Canvas</a>?</>,
+    <>Have you checked your <a href="https://exchange.nus.edu.sg" target="_blank" rel="noopener noreferrer">email</a> today?</>,
+    <>Anything pressing on <a href="https://myedurec.nus.edu.sg" target="_blank" rel="noopener noreferrer">EduRec</a>?</>,
+    <>Don't forget to check your Reminder!</>
+  ];
 
   useEffect(() => {
     const date = new Date();
     const formattedDate = date.toLocaleDateString(undefined, { year: 'numeric', month: 'long', day: 'numeric' });
     setCurrentDate(formattedDate);
   }, []);
+
+  useEffect(() => {
+    const intervalId = setInterval(() => {
+      setCurrentSentenceIndex((prevIndex) => (prevIndex + 1) % sentences.length);
+    }, 5000); // Change sentence every 5 seconds
+
+    return () => clearInterval(intervalId); // Cleanup interval on component unmount
+  }, [sentences.length]);
 
   return (
     <div className="home-layout">
@@ -25,6 +41,11 @@ const Home: React.FC = () => {
           </NavLink>
           <div className="title-container">
             <p></p>
+          </div>
+        </div>
+        <div className="home-scroll-container">
+          <div className="home-scroll-content">
+            {sentences[currentSentenceIndex]}
           </div>
         </div>
         <div className="date-container">
