@@ -15,6 +15,11 @@
   width: 100%;
 }
 
+.feedback-nav-right h1 {
+  text-align: center;
+  color: #69707A;
+}
+
 .feedback-nav-right h2 {
   text-align: left;
   margin-top: 0;
@@ -24,6 +29,30 @@
   margin-bottom: 20px;
 }
 
+.feedback-nav-right p {
+  text-align: center;
+  color: #888;
+  padding-left: 20px;
+  padding-right: 20px;
+  font-size: 20px;
+}
+
+.feedback-nav-right .feedback-prefix {
+  text-align: left;
+  color: #888;
+  font-size: 20px;
+  margin-bottom: 0px;
+}
+
+.feedback-nav-right .feedback-prefix .report-button {
+  margin-left: 40px;
+}
+
+.feedback-nav-right .form-group .feedbackform {
+  padding-left: 20px;
+  padding-right: 20px;
+  padding-top:0px;
+}
 
 
 .form-group {
@@ -43,6 +72,15 @@ textarea {
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   resize: vertical;
   box-sizing: border-box; /* Include padding and border in element's width and height */
+}
+
+.feedback-prefix button {
+  padding: 10px 20px; /* Adjust button padding */
+  font-size: 16px; /* Adjust font size */
+  cursor: pointer;
+  background-color: #1abc9c;
+  display: inline-block;
+  margin: 20px;
 }
 
 button {
