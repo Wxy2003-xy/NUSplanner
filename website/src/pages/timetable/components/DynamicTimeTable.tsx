@@ -8,6 +8,11 @@ import './DynamicTimeTable.css'
 import { size } from 'lodash';
 import { overlap } from "../../../util/timetableArrangement";
 import Timetable from "./table";
+import { TimetableArrangement } from "../../../util/dfsArrange";
+import { greedyArrange } from "../../../util/greedyArrange";
+import { constructGraph, findNonOverlappingSchedule } from "../../../util/HopcroftKarp";
+import { BipartiteMatcher } from "../../../util/bipartiteMatcher";
+import { TimeTable } from "../../../util/Timetable";
 const daysOfWeek = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
 
 const fetchTimeSlotInfo = async (acadYear:string, moduleCode:string, semester:number) => {
@@ -256,7 +261,30 @@ const timeToMinutes = (time: string): number => {
   const filterStartTime = filterByStartTime(minStartTime, filterDays);
   // console.log('filtered slots info: '+ JSON.stringify(filterStartTime))
   // const arranged = arrange(filterStartTime)
-  const arranged = solve(filterStartTime)
+  // const arranged = solve(filterStartTime)
+  // const arranged = greedyArrange(filterStartTime)
+  // const arranged = greedyArrange(filterStartTime)
+  const timeTable = new TimeTable();
+  const partitionSlots = (timeslots: ClassTimeSlotTypeUnion[]): ClassTimeSlotTypeUnion[][] => {
+    const courses = new Map<string, ClassTimeSlotTypeUnion[]>();
+    timeslots.forEach(slot => {
+        const title = `${slot.title} ${slot.lessonType || 'undefined'}`;
+        if (!courses.has(title)) {
+            courses.set(title, []);
+        }
+        courses.get(title)?.push(slot);
+    });
+    const partitions: ClassTimeSlotTypeUnion[][] = Array.from(courses.values());
+    return partitions;
+}
+  const partitions = partitionSlots(filterStartTime);
+  
+  const arranged = timeTable.findValidArrangement(partitions);
+  
+
+
+
+
   const navigate = useNavigate();
 
   const handleToMap = () => {

@@ -22,7 +22,7 @@ interface TimetableProps {
             const formattedEndTime = formatTime(slot.endTime[index]);
                 return (
                     <div
-                    key={`${slot.title}${day}${slot.startTime[index]}`} // Unique key for React elements
+                    key={`${slot.title}${slot.lessonType}${slot.classNo}${day}${slot.startTime[index]}`} // Unique key for React elements
                     className="timetable-slot"
                     style={{
                     gridColumn: dayIndex,
