@@ -1,7 +1,105 @@
-.map-container {
-   display: flex;
+.reminder-nav-right {
+  flex-grow: 1;
+  background-color: #f9f9f9;
+  /*background-color: #f0f0f0;*/
+  padding: 20px;
+  box-sizing: border-box;
 }
 
-.reminder-nav-right {
-   padding: 20px;
+.reminder-header {
+  display: flex;
+  justify-content: space-between;
+  padding: 20px 0;
+}
+
+.reminder-header .reminder-icon {
+  display: inline-block;
+  width: 24px;
+  height: 24px;
+  border: solid black;
+  border-width: 0 3px 3px 0;
+  /* padding: 3px; */
+  cursor: pointer;
+  user-select: none;
+  transition: transform 0.5s, border-color 0.3s; /* Smooth transition */
+}
+
+.reminder-header .reminder-icon-left {
+  transform: rotate(135deg);
+  -webkit-transform: rotate(135deg);
+}
+
+.reminder-header .reminder-icon-right {
+  transform: rotate(-45deg);
+  -webkit-transform: rotate(-45deg);
+}
+
+.reminder-header .reminder-icon-left:hover {
+  transform: scale(1.2) rotate(135deg); /* Enlarge but keep the rotation fixed */
+}
+
+.reminder-header .reminder-icon-right:hover {
+  transform: scale(1.2) rotate(-45deg); /* Enlarge but keep the rotation fixed */
+}
+
+.reminder-header .reminder-date {
+  font-size: 28px; /* Larger font size for the date */
+  font-weight: bold;
+}
+
+.reminder-days {
+  display: flex;
+  justify-content: space-between;
+  padding-bottom: 10px;
+}
+
+.reminder-row {
+  display: flex;
+}
+
+.reminder-col {
+  flex: 1;
+  text-align: center;
+  padding: 10px;
+  box-sizing: border-box;
+  border: 1px solid #ddd; 
+}
+
+.reminder-col .reminder-number {
+  display: block;
+  margin-bottom: 5px;
+}
+
+.reminder-cell {
+  min-height: 100px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  background-color: #d4ebf2;
+}
+
+.reminder-cell.disabled {
+  /*background-color: #f0f0f0;*/
+  /*background-color: #fff9c4;*/
+  background-color: #d1e7fd;
+}
+
+.reminder-cell.selected {
+  background-color: #b2d4f0;
+}
+
+.reminder-textarea {
+  width: 100%;
+  height: 60px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  padding: 5px;
+  font-size: 14px;
+  resize: none;
+  box-sizing: border-box;
+  background-color: #f0f0f0;
+}
+
+.reminder-textarea:focus {
+  border-color: #999;
 }

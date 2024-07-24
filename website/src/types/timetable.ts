@@ -22,8 +22,9 @@ export type Venue = {
 };
 export type Weeks = NumericWeeks | WeekRange;   // NumericWeeks for irregular schedule
 export type NumericWeeks = readonly number[];   // [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13]
-export const WorkingDays: readonly string[] = [ 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', ];
-export const DaysOfWeek: readonly string[] = [...WorkingDays, 'Sunday'];
+export type Day = | 'Monday' | 'Tuesday' | 'Wednesday' | 'Thursday' | 'Friday' | 'Saturday' | 'Sunday';
+export const WorkingDays: readonly Day[] = [ 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', ];
+export const DaysOfWeek: readonly Day[] = [...WorkingDays, 'Sunday'];
 
 export type WeekRange = {
     start: string;  // The start and end dates
@@ -36,7 +37,7 @@ export interface GenericTimeSlot {
     title: string;
     startTime?: StartTime;
     endTime?: EndTime;
-    day?: string;
+    day?: Day;
     color?: string;
 }
 
@@ -45,7 +46,6 @@ export interface CustomizableTimeSlot extends GenericTimeSlot {
     // endTime: EndTime;
     // day: Day;
     venue?: string;
-
 }
 
 export interface ClassTimeSlotType extends GenericTimeSlot {
@@ -53,36 +53,22 @@ export interface ClassTimeSlotType extends GenericTimeSlot {
     // startTime: StartTime;
     // endTime: EndTime;
     weeks?: Weeks;
-    venue?: string;
+    venue?: Venue;
     // day: Day;
     lessonType?: LessonType 
 }
 
-<<<<<<< Updated upstream
-=======
 export interface ClassTimeSlotTypeUnion {
     classNo?: ClassNo;
     startTime: StartTime[];
     endTime: EndTime[];
     weeks?: Weeks;
-    venue?: string;
-    day: string[];
+    venue?: Venue;
+    day: Day[];
     lessonType?: LessonType;
     title?: string;
 }
 
->>>>>>> Stashed changes
 export type CourseSlotGroupType = {
     SlotCollection: ClassTimeSlotType[];
-}
-
-export interface CleanClassTimeSlot {
-    classNo?: ClassNo[];
-    startTime: StartTime[];
-    endTime: EndTime[];
-    weeks?: Weeks;
-    venue?: string[];
-    day: string[];
-    lessonType?: LessonType;
-    title?: string;
 }

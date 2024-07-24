@@ -1,133 +1,90 @@
-import React, { useState, useEffect, ChangeEvent } from "react";
-import { GenericTimeSlot, Day, ClassTimeSlotType } from '../../../types/timetable';
+import React, { useState, useEffect } from "react";
+import { useNavigate } from 'react-router-dom';
+import { solve } from "../../../util/timetableGeneration";
 import { useLocation } from 'react-router-dom';
-<<<<<<< Updated upstream
-import { getYear } from 'date-fns';
-// Utility to map index to day names (assuming Monday start)
-const dayNames: { [key: number]: Day } = {
-  0: 'Monday',
-  1: 'Tuesday',
-  2: 'Wednesday',
-  3: 'Thursday',
-  4: 'Friday',
-  5: 'Saturday',
-  6: 'Sunday'
-}
-=======
-import { ClassTimeSlotType, ClassTimeSlotTypeUnion, CleanClassTimeSlot} from '../../../types/timetable';
+import { ClassTimeSlotType, ClassTimeSlotTypeUnion, Day } from '../../../types/timetable';
 import { DFSUnionArrange, SlotKey, SlotType, findMaxCliques} from '../../../util/timetableArrangement';
 import './DynamicTimeTable.css'
 import { size } from 'lodash';
 import { overlap } from "../../../util/timetableArrangement";
 import Timetable from "./table";
-import { arrange } from '../../../util/timetableArrange';
-import { backtrackingArrange, slotPreprocessing, transformAndMergeSlots } from "../../../util/arrangeWithUnionedSlots";
-import UnderConstruction from "../../../components/UnderConstruction";
+import { TimetableArrangement } from "../../../util/dfsArrange";
+import { greedyArrange } from "../../../util/greedyArrange";
+import { constructGraph, findNonOverlappingSchedule } from "../../../util/HopcroftKarp";
+import { BipartiteMatcher } from "../../../util/bipartiteMatcher";
+import { TimeTable } from "../../../util/Timetable";
 const daysOfWeek = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
->>>>>>> Stashed changes
 
-const START_TIME = 8 * 60;  // 8:00 AM in minutes
-const END_TIME = 18 * 60;   // 6:00 PM in minutes
-const INTERVAL = 10; 
-
-function fetchTimeSlotInfo(acadYear: string, moduleCode: string, semesterArg: number): [ClassTimeSlotType | null, string] {
-  const [courseTimeInfo, setTimeInfo] = useState<ClassTimeSlotType | null>(null);
-  const [error, setError] = useState<string>('');
-  if (semesterArg === 0) {
-    throw new Error('Invalid semester data');
-  }
-  useEffect(() => {
-    const nextYear = parseInt(acadYear, 10) + 1;
-    const apiUrl = `https://api.nusmods.com/v2/${acadYear}-${nextYear}/modules/${moduleCode}.json`;
-
-    fetch(apiUrl)
-      .then(response => {
-        if (!response.ok) {
+const fetchTimeSlotInfo = async (acadYear:string, moduleCode:string, semester:number) => {
+  const apiUrl = `https://api.nusmods.com/v2/${acadYear}/modules/${moduleCode}.json`;
+  try {
+      const response = await fetch(apiUrl);
+      if (!response.ok) {
           throw new Error('Network response was not ok');
-        }
-        return response.json();
-      })
-      .then(data => {
-        const semesterSpecificInfo = data.semesterData.find((semester: any) => semester.semester === semesterArg);
-        if (semesterSpecificInfo) {
-          const slot: ClassTimeSlotType = {
-            classNo: semesterSpecificInfo.classNo,
-            startTime: semesterSpecificInfo.startTime,
-            endTime: semesterSpecificInfo.endTime,
-            weeks: semesterSpecificInfo.weeks,
-            venue: semesterSpecificInfo.venue,
-            day: semesterSpecificInfo.day,
-            lessonType: semesterSpecificInfo.lessonType,
-            title: moduleCode
-          };
-          setTimeInfo(slot);
-        } else {
-          const slot: ClassTimeSlotType = {
-            classNo: undefined,
-            startTime: undefined,
-            endTime: undefined,
-            weeks: undefined,
-            venue: undefined,
-            day: undefined,
-            lessonType: undefined,
-            title: moduleCode
-          };
-          // setTimeInfo(slot);
-          console.log(moduleCode + 'has no time slot info')
-          throw new Error('Semester information  not found');
-        }
-      })
-      .catch(err => {
-        console.error('Error fetching data:', err);
-        setError(err.message);
-        setTimeInfo(null);
-      });
-  }, [acadYear, moduleCode, semesterArg]); // Dependencies for useEffect
-  console.log(courseTimeInfo);
-  
-  return [courseTimeInfo, error];
-}
-
+      }
+      const data = await response.json();
+      const semesterSpecificInfo = data.semesterData.find(semesterData => semesterData.semester === semester);
+      if (!semesterSpecificInfo) {
+          throw new Error('Semester information not found');
+      }
+      return semesterSpecificInfo.timetable.map(slot => ({
+          classNo: slot.classNo,
+          startTime: slot.startTime,
+          endTime: slot.endTime,
+          weeks: slot.weeks,
+          venue: slot.venue,
+          day: slot.day,
+          lessonType: slot.lessonType,
+          title: moduleCode
+      }));
+  } catch (err) {
+      console.error('Error fetching data:', err);
+      throw err;
+  }
+};
 
 const DynamicTimeTable = () => {
   const location = useLocation();
-  const { courseList, semester} = location.state || {courseList: [], semster: 0}
+  const { courseList, semester } = location.state || { courseList: [], semester: 1 };
   const currentYear = new Date().getFullYear();
-  const toArrange:ClassTimeSlotType[] = courseList.map(
-    course => fetchTimeSlotInfo(JSON.stringify(currentYear), course, semester));
+  const acadYear = `${currentYear}-${currentYear + 1}`;
 
-
-  const [numOfDays, setNumOfDays] = useState<number>(() => {
-  const savedDays = localStorage.getItem('numOfDays');
-    return savedDays ? parseInt(savedDays) : 5;
+  const [timeSlots, setTimeSlots] = useState(() => {
+    const data = localStorage.getItem('cachedTimeSlots');
+    return data ? JSON.parse(data) : {};
   });
+  const [errors, setErrors] = useState({});
+  const initialDays = JSON.parse(localStorage.getItem('selectedDays') || '["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"]');
+  const initialStartTime = localStorage.getItem('minStartTime') || '10:00';
+
+  const [selectedDays, setSelectedDays] = useState(initialDays);
+  const [minStartTime, setMinStartTime] = useState(initialStartTime);
 
   useEffect(() => {
-    const existingCourses = localStorage.getItem('courseList');
-    console.log();
-    
-    if (!existingCourses || existingCourses === "[]") {
-      console.log("Setting new course list in local storage.");
-      localStorage.setItem('courseList', JSON.stringify(courseList));
-    } else if (JSON.stringify(courseList) !== existingCourses) {
-      console.log("Clearing old course list and setting new one.");
-      localStorage.removeItem('courseList'); // Clear existing
-      localStorage.setItem('courseList', JSON.stringify(courseList)); // Set new
+    // Cache the state to local storage
+    localStorage.setItem('selectedDays', JSON.stringify(selectedDays));
+    localStorage.setItem('minStartTime', minStartTime);
+  }, [selectedDays, minStartTime]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const slotsPromises = courseList.map(course => fetchTimeSlotInfo(acadYear, course, semester));
+        const slots = await Promise.all(slotsPromises);
+        const newSlots = slots.reduce((acc, slot, idx) => ({
+          ...acc,
+          [courseList[idx]]: slot
+        }), {});
+        setTimeSlots(newSlots);
+        localStorage.setItem('cachedTimeSlots', JSON.stringify(newSlots));
+      } catch (error) {
+        console.error('Failed to fetch data:', error);
+      }
+    };
+
+    if (courseList.length > 0 && (Object.keys(timeSlots).length === 0 || window.confirm("New course list detected. Do you want to refresh the cached data?"))) {
+      fetchData();
     }
-<<<<<<< Updated upstream
-  }, [courseList]);
-  const handleSettingDays = (event: ChangeEvent<HTMLSelectElement>) => {
-    const rows = parseInt(event.target.value);
-    setNumOfDays(rows);
-    localStorage.setItem('numOfDays', rows.toString());
-  };
-  return (
-    <div>
-      <select className="dropdown-select-days" value={numOfDays} onChange={handleSettingDays}>
-        {[4, 5, 6, 7].map(num => (<option key={num} value={num}>{num + ' Days'}</option>))}
-      </select>
-      <h1>Timetable</h1>
-=======
   }, [acadYear, courseList, semester]); // Removed timeSlots from dependencies
 
   const saveTimeSlots = () => {
@@ -204,7 +161,7 @@ const DynamicTimeTable = () => {
     return key;
 }
 
-const getKey = (slot: CleanClassTimeSlot): SlotKey => {
+const getKey = (slot: ClassTimeSlotTypeUnion): SlotKey => {
   const key = `${slot.title}${slot.lessonType}${slot.classNo}${slot.day}${slot.startTime}`;
   // console.log(key); // Debugging: Log out the keys to check for duplicates
   return key;
@@ -225,7 +182,7 @@ const getKey = (slot: CleanClassTimeSlot): SlotKey => {
         if (existing) {
             existing.startTime.push(slot.startTime as string);
             existing.endTime.push(slot.endTime as string);
-            existing.day.push(slot.day as string);
+            existing.day.push(slot.day as Day);
         } else {
             grouped.set(partialKey, {
                 classNo: slot.classNo,
@@ -235,7 +192,7 @@ const getKey = (slot: CleanClassTimeSlot): SlotKey => {
                 endTime: [slot.endTime as string],
                 weeks: slot.weeks,
                 venue: slot.venue,
-                day: [slot.day as string],
+                day: [slot.day as Day],
             });
         }
     });
@@ -304,7 +261,30 @@ const timeToMinutes = (time: string): number => {
   const filterStartTime = filterByStartTime(minStartTime, filterDays);
   // console.log('filtered slots info: '+ JSON.stringify(filterStartTime))
   // const arranged = arrange(filterStartTime)
-  const arranged = transformAndMergeSlots(filterDays)
+  // const arranged = solve(filterStartTime)
+  // const arranged = greedyArrange(filterStartTime)
+  // const arranged = greedyArrange(filterStartTime)
+  const timeTable = new TimeTable();
+  const partitionSlots = (timeslots: ClassTimeSlotTypeUnion[]): ClassTimeSlotTypeUnion[][] => {
+    const courses = new Map<string, ClassTimeSlotTypeUnion[]>();
+    timeslots.forEach(slot => {
+        const title = `${slot.title} ${slot.lessonType || 'undefined'}`;
+        if (!courses.has(title)) {
+            courses.set(title, []);
+        }
+        courses.get(title)?.push(slot);
+    });
+    const partitions: ClassTimeSlotTypeUnion[][] = Array.from(courses.values());
+    return partitions;
+}
+  const partitions = partitionSlots(filterStartTime);
+  
+  const arranged = timeTable.findValidArrangement(partitions);
+  
+
+
+
+
   const navigate = useNavigate();
 
   const handleToMap = () => {
@@ -312,18 +292,36 @@ const timeToMinutes = (time: string): number => {
   };
   return (
     <div> 
-      <UnderConstruction/>
       {/* <h1>Timetable</h1> */}
->>>>>>> Stashed changes
       <h2>Semester: {semester}</h2>
-      <ul>
-        {courseList.map((course, index) => (
-          <li key={index}>{course}</li>
-        ))}
-      </ul>
+      <div>
+        <h3>Select Days</h3>
+        {renderDayCheckboxes()}
+      </div>
+      <div>
+        <h3>No earlier than:</h3>
+        <input type="time" value={minStartTime} onChange={handleStartTimeChange} />
+      </div>
+      <h2 className="weekday-header">{'Time:__________Monday_________________Tuesday_________________Wednesday________________Thursday__________________Friday___________'}</h2>
+      <div className="timetablecontainer">
+        <div className="timing">{'08:00\n08:20\n08:40\n09:00\n09:20\n09:40\n10:00\n10:20\n10:40\n11:00\n11:20\n11:40\n12:00\n12:20\n12:40\n13:00\n13:20\n13:40\n14:00\n14:20\n14:40\n15:00\n15:20\n15:40\n16:00\n16:20\n16:40\n17:00\n17:20\n17:40\n18:00'}</div>
+        <div>
+          {arranged ? 
+          <Timetable timeSlots={arranged}></Timetable> : <p>No valid arrangement found.</p>} 
+        </div>
+      </div>
+      <button className="to-map-button" onClick={() => handleToMap()}>View Map</button>
+      {arranged ? (
+      arranged.map(slot => (
+        <div key={getKey(slot)}>
+          <p>{`${slot.title} classNo: ${slot.lessonType} ${slot.classNo} on ${slot.day} from ${slot.startTime} to ${slot.endTime} at ${slot.venue}`}</p>
+        </div>
+      ))
+    ) : <p>No valid arrangement found.</p>}
+    {/* {areMapsEqual(countLessonTypesPerCourse(slotsArray), countLessonTypesPerCourse(filterStartTime))?<p></p>:<p>there are clashing slots</p>} */}
+      <button onClick={saveTimeSlots}>Save Timetable</button>
     </div>
   );
-  
 };
 
 export default DynamicTimeTable;

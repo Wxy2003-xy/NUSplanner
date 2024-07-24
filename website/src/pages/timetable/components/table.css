@@ -1,0 +1,25 @@
+.timetable-comp {
+    width: 100%;
+    display: grid;
+    grid-template-columns: repeat(5, 1fr); /* 5 working days */
+    grid-template-rows: repeat(10, 1fr); /* Assuming 10 hours a day */
+    grid-gap: 5px;
+    border-left: 2px solid #ccc;
+    border-top: 3px solid black;
+    border-right: 2px solid #ccc;
+    border-bottom: 2px solid #ccc;
+}
+
+.timetable-slot {
+    padding: 2px;
+    color: #333;
+    display: flex;
+    align-items: baseline;
+    justify-content: left;
+    border-radius: 4px;
+    border-left: 2px solid #ccc;
+    border-top: 2px solid #ccc;
+    border-right: 2px solid #ccc;
+    border-bottom: 2px solid #ccc;
+    background-clip: padding-box; /* Prevents background color from bleeding under the border */
+}

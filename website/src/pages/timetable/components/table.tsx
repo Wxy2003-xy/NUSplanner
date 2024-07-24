@@ -1,8 +1,8 @@
 import React from 'react';
 import './table.css';
-import { ClassTimeSlotTypeUnion, CleanClassTimeSlot } from '../../../types/timetable';
+import { ClassTimeSlotTypeUnion } from '../../../types/timetable';
 interface TimetableProps {
-    timeSlots: CleanClassTimeSlot[];
+    timeSlots: ClassTimeSlotTypeUnion[];
   }
   function formatTime(time: string): string {
     const hour = parseInt(time.substring(0, 2), 10);
@@ -22,7 +22,7 @@ interface TimetableProps {
             const formattedEndTime = formatTime(slot.endTime[index]);
                 return (
                     <div
-                    key={`${slot.title}${day}${slot.startTime[index]}`} // Unique key for React elements
+                    key={`${slot.title}${slot.lessonType}${slot.classNo}${day}${slot.startTime[index]}`} // Unique key for React elements
                     className="timetable-slot"
                     style={{
                     gridColumn: dayIndex,
@@ -31,7 +31,7 @@ interface TimetableProps {
                     }}>
                         {slot.title} - {slot.lessonType} <br/>
                         {formattedStartTime} - {formattedEndTime} <br/>
-                        {slot.venue} <br/>
+                        {slot.venue?.roomName} <br/>
                     </div>
                 );
             })

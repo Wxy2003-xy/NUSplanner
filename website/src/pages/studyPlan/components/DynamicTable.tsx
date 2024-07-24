@@ -128,7 +128,8 @@ const DynamicTable: React.FC<DynamicTableProps> = ({ tempCard, setTempCard }) =>
   });
   // notification, default nothing
   const [notification, setNotification] = useState<string | null>(null);
-  const [clashnotification, setClashNotification] = useState<string | null>(null);
+  const [clashNotification, setClashNotification] = useState<string | null>(null);
+
   useEffect(() => { 
     let timer;
     if (notification) {
@@ -140,17 +141,19 @@ const DynamicTable: React.FC<DynamicTableProps> = ({ tempCard, setTempCard }) =>
   
     // Cleanup function to clear the timer if the component unmounts or the effect reruns
     return () => clearTimeout(timer);
-  }, [notification]); // Dependency array ensures effect runs only when `notification` changes  
+  }, [notification]); // Dependency array ensures effect runs only when notification changes
   useEffect(() => { 
     let timer;
-    if (clashnotification) {
+    if (clashNotification) {
       // Set a timer to clear the notification after 2 seconds
       timer = setTimeout(() => {
         setClashNotification(null);
       }, 5000); 
     }
+  
+    // Cleanup function to clear the timer if the component unmounts or the effect reruns
     return () => clearTimeout(timer);
-  }, [clashnotification]);
+  }, [notification]);
   // selected card, temproraily hold selected card object; type SelectedCard from website/src/types/studyplan.ts
   const [selectedCard, setSelectedCard] = useState<SelectedCard | null>(null);
   // grade to be set of the selected card, default empty
@@ -231,16 +234,17 @@ const DynamicTable: React.FC<DynamicTableProps> = ({ tempCard, setTempCard }) =>
     let newMinors = [...minors];
     newMinors[index][type] = value;
     setMinors(newMinors);
-    localStorage.setItem(`minor${type}${index + 1}`, value);
+    localStorage.setItem('minors', JSON.stringify(newMinors));
     console.log('minor info set');
   } 
 
-  const handleMoveCard = (fromColumn: number, fromIndex: number, toColumn: number, toIndex = null) => { 
+  const handleMoveCard = (fromColumn: number, fromIndex: number, toColumn: number, toIndex = null) => {
     if (fromColumn === undefined || fromIndex === undefined || toColumn === undefined || toIndex === undefined) {
       console.error("Invalid move parameters", {fromColumn, fromIndex, toColumn, toIndex});
       return;
     }
     console.log(`Moving card from Column: ${fromColumn}, Index: ${fromIndex} to Column: ${toColumn}, Index: ${toIndex}`);
+
     if (fromColumn === toColumn && toIndex !== null) {
       const updatedCards = Array.from(cards[fromColumn]);
       const [removed] = updatedCards.splice(fromIndex, 1);
@@ -248,9 +252,8 @@ const DynamicTable: React.FC<DynamicTableProps> = ({ tempCard, setTempCard }) =>
       const newCards = [...cards];
       newCards[fromColumn] = updatedCards;
       setCards(newCards);
-      updateCardPrerequisites(removed, toColumn); // Update prerequisites for the moved card
-      staticupdateAllPrerequisites(cards);
-
+      // updateCardPrerequisites(removed, toColumn); // Update prerequisites for the moved card
+      staticUpdateAllPrerequisites(cards);
       console.log(`Card moved within the same column to a new position Index: ${toIndex}`);
     } else {
       const card = cards[fromColumn][fromIndex];
@@ -259,18 +262,23 @@ const DynamicTable: React.FC<DynamicTableProps> = ({ tempCard, setTempCard }) =>
       const newCards = [...cards];
       newCards[fromColumn] = newCards[fromColumn].filter((_, index) => index !== fromIndex);
       newCards[toColumn].push(card); // Add card to the new column
-      updateCardPrerequisites(card, toColumn); // Update prerequisites for the moved card
+      // updateCardPrerequisites(card, toColumn); // Update prerequisites for the moved card
       setCards(newCards);
-      staticupdateAllPrerequisites(cards);
+      staticUpdateAllPrerequisites(cards);
       console.log(`Card moved to new Column: ${toColumn} at Index: ${newCards[toColumn].length - 1}`);
     }
-  };
+};
   const navigate = useNavigate();
   const handleToTimetable = (columnIndex: number) => {
-    const column = cards[columnIndex].map(card => card.name);
+    const column:string[] = cards[columnIndex].map(card => card.name);
     const semester = (columnIndex % 2 === 1 ? 1 : 2);
     navigate("/timetable", { state: { courseList: column, semester: semester } });
   };
+
+  const handleToMap = (columnIndex: number) => {
+    const column = cards[columnIndex].map(card => card.name);
+    navigate("/map", { state: { courseList: column} });
+  }
 
   
   useEffect(() => {
@@ -295,12 +303,12 @@ const DynamicTable: React.FC<DynamicTableProps> = ({ tempCard, setTempCard }) =>
   }, [minors]);
 
   useEffect(() => {
-    const title = `Study Plan for ${major}` + (secondMajor && (
-      programs.includes('Double') || programs.includes('2nd')
-    ) ? ` and ${secondMajor}` : '');
-
+    // Construct the title based on whether there's a second major and the program type includes 'Double' or '2nd'
+    const title = `Study Plan for ${major}` + (secondMajor && (programs.includes('Double') || programs.includes('2nd Major')) ? ` and ${secondMajor}` : '');
+  
     setHeaderTitle(title);
   }, [major, secondMajor, programs]);
+  
 
   useEffect(() => {
     const sub = (minors.length < 1 ? '' : programs.includes('Minor(s)') 
@@ -345,7 +353,8 @@ const DynamicTable: React.FC<DynamicTableProps> = ({ tempCard, setTempCard }) =>
     const endTime2 = new Date(startTime2.getTime() + exam2.examDuration * 60000); // converting duration to milliseconds
   
     const overlap = startTime1 < endTime2 && startTime2 < endTime1;
-    console.log(`Checking overlap between ${card1.name} and ${card2.name}:`, overlap);
+    console.log(`Checking overlap between ${card1.name} and ${card2.name}: ${overlap}`);
+
     return overlap;
   }
   
@@ -355,7 +364,6 @@ const DynamicTable: React.FC<DynamicTableProps> = ({ tempCard, setTempCard }) =>
     if (tempCard) {
       let prereqNotSatisfied = false;
       let examOverlapDetected = false;
-
       const sem = columnIndex % 2 === 1 ? 1 : 2;
       if (!tempCard.semester.includes(sem)) {
         setNotification(`${tempCard.name} is not offered in current semester`);
@@ -371,17 +379,7 @@ const DynamicTable: React.FC<DynamicTableProps> = ({ tempCard, setTempCard }) =>
         return; // Stop adding the course if it's precluded
       }
 
-      // Check for exam overlaps with other cards in the same column
-      cards[columnIndex].forEach(card => {
-        if (card.examInfo && tempCard.examInfo && examsOverlap(card, tempCard)) {
-          examOverlapDetected = true;
-          console.log('clash detected between', tempCard.name, 'and', card.name);
-          setClashNotification(`Exam time overlap detected between ${tempCard.name} and ${card.name}`);
-          // Removed the line that clears the notification immediately
-          return; // Early return if a clash is detected
-        }
-      });
-
+      if (tempCard.prereqTree) {
         try {
           const prereqTree:PrereqTreeNode | string = tempCard.prereqTree;
           console.log(JSON.stringify(prereqTree))
@@ -396,7 +394,14 @@ const DynamicTable: React.FC<DynamicTableProps> = ({ tempCard, setTempCard }) =>
       }
       const newCard = { ...tempCard, prereqNotSatisfied };
       
-      
+      // Check for exam overlaps with other cards in the same column
+      cards[columnIndex].forEach(card => {
+      if (card.examInfo && tempCard.examInfo && examsOverlap(card, tempCard)) {
+        examOverlapDetected = true;
+        console.log('clash')    
+        setClashNotification(`Exam time overlap detected between ${tempCard.name} and ${card.name}`);
+      }
+      });
 
       let existingCardFound = false;
   
@@ -463,18 +468,23 @@ const DynamicTable: React.FC<DynamicTableProps> = ({ tempCard, setTempCard }) =>
 
   const handleCardClick = (columnIndex: number, cardId: number) => {
     console.log("ID: " + cardId + " in Column Index: " + columnIndex);
-    const card = cards[columnIndex].find(card => card.id === cardId);
+    const cardIndex = cards[columnIndex].findIndex(card => card.id === cardId);
+    const card = cards[columnIndex][cardIndex];
+
     const isSelected = selectedCard && selectedCard.id === cardId;
     if (isSelected) {
+      console.log("Deselecting card at Column: " + columnIndex + ", Row: " + cardIndex);
       setSelectedCard(null);
     } else if (card) {
+      console.log("Selecting card at Column: " + columnIndex + ", Row: " + cardIndex);
       setSelectedCard({
         ...card,
         columnIndex
       });
       setGrade(card.grade || '');
     }
-  };
+};
+
 
   const updateGrade = (event: ChangeEvent<HTMLSelectElement>) => {
     setGrade(event.target.value);
@@ -527,6 +537,7 @@ const DynamicTable: React.FC<DynamicTableProps> = ({ tempCard, setTempCard }) =>
 
   // Save the cards state to localStorage whenever it changes
   useEffect(() => {
+    console.log('getting table cache')
     localStorage.setItem('cards', JSON.stringify(cards));
   }, [cards]);
   
@@ -616,10 +627,9 @@ const DynamicTable: React.FC<DynamicTableProps> = ({ tempCard, setTempCard }) =>
     });
   };
 
-  const staticupdateAllPrerequisites = (cards: CardType[][]) => {
+  const staticUpdateAllPrerequisites = (cards:CardType[][]) => {
     cards.forEach((column, columnIndex) => {
       column.forEach(card => {
-        console.log('checking ' + card.name)
         updateCardPrerequisites(card, columnIndex);
       });
     });
@@ -634,6 +644,7 @@ const DynamicTable: React.FC<DynamicTableProps> = ({ tempCard, setTempCard }) =>
     const isSatisfied = checkPrerequisites(card.prereqTree, columnIndex);
     card.prereqNotSatisfied = !isSatisfied;
     card.color = isSatisfied ? '#88f7c5' : '#ff9999';
+};
   /**
   * Find a card by ID
   * @param {number} id - card ID
@@ -651,14 +662,6 @@ const DynamicTable: React.FC<DynamicTableProps> = ({ tempCard, setTempCard }) =>
   };
 
   const iterateCardByCourseCodeLeft = (courseCode: string, columnIdx: number): boolean => {
-    const cleanCourseCode = courseCode.split(':')[0].trim();
-    console.log(cleanCourseCode);
-    if (cleanCourseCode.search(/\d/) !== -1) {
-      console.log('specific code')
-      for (let i = 0; i < columnIdx; i++) {
-        if (cards[i].some(card => card.name === cleanCourseCode)) {
-          console.log('found: ' + cleanCourseCode)
-          return true;  
     const hasWildcard = courseCode.includes('%');
     let cleanCourseCode = courseCode.split(':')[0].trim(); // Strip the ":D" suffix if present
 
@@ -666,17 +669,11 @@ const DynamicTable: React.FC<DynamicTableProps> = ({ tempCard, setTempCard }) =>
     if (hasWildcard) {
         cleanCourseCode = cleanCourseCode.split('%')[0].trim();
     }
-    // console.log('Checking course:', cleanCourseCode);
-    // Check for exact matches or prefix matches based on wildcard presence
-    for (let i = 0; i < columnIdx; i++) {
-        if (hasWildcard) {
-            if (cards[i].some(card => card.name.startsWith(cleanCourseCode))) {
-                // console.log('Found match with wildcard:', cleanCourseCode);
 
     console.log('Checking course:', cleanCourseCode);
 
     // Check for exact matches or prefix matches based on wildcard presence
-    for (let i = 0; i <= columnIdx; i++) {
+    for (let i = 0; i < columnIdx; i++) {
         if (hasWildcard) {
             if (cards[i].some(card => card.name.startsWith(cleanCourseCode))) {
                 console.log('Found match with wildcard:', cleanCourseCode);
@@ -684,17 +681,6 @@ const DynamicTable: React.FC<DynamicTableProps> = ({ tempCard, setTempCard }) =>
             }
         } else {
             if (cards[i].some(card => card.name === cleanCourseCode)) {
-                // console.log('Found exact match:', cleanCourseCode);
-                return true;
-            }
-        }
-      }
-    } else {
-      console.log('prefix only')
-      for (let i = 0; i < columnIdx; i++) {
-        if (cards[i].some(card => card.name.includes(cleanCourseCode))) {
-          console.log('found: ' + cleanCourseCode)
-          return true;  
                 console.log('Found exact match:', cleanCourseCode);
                 return true;
             }
@@ -746,10 +732,9 @@ const DynamicTable: React.FC<DynamicTableProps> = ({ tempCard, setTempCard }) =>
   
   
   return (
-    
     <div className='global-container'>
       {notification && <div className="notification">{notification}</div>}
-      {clashnotification && <div className="clash-notification">{clashnotification}</div>}
+      {clashNotification && <div className="clash-notification">{clashNotification}</div>}
     <button className="collapse-button"onClick={toggleCollapse}>Major Setting</button>
     <div>
       <div className="collapsible-content" style={{ display: isCollapsed ? 'none' : 'block' }}>
@@ -863,7 +848,9 @@ const DynamicTable: React.FC<DynamicTableProps> = ({ tempCard, setTempCard }) =>
                 classification={card.classification}/>
             ))}
             <button className="add-button" onClick={() => addCard(columnIndex)}>Add Course</button>
-            <button className="to-timetable-button" onClick={() => handleToTimetable(columnIndex)}>View Timetable for Current Academic Year</button>
+            <button className="to-timetable-button" onClick={() => handleToTimetable(columnIndex)}>View Timetable</button>
+            <button className="to-map-button" onClick={() => handleToMap(columnIndex)}>View Map</button>
+
           </DroppableColumn>
         ))}
       </div>

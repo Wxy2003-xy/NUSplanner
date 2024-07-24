@@ -1,4 +1,7 @@
 # NUSplanner
+
+if you see this from the weblink, the site is currently under maintainace. Sorry for the inconvenience
+
 ## Proposed Level of Achievement:
 
 Artemis

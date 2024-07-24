@@ -83,10 +83,8 @@ const ModuleForm: React.FC<ModuleFormProps> = ({ setTempCard }) => {
                     semester: data.semesterData.map(data => data.semester),
                     content: data.title,
                     courseCredit: data.moduleCredit,
+                    prereqTree: data.prereqTree,
                     preclusionRule: extractCourseCodes(data.preclusionRule),
-                    prereqTree: data.prereqTree 
-                    preclusionRule: extractCourseCodes(data.preclusionRule),
-                    prereqTree: data.prereqTree, 
                     examInfo: data.semesterData.map(data => {
                         return {
                             examTime: data.examDate,    
