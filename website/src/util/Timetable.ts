@@ -1,21 +1,4 @@
 import { ClassTimeSlotTypeUnion } from "../types/timetable";
-
-interface TimeSlot {
-    startTime: string;
-    endTime: string;
-    day: string;
-  }
-  
-  export interface ClassTimeSlotTypeUnion {
-    classNo?: string;
-    startTime: string[];
-    endTime: string[];
-    weeks?: string[];
-    venue?: string;
-    day: string[];
-    lessonType?: string;
-    title?: string;
-  }
   
   export class TimeTable {
     private grid: Map<string, boolean[]>;

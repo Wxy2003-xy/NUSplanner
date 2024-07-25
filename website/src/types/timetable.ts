@@ -63,7 +63,7 @@ export interface ClassTimeSlotTypeUnion {
     startTime: StartTime[];
     endTime: EndTime[];
     weeks?: Weeks;
-    venue?: Venue;
+    venue?: Venue | string;
     day: Day[];
     lessonType?: LessonType;
     title?: string;

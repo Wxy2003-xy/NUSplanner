@@ -229,3 +229,17 @@
   color:#333
 }
 
+
+
+.joyride-step__overlay {
+  z-index: 9999;
+}
+
+.joyride-tooltip {
+  z-index: 10000;
+}
+
+.joyride-tooltip__button {
+  background-color: #0cb591;
+  color: #fff;
+}

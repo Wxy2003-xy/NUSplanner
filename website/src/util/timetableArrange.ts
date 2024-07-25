@@ -1,7 +1,6 @@
 import { StartTime, EndTime, ClassTimeSlotType, ClassTimeSlotTypeUnion, ClassNo, Day, Weeks } from '../types/timetable';
 import { isEqual, partition } from 'lodash';
 import { Clear } from '@mui/icons-material';
-import { ClassificationType } from "typescript";
 
 const timeToMinutes = (time: string): number => {
     const [hours, minutes] = time.split(':').map(Number);

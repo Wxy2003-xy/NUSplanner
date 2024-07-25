@@ -79,16 +79,7 @@ const Map = () => {
       <div className="map-nav-right">
         
         <div style={{ height: '100%' }}>
-        <div>
-      {timeSlots ? (
-      timeSlots.map(slot => (
-        <div key={getKey(slot)}>
-          <p>{`${slot.title} classNo: ${slot.lessonType} ${slot.classNo} on ${slot.day} from ${slot.startTime} to ${slot.endTime} at ${slot.venue} `}</p>
-        </div>
-      ))
-      ) : <p>No valid arrangement found.</p>}
-
-      </div>
+        
           <MapContainer center={[1.29495055860437, 103.77447075499941]} 
                         zoom={16} 
                         style={{ height: '625px', width: '100%' }} 
@@ -116,6 +107,16 @@ const Map = () => {
             <ZoomControl position="topright" />
           </MapContainer>
         </div>
+        <div className='venue-info-list'>
+      {timeSlots ? (
+      timeSlots.map(slot => (
+        <div key={getKey(slot)}>
+          <p>{`${slot.title} classNo: ${slot.lessonType} ${slot.classNo} on ${slot.day} from ${slot.startTime} to ${slot.endTime} at ${slot.venue} `}</p>
+        </div>
+      ))
+      ) : <p>No valid arrangement found.</p>}
+
+      </div>
         <div className='credit-section'>
         <h3>Credit:</h3>
         <p><a href="https://www.flaticon.com/free-icons/slides" title="slides icons">Slides icons created by Freepik - Flaticon</a></p>

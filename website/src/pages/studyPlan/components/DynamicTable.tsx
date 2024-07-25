@@ -8,6 +8,7 @@ import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 import DraggableCard from './DraggableCard';
 import DroppableColumn from './DropColumn';
+import GuidedTour from './UserGuide';
 const allPrograms = {
   'School of Computing': [
     "Computer Science", 
@@ -129,7 +130,17 @@ const DynamicTable: React.FC<DynamicTableProps> = ({ tempCard, setTempCard }) =>
   // notification, default nothing
   const [notification, setNotification] = useState<string | null>(null);
   const [clashNotification, setClashNotification] = useState<string | null>(null);
+  const [showTour, setShowTour] = useState(() => {
+    const storedShowTour = localStorage.getItem('showTourState');
+    return storedShowTour === null ? true : storedShowTour === 'true';
+  });
 
+  // Existing useEffect hooks and functions...
+
+  const handleTourClose = () => {
+    setShowTour(true);
+    localStorage.setItem('showTourState', 'true');
+  };
   useEffect(() => { 
     let timer;
     if (notification) {
@@ -734,6 +745,7 @@ const DynamicTable: React.FC<DynamicTableProps> = ({ tempCard, setTempCard }) =>
   return (
     <div className='global-container'>
       {notification && <div className="notification">{notification}</div>}
+      {showTour && <GuidedTour startTour={showTour} onClose={handleTourClose} />}
       {clashNotification && <div className="clash-notification">{clashNotification}</div>}
     <button className="collapse-button"onClick={toggleCollapse}>Major Setting</button>
     <div>
@@ -849,7 +861,7 @@ const DynamicTable: React.FC<DynamicTableProps> = ({ tempCard, setTempCard }) =>
             ))}
             <button className="add-button" onClick={() => addCard(columnIndex)}>Add Course</button>
             <button className="to-timetable-button" onClick={() => handleToTimetable(columnIndex)}>View Timetable</button>
-            <button className="to-map-button" onClick={() => handleToMap(columnIndex)}>View Map</button>
+            {/* <button className="to-map-button" onClick={() => handleToMap(columnIndex)}>View Map</button> */}
 
           </DroppableColumn>
         ))}
@@ -906,6 +918,8 @@ const DynamicTable: React.FC<DynamicTableProps> = ({ tempCard, setTempCard }) =>
       )}
     </DndProvider>
   </div>
+  <p className='notificationsite'></p>
+  <p className='course-query'></p>
 </div>
   );
 };

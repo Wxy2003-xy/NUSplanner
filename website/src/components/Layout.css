@@ -12,9 +12,9 @@ body {
 }
 
 header {  
-  background-color: #2C3E50;
+  background-color: #101625;
   color: white;
-  padding: 10px 20px;
+  padding: 20px 25px;
   display: flex;
   align-items: center;
   justify-content: space-between; /* Ensures proper spacing */
@@ -47,7 +47,7 @@ header {
 }
 
 .logo-container span {
-  font-size: 28px;
+  font-size: 40px;
   font-weight: bold;
   margin-right: 20px;
   color: white;
@@ -56,7 +56,7 @@ header {
 
 .title-container p {
   margin: 0;
-  font-size: 24px;
+  font-size: 40px;
 }
 
 .scroll-container {
@@ -112,13 +112,15 @@ header {
 }
 
 nav {
+  line-height: 48px;
   flex-shrink: 0;
-  background-color: #f0f0f0;
-  padding: 0;
-  width: 150px;
+  background-color: #00755d;
+  padding-left: 6px;
+  width: 160px;
   height: 100%;
   box-sizing: border-box;
   z-index: 10000;
+  font-size: 16px;
 }
 
 .nav-left {
@@ -137,7 +139,9 @@ nav ul li {
 }
 
 nav ul li a {
-  color: gray;
+  color: rgb(255, 255, 255);
+  font-weight: bold;
+
   text-decoration: none;
   padding: 10px;
   display: flex;
@@ -145,7 +149,7 @@ nav ul li a {
 }
 
 nav ul li a.active {
-  color: red;
+  color: #00ffdd;
 }
 
 nav ul li a span {
@@ -153,7 +157,7 @@ nav ul li a span {
 }
 
 nav ul li a:hover {
-  color: red;
+  color: #00ffdd;
 }
 
 nav ul li a:hover span {
@@ -162,4 +166,32 @@ nav ul li a:hover span {
 
 .page-content {
   flex-grow: 1;
+}
+
+
+.join-us-container {
+  display: flex;
+  align-items: center;
+  margin-right: 20px; /* Space between the "Join us" section and the "About Us" section */
+  text-decoration: none;
+}
+
+.join-us-icon {
+  width: 24px; /* Adjust size as needed */
+  height: 24px; /* Adjust size as needed */
+  margin-right: 8px; /* Space between the icon and text */
+  transition: transform 0.3s ease; /* Smooth transition for icon enlargement */
+}
+
+.join-us-container .join-us-icon:hover {
+  transform: scale(1.1); /* Slightly enlarge the icon on hover */
+}
+
+.join-us-text {
+  color: white; /* Adjust color as needed */
+  text-decoration: none;
+}
+
+.join-us-container .join-us-text:hover {
+  color: antiquewhite; /* Light color on hover (anti-white) */
 }

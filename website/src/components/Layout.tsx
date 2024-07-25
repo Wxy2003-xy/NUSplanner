@@ -2,6 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { NavLink } from 'react-router-dom';
 import logoImage from '../images/nusplannerLogo.png';
 import './Layout.css';
+import Footer from './Footer';
+import teleLogo from '../images/teleLogo.jpg'
 
 const Layout = ({ children }) => {
   const [currentDate, setCurrentDate] = useState('');
@@ -42,6 +44,10 @@ const Layout = ({ children }) => {
             <p></p>
           </div>
         </div>
+        <NavLink to="https://t.me/+c2TQvkafNAIzYmY9" className="join-us-container" target="_blank" rel="noopener noreferrer">
+          <img src={teleLogo} alt="Join Us" className="join-us-icon" />
+          <span className="join-us-text">Join us</span>
+        </NavLink>
         <div className="scroll-container">
           <div className="scroll-content">
             {sentences[currentSentenceIndex]}
@@ -86,6 +92,7 @@ const Layout = ({ children }) => {
           {children}
         </div>
       </div>
+      <Footer/>
     </div>
   );
 };

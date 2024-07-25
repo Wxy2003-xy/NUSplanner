@@ -1,25 +1,84 @@
-.timetable-comp {
-    width: 100%;
+/* table.css */
+.timetable-container {
+    display: inline-flexbox;
+    justify-content: baseline;
+    margin-left: -100px 0;
+  }
+  
+  .timetable-grid {
     display: grid;
-    grid-template-columns: repeat(5, 1fr); /* 5 working days */
-    grid-template-rows: repeat(10, 1fr); /* Assuming 10 hours a day */
-    grid-gap: 5px;
-    border-left: 2px solid #ccc;
-    border-top: 3px solid black;
-    border-right: 2px solid #ccc;
-    border-bottom: 2px solid #ccc;
-}
-
-.timetable-slot {
-    padding: 2px;
-    color: #333;
+    /* grid-template-columns: repeat(6, 1fr); */
+    grid-template-columns: 80px repeat(5, 1fr); /* First column is narrower */
+    grid-template-rows: auto repeat(28, 30px);
+    gap: 1px;
+    background-color: #ffffff;
+  }
+  
+  .timetable-header {
+    display: contents;
+  }
+  
+  .timetable-time-header, .timetable-day-header {
+    height: 30px;
+    background-color: #e6e6e6;
+    text-align: center;
     display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    grid-row: 1;
+    border: 1px solid #ccc; /* Added border */
+  }
+  
+  .timetable-time-slot {
+    background-color: #ececec;
+    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    grid-column: 1;
+    border: 1px solid #ccc; /* Added border */
+  }
+  
+  .timetable-body {
+    display: contents;
+  }
+  
+  .timetable-slot {
+    background-color: #ffffff;
+    text-align: baseline;
+    border: 1px solid #b6b6b6;
+    display: flex;
+    flex-direction: column;
+    justify-content: baseline;
     align-items: baseline;
-    justify-content: left;
     border-radius: 4px;
-    border-left: 2px solid #ccc;
-    border-top: 2px solid #ccc;
-    border-right: 2px solid #ccc;
-    border-bottom: 2px solid #ccc;
-    background-clip: padding-box; /* Prevents background color from bleeding under the border */
-}
+    padding: 4px;
+    margin: 1px;
+    font-size: 12px;
+  }
+  .palette-selector {
+    margin-top: 10px;
+    height: 15px;
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+  }
+  
+  .palette-selector label {
+    margin-right: 10px;
+    font-weight: bold;
+  }
+  
+  .palette-selector select {
+    padding: 2px;
+    border-radius: 4px;
+    border: 1px solid #ccc;
+    font-size: 14px;
+  }
+
+  .credit {
+    align-self:flex-end;
+    font-size: 10px;
+  }
