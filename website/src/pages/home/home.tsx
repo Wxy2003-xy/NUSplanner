@@ -3,15 +3,74 @@ import Layout from '../../components/Layout'; // Adjust the path as needed
 import './home.css';
 import { NavLink } from 'react-router-dom';
 import logoImage from '../../images/nusplannerLogo.png';
+import teleLogo from '../../images/teleLogo.png';
+import nusScience from '../../images/nusScience.jpeg';
+import nusSoc from '../../images/nusSoc.jpg';
+import nusFass from '../../images/nusFass.jpeg';
+import nusCde from '../../images/nusCde.jpeg';
+import NUS from '../../images/NUS.jpeg';
+
 
 const Home: React.FC = () => {
   const [currentDate, setCurrentDate] = useState<string>('');
+  const [currentSentenceIndex, setCurrentSentenceIndex] = useState(0);
+  const [currentSlideIndex, setCurrentSlideIndex] = useState(0);
+  {/*const [currentImageIndex, setCurrentImageIndex] = useState(0);*/}
+
+  const sentences = [
+    <>Any upcoming deadlines on <a href="https://canvas.nus.edu.sg" target="_blank" rel="noopener noreferrer">Canvas</a>?</>,
+    <>Have you checked your <a href="https://exchange.nus.edu.sg" target="_blank" rel="noopener noreferrer">email</a> today?</>,
+    <>Anything pressing on <a href="https://myedurec.nus.edu.sg" target="_blank" rel="noopener noreferrer">EduRec</a>?</>,
+    <>Don't forget to check your Reminder!</>
+  ];
+
+  {/*const images = [NUS, nusSoc, nusScience, nusFass, nusCde];*/}
+  const slides = [
+    { src: NUS},
+    { src: nusSoc},
+    { src: nusScience},
+    { src: nusFass},
+    { src: nusCde}
+  ];
 
   useEffect(() => {
     const date = new Date();
     const formattedDate = date.toLocaleDateString(undefined, { year: 'numeric', month: 'long', day: 'numeric' });
     setCurrentDate(formattedDate);
   }, []);
+
+  useEffect(() => {
+    const intervalId = setInterval(() => {
+      setCurrentSentenceIndex((prevIndex) => (prevIndex + 1) % sentences.length);
+    }, 5000); // Change sentence every 5 seconds
+
+    return () => clearInterval(intervalId); // Cleanup interval on component unmount
+  }, [sentences.length]);
+
+  {/*
+  useEffect(() => {
+    const imageIntervalId = setInterval(() => {
+      setCurrentImageIndex((prevIndex) => (prevIndex + 1) % images.length);
+    }, 3000); // Change image every 3 seconds
+
+    return () => clearInterval(imageIntervalId); // Cleanup interval on component unmount
+  }, [images.length]); */}
+
+  useEffect(() => {
+    const autoSlideIntervalId = setInterval(() => {
+      setCurrentSlideIndex((prevIndex) => (prevIndex + 1) % slides.length);
+    }, 3000); // Change image every 3 seconds
+
+    return () => clearInterval(autoSlideIntervalId); // Cleanup interval on component unmount
+  }, [slides.length]);
+
+  const nextSlide = () => {
+    setCurrentSlideIndex((prevIndex) => (prevIndex + 1) % slides.length);
+  };
+
+  const prevSlide = () => {
+    setCurrentSlideIndex((prevIndex) => (prevIndex - 1 + slides.length) % slides.length);
+  };
 
   return (
     <div className="home-layout">
@@ -27,40 +86,74 @@ const Home: React.FC = () => {
             <p></p>
           </div>
         </div>
+        <div className="home-scroll-container">
+          <div className="home-scroll-content">
+            {sentences[currentSentenceIndex]}
+          </div>
+        </div>
+        <NavLink to="https://t.me/+c2TQvkafNAIzYmY9" className="join-us-container" target="_blank" rel="noopener noreferrer">
+          <img src={teleLogo} alt="Join Us" className="join-us-icon" />
+          <span className="join-us-text">Join us</span>
+        </NavLink>
+        <div className="about-us-container">
+          <NavLink to="/about" className="about-us-link">
+            <span>About Us</span>
+          </NavLink>
+        </div>             
         <div className="date-container">
           <span>{currentDate}</span>
         </div>
       </header>
-      <div className="home-nav-right">
-        <div className="content">
-          <h2>Welcome to NUSPlanner</h2>
-          {/*<p>Your Smart StudyPlan & TimeTable Designer</p> */}
-          
-          {/* Add rectangle boxes with links */}
-          <div className="link-box-container">
-            <NavLink to="/studyplan" className="link-box">
-              <span>Study Plan</span>
-            </NavLink>
-            <NavLink to="/timetable" className="link-box">
-              <span>Timetable</span>
-            </NavLink>
-            <NavLink to="/community" className="link-box">
-              <span>Community</span>
-            </NavLink>
-            <NavLink to="/reminder" className="link-box">
-              <span>Reminder</span>
-            </NavLink>
-            <NavLink to="/map" className="link-box">
-              <span>Map</span>
-            </NavLink>
-            <NavLink to="/feedback" className="link-box">
-              <span>Feedback</span>
-            </NavLink>
-            <NavLink to="/about" className="link-box">
-              <span>About us</span>
-            </NavLink>
+      <div className="home-main-content">
+        <div className="home-left-section">
+          <div className="home-left-top">
+            <div className="home-slideshow-container">
+              {slides.map((slide, index) => (
+                <img
+                  key={index}
+                  src={slide.src}
+                  alt={`Slide ${index + 1}`}
+                  className={`home-slideshow-image ${currentSlideIndex === index ? '' : 'hidden'}`}
+                />
+              ))}
+              <div className="home-slideshow-navigation">
+                <button onClick={prevSlide}>‹</button>
+                <button onClick={nextSlide}>›</button>
+              </div>
+            </div>
           </div>
-      </div>
+          <div className="bottom-section">
+            {/* Bottom section content */}
+          </div>
+        </div>
+        <div className="home-right-section">
+          <div className="home-right-content">
+            {/*<h2>Welcome to NUSPlanner</h2>*/}
+            {/*<p>Your Smart StudyPlan & TimeTable Designer</p> */}
+          
+            {/* Add rectangle boxes with links */}
+            <div className="link-box-container">
+              <NavLink to="/studyplan" className="link-box">
+                <span>Study Plan</span>
+              </NavLink>
+              <NavLink to="/timetable" className="link-box">
+                <span>Timetable</span>
+              </NavLink>
+              <NavLink to="/community" className="link-box">
+                <span>Community</span>
+              </NavLink>
+              <NavLink to="/reminder" className="link-box">
+                <span>Reminder</span>
+              </NavLink>
+              <NavLink to="/map" className="link-box">
+                <span>Map</span>
+              </NavLink>
+              <NavLink to="/feedback" className="link-box">
+                <span>Feedback</span>
+              </NavLink>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   );
