@@ -80,15 +80,15 @@ header {
 .home-left-section {
   width: 50%;
   background-color: #f8f9fa; /* Optional: Background color for the left section */
-  padding: 5px;
-  padding-right: 15px;
+  padding: 15px;
   padding-left: 15px;
+  padding-top: 10px;
 }
 
 .home-left-top {
-  flex: 0 0 70%;
+  flex: 0 0 30%;
   position: relative;
-  height: 70%; 
+  height: 30%; 
   overflow: hidden; /* Hide overflow to ensure no scrollbars */
 }
 
@@ -141,9 +141,37 @@ header {
   background: rgba(0, 0, 0, 0.8); /* Darker background on hover */
 }
 
-.bottom-section {
-  flex: 0 0 30%;
-  background-color: #F5F5F5; /* Pale gray background */
+.home-left-bottom {
+  flex: 0 0 70%;
+  background-color: white; /* Pale gray background */
+  border-radius: 8px; /* Rounded corners for a modern look */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+  margin-top: 15px;
+}
+
+.home-left-bottom .home-leftbottom-content {
+  font-size: 18px; /* Readable font size */
+  line-height: 1.6; /* Improved readability */
+  color: #333; /* Dark text color for contrast */
+  margin-bottom: 16px; /* Space between paragraphs */
+}
+
+.home-left-bottom .home-leftbottom-title {
+  font-weight: bold;
+  margin-bottom: 5px;
+  color: #00755d;
+  text-decoration: none;
+}
+
+.home-left-bottom .home-leftbottom-title:hover {
+  color: #004d3f;
+  text-decoration: none;
+}
+
+.home-left-bottom .home-leftbottom-content {
+  font-style: italic; /* Emphasize the first paragraph */
+  color: #005c4a; /* A distinct color for emphasis */
+  margin-top: 0px;
 }
 
 .home-right-section {
