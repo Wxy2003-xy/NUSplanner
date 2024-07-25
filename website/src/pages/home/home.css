@@ -71,14 +71,82 @@ header {
   height: 100%;
 }
 
-.content {
+.home-main-content {
   display: flex;
-  flex-grow: 1;
+  width: 100%;
+  height: calc(100vh - 60px); /* Adjust height to fit below header */
 }
 
-.home-nav-right {
-  margin: 10px; /* Remove margin from left */
-  padding: 10px; /* Remove padding */
+.home-left-section {
+  width: 50%;
+  background-color: #f8f9fa; /* Optional: Background color for the left section */
+  padding: 5px;
+  padding-right: 15px;
+  padding-left: 15px;
+}
+
+.home-left-top {
+  flex: 0 0 70%;
+  position: relative;
+  height: 70%; 
+  overflow: hidden; /* Hide overflow to ensure no scrollbars */
+}
+
+.home-slideshow-container {
+  position: relative;
+  height: 100%; /* Ensure the container takes full height of the top section */
+  width: 100%;
+  overflow: hidden; /* Hide overflow */
+}
+
+.home-slideshow-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover; /* Maintain aspect ratio while covering the container */
+  position: absolute;
+  top: 0;
+  left: 0;
+  transition: opacity 1s ease-in-out; /* Smooth transition */
+  filter: brightness(80%) contrast(120%); /* Enhance image appearance */
+  border-radius: 1%;
+}
+
+/* Ensure only one image is visible at a time */
+.home-slideshow-image.hidden {
+  opacity: 0;
+}
+
+.home-slideshow-navigation {
+  position: absolute;
+  top: 50%;
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  transform: translateY(-50%);
+}
+
+.home-slideshow-navigation button {
+  background: rgba(0, 0, 0, 0.5); /* Semi-transparent background for buttons */
+  border: none;
+  color: white;
+  font-size: 24px;
+  cursor: pointer;
+  padding: 10px;
+  border-radius: 0%;
+  transition: 0.3s ease;
+  margin: 0px;
+}
+
+.home-slideshow-navigation button:hover {
+  background: rgba(0, 0, 0, 0.8); /* Darker background on hover */
+}
+
+.bottom-section {
+  flex: 0 0 30%;
+  background-color: #F5F5F5; /* Pale gray background */
+}
+
+.home-right-section {
   flex-grow: 1;
   position: relative;
   display: flex;
@@ -87,9 +155,18 @@ header {
   color: white; /* Ensure text is readable over the background image */
   text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.4); /* Add text shadow for readability */
   height: 100%; /* Ensure it takes full height */
+  width: 50%; /* Occupies half of the screen width */
+  background-color: #ffffff; /* Optional: Background color for the right section */
+  padding: 0px;
+  margin: 0px
+}
+  
+.home-right-content {
+  display: flex;
+  flex-grow: 1;
 }
 
-.home-nav-right .background {
+.home-right-section .background {
   position: absolute;
   top: 0;
   left: 0;
@@ -101,11 +178,11 @@ header {
   transition: opacity 1s ease-in-out;
 }
 
-.home-nav-right .background.hidden {
+.home-right-section .background.hidden {
   opacity: 0;
 }
 
-.home-nav-right .content {
+.home-right-section .home-right-content {
   position: relative;
   z-index: 1;
   display: flex;
@@ -128,9 +205,9 @@ header {
 }
 
 /* New styles for rectangle boxes */
-.home-nav-right .link-box {
-  width: 300px; /* Set width of the boxes */
-  height: 100px; /* Set height of the boxes */
+.home-right-section .link-box {
+  width: 280px; /* Set width of the boxes */
+  height: 160px; /* Set height of the boxes */
   background-color: rgba(101, 171, 195, 0.8); /* Semi-transparent background */
   margin: 10px 0; /* Spacing between boxes */
   display: flex;
@@ -142,27 +219,96 @@ header {
   text-decoration: none; /* Remove underline */
 }
 
-.home-nav-right .link-box:hover {
+.home-right-section .link-box:hover {
   transform: scale(1.05); /* Slightly expand on hover */
 }
 
-.home-nav-right .link-box span {
+.home-right-section .link-box span {
   color: white; /* Link color */
-  font-size: 18px;
+  font-size: 22px;
 }
 
 /* Style for the h2 */
-.home-nav-right h2 {
+.home-right-section h2 {
   color: black; /* Set color to black */
   margin: 0; /* Remove default margins */
   padding: 0; /* Remove padding */
   align-self: flex-start; /* Align to the left */
 }
 
-.home-nav-right .link-box-container {
+.home-right-section .link-box-container {
   display: flex;
   flex-wrap: wrap; /* Allow items to wrap to the next line */
   gap: 10px; /* Space between boxes */
   margin: 15px;
   justify-content: center; /* Center the rows of boxes */
+  margin-left: 25px;
+}
+
+.home-scroll-container {
+  flex-grow: 1;
+  display: flex;
+  justify-content: right;
+  align-items: center;
+  overflow: hidden; /* Hide overflow to create the scrolling effect */
+  white-space: nowrap; /* Prevents wrapping of the content */
+  margin-right: 45px;
+}
+
+.home-scroll-content {
+  display: inline-block;
+  animation: scroll 3s infinite; /* Animation to smoothly transition sentences */
+  font-size: 16px;
+  color: white;
+  text-align: center;
+}
+
+.home-scroll-content a {
+  color: #ADD8E6; /* Change link color to black */
+  text-decoration: underline; /* Remove underline from links */
+}
+
+.home-scroll-content a:hover {
+  color: #9FC4E6; 
+}
+
+.join-us-container {
+  display: flex;
+  align-items: center;
+  margin-right: 20px; /* Space between the "Join us" section and the "About Us" section */
+  text-decoration: none;
+}
+
+.join-us-icon {
+  width: 24px; /* Adjust size as needed */
+  height: 24px; /* Adjust size as needed */
+  margin-right: 8px; /* Space between the icon and text */
+  transition: transform 0.3s ease; /* Smooth transition for icon enlargement */
+}
+
+.join-us-container .join-us-icon:hover {
+  transform: scale(1.1); /* Slightly enlarge the icon on hover */
+}
+
+.join-us-text {
+  color: white; /* Adjust color as needed */
+  text-decoration: none;
+}
+
+.join-us-container .join-us-text:hover {
+  color: antiquewhite; /* Light color on hover (anti-white) */
+}
+
+.about-us-container {
+  margin-right: 20px; /* Space between the "About Us" section and the date */
+}
+
+.about-us-link {
+  color: white; /* Adjust color as needed */
+  text-decoration: none;
+}
+
+.about-us-link:hover {
+  text-decoration: none;
+  color:antiquewhite;
 }
