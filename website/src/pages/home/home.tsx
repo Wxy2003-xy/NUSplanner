@@ -3,7 +3,7 @@ import Layout from '../../components/Layout'; // Adjust the path as needed
 import './home.css';
 import { NavLink } from 'react-router-dom';
 import logoImage from '../../images/nusplannerLogo.png';
-import teleLogo from '../../images/teleLogo.png';
+import teleLogo from '../../images/teleLogo.jpg';
 import nusScience from '../../images/nusScience.jpeg';
 import nusSoc from '../../images/nusSoc.jpg';
 import nusFass from '../../images/nusFass.jpeg';
@@ -122,8 +122,25 @@ const Home: React.FC = () => {
               </div>
             </div>
           </div>
-          <div className="bottom-section">
-            {/* Bottom section content */}
+          <div className="home-left-bottom">
+            <NavLink to="/studyplan" className="home-leftbottom-title">
+              Study Plan
+            </NavLink>           
+            <p className="home-leftbottom-content">
+              Plan your courses effortlessly with our intuitive Study Plan feature, which organizes your courses, tracks prerequisites, and avoids exam clashes, all with a user-friendly interface. Focus on your academic goals without the stress of manual planning.
+            </p>
+            <NavLink to="/timetable" className="home-leftbottom-title">
+              Timetable
+            </NavLink>
+            <p className="home-leftbottom-content">
+              But that's not all! Elevate your planning with our Timetable Recommendation feature. We create a personalized timetable for each semester, tailored to your preferences like free days and preferred start times, ensuring a balanced and efficient schedule with minimal adjustments.
+            </p>
+            <NavLink to="/map" className="home-leftbottom-title">
+              Map
+            </NavLink>
+            <p className="home-leftbottom-content">
+              Additionally, our Map feature guides you directly from your timetable to a map page showing the locations of all your classes. This ensures you know exactly where to go, saving time and reducing campus navigation stress.
+            </p>
           </div>
         </div>
         <div className="home-right-section">
