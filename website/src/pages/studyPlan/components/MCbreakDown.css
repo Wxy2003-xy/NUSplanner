@@ -7,7 +7,6 @@
     margin-bottom: -1px;
   }
 .counter-box {
-  
     position: relative; 
     background-color: #ffffff;
     color: #333;
@@ -23,17 +22,17 @@
     padding: 5px;
     text-align: left;
     border-radius: 3px;
-    margin-top: 2px; /* Space between toggle button and breakdown */
+    margin-top: 2px; 
   }
 
 .counter-box:hover {
-    transform: scale(1.01); /* Subtle growth on hover for interaction feedback */
-    z-index: 4; /* Ensures it stays above other elements */
+    transform: scale(1.01); 
+    z-index: 4; 
 }
 
 .counter-box:hover .counter-box-breakdown {
     display: block;
-    justify-content: flex-start; /* Align content to the start */
+    justify-content: flex-start; 
 }
 
 .toggle-button {
@@ -48,13 +47,13 @@
   }
   
   .toggle-button.expand {
-    background-color: #4CAF50; /* Green for Expand */
+    background-color: #4CAF50; 
   }
   
   .toggle-button.collapse {
-    background-color: #f44336; /* Red for Collapse */
+    background-color: #f44336; 
   }
   
   .toggle-button:hover {
-    opacity: 0.8; /* Slightly dim the button on hover */
+    opacity: 0.8; 
   }

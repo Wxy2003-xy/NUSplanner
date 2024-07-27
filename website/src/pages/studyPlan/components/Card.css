@@ -8,7 +8,7 @@
 
 .container {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(120px, 0fr)); /* Adjust column size as needed */
+  grid-template-columns: repeat(auto-fill, minmax(120px, 0fr)); 
 }
 
 .card {
@@ -34,7 +34,7 @@
   }
   
   .card.prereq-not-satisfied {
-    background-color: #ff9999; /* Different color for unmet prerequisites */
+    background-color: #ff9999;
   }
   
   .card:hover {

@@ -1,17 +1,21 @@
 .footer-box {
-  display: flex; /* Use flexbox */
+  display: flex;
   flex-direction: column;
-  justify-content: flex-end; /* Align items to the right */
-  padding: 4px; /* Padding for aesthetics */
-  background-color: #0a756d; /* Light grey background, adjust as needed */
-  color: white; /* Dark text, adjust as needed */
+  justify-content: flex-end;
+  padding-left: 20px;
+  padding-right: 20px;
+  padding-top: 24px; 
+  background-color: #0a756d; 
+  color: white;
+  
 }
 
 .sym {
   margin-right: 20px;
-  align-self: center; /* Center align vertically */
+  align-self: center; 
 }
 
 .credit-section {
-  font-size: 8px;
+  justify-content:end;
+  align-items: baseline;
 }

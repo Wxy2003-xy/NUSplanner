@@ -27,10 +27,10 @@ const GuidedTour: React.FC<GuidedTourProps> = ({ startTour, onClose }) => {
       target: '.collapse-button',
       content: 'Click here to expand the Major Setting section and change the number of semesters you would like to plan for.',
     },
-    {
-      target: '.dropdown-select',
-      content: 'Use these dropdowns to select your program and major etc.',
-    },
+    // {
+    //   target: '.dropdown-select',
+    //   content: 'Use these dropdowns to select your program and major etc.',
+    // },
     {
       target: '.table',
       content: 'This is your study plan table. You can drag and drop courses here. Click on courses in the table to remove, update info or see details',

@@ -1,24 +1,24 @@
 .under-development-notice {
-    position: fixed; /* Fixed position to always be visible */
-    bottom: 20px; /* Positioned at the bottom of the viewport */
-    right: 20px; /* Positioned on the right side */
-    background-color: #ffdd57; /* Bright yellow background for visibility */
-    color: #333; /* Dark text for contrast */
-    padding: 15px 20px; /* Padding for spacing inside the notice */
-    border-radius: 8px; /* Rounded corners */
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Subtle shadow for 3D effect */
-    width: auto; /* Auto width based on content */
-    z-index: 1000; /* High z-index to stay on top of other content */
+    position: fixed; 
+    bottom: 20px; 
+    right: 20px; 
+    background-color: #ffdd57;
+    color: #333; 
+    padding: 15px 20px; 
+    border-radius: 8px; 
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    width: auto; 
+    z-index: 1000;
   }
   
   .under-development-notice h2 {
-    margin: 0 0 10px 0; /* Space below the headline */
-    font-size: 18px; /* Larger font size for the headline */
-    font-weight: bold; /* Bold font for emphasis */
+    margin: 0 0 10px 0; 
+    font-size: 18px; 
+    font-weight: bold; 
   }
   
   .under-development-notice p {
-    margin: 0; /* No margin to keep the text compact */
-    font-size: 14px; /* Standard font size for the text */
+    margin: 0; 
+    font-size: 14px; 
   }
   

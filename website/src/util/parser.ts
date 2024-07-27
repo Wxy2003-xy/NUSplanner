@@ -1,11 +1,7 @@
-// Define a type for the function parameter
 function parseMudInfoJSON(str: string): any {
     return JSON.parse(str);
 }
 
-
-
-// Corrected the function parameter name to match the one used inside the function
 function parsePrerequisite(inputString: string): string[] | null {
     const regex = /\w+|[^\w\s]/g;
     return inputString.match(regex);
@@ -25,7 +21,6 @@ interface PrereqTree {
     branches: PrereqTree[];
 }
 
-// Function to create an empty PrereqTree
 export function createEmptyPrereqTree(): PrereqTree {
     return { branches: [] };
 }

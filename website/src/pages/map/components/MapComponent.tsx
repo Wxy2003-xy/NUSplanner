@@ -5,7 +5,7 @@ const MapComponent = ({ timeSlots, venues }) => {
   const map = useMap();
 
   useEffect(() => {
-    map.invalidateSize(); // Ensures the map adjusts to container size changes
+    map.invalidateSize(); 
   }, [timeSlots]);
 
   return (

@@ -87,56 +87,36 @@ const programOptions = [
 ];
 
 const DynamicTable: React.FC<DynamicTableProps> = ({ tempCard, setTempCard }) => {
-  // State to manage the collapse of major setting, default hidden
   const [isCollapsed, setIsCollapsed] = useState(true);  
-  // State to manage the number of columns of the table, default 8 semesters
   const [columnCount, setColumnCount] = useState<number>(8);  
-  // home faculty, default soc, cached
   const [faculty, setFaculty] = useState(() => localStorage.getItem('faculty') || 'School of Computing');
-  // programme, default single degree, cached
   const [programs, setPrograms] = useState(() => localStorage.getItem('programs') || 'Single Degree Program');
-  // primary major, default empty (first option), cached
   const [major, setMajor] = useState<string>(() => {
     const storedMajor = localStorage.getItem('major');
     return storedMajor && allPrograms[faculty].includes(storedMajor) 
             ? storedMajor 
-            : allPrograms[faculty][0];  // default empty
+            : allPrograms[faculty][0];  
   });
-  // second major faculty, default soc, cached
   const [secondFaculty, setSecondFaculty] = useState(() => localStorage.getItem('secondFaculty') || 'School of Computing');
-  // second major, default empty, cached
   const [secondMajor, setSecondMajor] = useState(() => localStorage.getItem('secondMajor') || '');
-  // state to manage if second major is shown in title, only when programme includes 2nd major or double degree etc
   const [showSecondMajor, setShowSecondMajor] = useState(() => programs.includes('2nd Major') || programs.includes('Double or Concurrent Degree'));
-  // state to manage if minors are shown in title, only when programme includes minors
   const [showMinors, setShowMinors] = useState(() => programs.includes('Minor(s)'));
-
-  // minor array, default empty, cached; type MinorDetail from website/src/types/studyplan.ts
   const [minors, setMinors] = useState<MinorDetails[]>(() => {
     const storedMinors = localStorage.getItem('minors');
     return storedMinors ? JSON.parse(storedMinors) : [];
   });
-  
-  // Title, rendered with useEffect 
   const [headerTitle, setHeaderTitle] = useState('');
-  // Sub-title(to show minor), rendered with useEffect
   const [headerSub, setHeaderSub] = useState('');
-  // 2D array representing the card table, using type CardType from website/src/types/studyplan.ts; cached
   const [cards, setCards] = useState<Array<Array<CardType>>>(() => {
     const savedCards = localStorage.getItem('cards');
-    // default to 8 width table
     return savedCards ? JSON.parse(savedCards) : new Array(8).fill([]).map(() => []);
   });
-  // notification, default nothing
   const [notification, setNotification] = useState<string | null>(null);
   const [clashNotification, setClashNotification] = useState<string | null>(null);
   const [showTour, setShowTour] = useState(() => {
     const storedShowTour = localStorage.getItem('showTourState');
     return storedShowTour === null ? true : storedShowTour === 'true';
   });
-
-  // Existing useEffect hooks and functions...
-
   const handleTourClose = () => {
     setShowTour(true);
     localStorage.setItem('showTourState', 'true');
@@ -144,40 +124,27 @@ const DynamicTable: React.FC<DynamicTableProps> = ({ tempCard, setTempCard }) =>
   useEffect(() => { 
     let timer;
     if (notification) {
-      // Set a timer to clear the notification after 2 seconds
       timer = setTimeout(() => {
         setNotification(null);
-      }, 2000); // 2000 milliseconds = 2 seconds
+      }, 2000); 
     }
-  
-    // Cleanup function to clear the timer if the component unmounts or the effect reruns
     return () => clearTimeout(timer);
-  }, [notification]); // Dependency array ensures effect runs only when notification changes
+  }, [notification]); 
   useEffect(() => { 
     let timer;
     if (clashNotification) {
-      // Set a timer to clear the notification after 2 seconds
       timer = setTimeout(() => {
         setClashNotification(null);
       }, 5000); 
     }
-  
-    // Cleanup function to clear the timer if the component unmounts or the effect reruns
     return () => clearTimeout(timer);
   }, [notification]);
-  // selected card, temproraily hold selected card object; type SelectedCard from website/src/types/studyplan.ts
   const [selectedCard, setSelectedCard] = useState<SelectedCard | null>(null);
-  // grade to be set of the selected card, default empty
   const [grade, setGrade] = useState<string>('');
-  // classification to be set of the selected card, default empty
   const [classification, setClassification] = useState<string>('');
-
-  // major setting toggle visibility function
   const toggleCollapse = () => {    
     setIsCollapsed(!isCollapsed);
   };
-
-  // handle number of columns change
   const handleColumnChange = (event: ChangeEvent<HTMLSelectElement>) => {
     const newCount = parseInt(event.target.value);   
     const newCards = new Array(newCount + 1)
@@ -186,8 +153,6 @@ const DynamicTable: React.FC<DynamicTableProps> = ({ tempCard, setTempCard }) =>
     setColumnCount(newCount);   // update column count state
     setCards(newCards);         // update card table state
   };
-
-  // handle faculty change
   const handleFacultyChange = (event: ChangeEvent<HTMLSelectElement>) => {
     const newFaculty = event.target.value;
     setFaculty(newFaculty);
@@ -196,8 +161,6 @@ const DynamicTable: React.FC<DynamicTableProps> = ({ tempCard, setTempCard }) =>
     setMajor(firstMajor);
     localStorage.setItem('major', firstMajor);
   }
-
-  // handle program change
   const handleProgramChange = (event: ChangeEvent<HTMLSelectElement>) => {
     const newProgram = event.target.value;
     setPrograms(newProgram);
@@ -206,20 +169,15 @@ const DynamicTable: React.FC<DynamicTableProps> = ({ tempCard, setTempCard }) =>
         || newProgram.includes('Double or Concurrent Degree'));
     setShowMinors(newProgram.includes('Minor(s)'));
   }
-
-  // handle primary major change
   const handleMajorChange = (event: ChangeEvent<HTMLSelectElement>) => {
     const newMajor = event.target.value;
     setMajor(newMajor);
   }
-
-  // handle second major change
   const handleSecondMajorChange = (event: ChangeEvent<HTMLSelectElement>, type: 'faculty' | 'major') => {
     const value = event.target.value;
     if (type === 'faculty') {
       setSecondFaculty(value);
       localStorage.setItem('secondFaculty', value);
-      // Reset the second major when the faculty changes
       setSecondMajor('');
     } else if (type === 'major') {
       setSecondMajor(value);
@@ -675,14 +633,11 @@ const DynamicTable: React.FC<DynamicTableProps> = ({ tempCard, setTempCard }) =>
   const iterateCardByCourseCodeLeft = (courseCode: string, columnIdx: number): boolean => {
     const hasWildcard = courseCode.includes('%');
     let cleanCourseCode = courseCode.split(':')[0].trim(); // Strip the ":D" suffix if present
-
     // If there's a wildcard, remove it and any subsequent characters for matching
     if (hasWildcard) {
         cleanCourseCode = cleanCourseCode.split('%')[0].trim();
     }
-
     console.log('Checking course:', cleanCourseCode);
-
     // Check for exact matches or prefix matches based on wildcard presence
     for (let i = 0; i < columnIdx; i++) {
         if (hasWildcard) {
@@ -703,15 +658,12 @@ const DynamicTable: React.FC<DynamicTableProps> = ({ tempCard, setTempCard }) =>
 
   const countCardByCourseCodeLeft = (courseCode: string, columnIdx: number): number => {
     const cleanCourseCode = courseCode.split('%')[0].trim();
-    // console.log(cleanCourseCode)
     let count:number = 0;
     for (let i = 0; i < columnIdx; i++) {
       if (cards[i].some(card => card.name.includes(cleanCourseCode))) {
-        // console.log('found: ' + cleanCourseCode)
         count++; 
       }
     }
-    // console.log(count);
     return count;
   }
 
@@ -720,9 +672,6 @@ const DynamicTable: React.FC<DynamicTableProps> = ({ tempCard, setTempCard }) =>
   }
 
   const renderPrereqTreeVisual = (prereqData: PrereqTreeNode | string | undefined) => {
-    // console.log('tree: ' + prereqData)
-    // console.log('string: ' + JSON.stringify(prereqData))
-
     if (typeof prereqData === 'string') {
       try {
         const treeData = JSON.parse(prereqData);
@@ -871,9 +820,13 @@ const DynamicTable: React.FC<DynamicTableProps> = ({ tempCard, setTempCard }) =>
       </div>
       {selectedCard && (
         <div className="confirmation-dialog">
-          <p>Delete course {selectedCard.name} from {semesterCount(selectedCard.columnIndex)}?</p>
-          <button className='yes-button'onClick={removeCard}>Yes</button>
-          <button className='no-button'onClick={() => setSelectedCard(null)}>No</button>
+        <div className='selection-section'>
+          <div className='remove-confirmation'>
+            <p>Delete {selectedCard.name} from {semesterCount(selectedCard.columnIndex)}?</p>
+            <button className='yes-button'onClick={removeCard}>Yes</button>
+            <button className='no-button'onClick={() => setSelectedCard(null)}>No</button>
+          </div>
+          <div className='remove-confirmation'>
           <p>Update grade:</p>
           <select className="grade-dropdown-list"value={grade} onChange={updateGrade} required>
             <option value="">Select Grade</option>
@@ -891,6 +844,8 @@ const DynamicTable: React.FC<DynamicTableProps> = ({ tempCard, setTempCard }) =>
             <option value="F">F</option>
           </select>
           <button className='update-grade-button'onClick={saveGrade}>Update Grade</button>
+          </div>
+          <div className='remove-confirmation'>
           <p>Classify course:</p>
           <select className="classification-dropdown-list"value={classification} onChange={updateClassification} required>
             <option value="">Classify as:</option>
@@ -904,6 +859,8 @@ const DynamicTable: React.FC<DynamicTableProps> = ({ tempCard, setTempCard }) =>
             <option value="Specialisation Elective">Specialisation Elective</option>
           </select>
           <button className='update-classification-button'onClick={saveClassification}>Update Classification</button>
+          </div>
+          </div>
           <h3>Selected Course Details:</h3>
           <h2><strong></strong> {selectedCard.name}</h2>
           <p><strong>Course Name:</strong> {selectedCard.content}</p>

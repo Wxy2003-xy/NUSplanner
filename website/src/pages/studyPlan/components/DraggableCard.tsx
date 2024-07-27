@@ -18,7 +18,6 @@ const DraggableCard = ({
       const dropResult = monitor.getDropResult() as DropResult; // Cast to the correct type
       if (item && dropResult && item.columnIndex === dropResult.columnIndex) {
         handleMoveCard(item.columnIndex, item.index, dropResult.newIndex || item.index);
-        // Use item.index as fallback if newIndex is undefined
       }
     }
   }));

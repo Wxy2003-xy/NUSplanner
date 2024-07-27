@@ -18,13 +18,13 @@ function App() {
     fetch('/')
       .then(response => response.text())
       .then(data => setMessage(data))
-      .catch(err => console.error('Error fetching data:', err)); // Proper error handling
+      .catch(err => console.error('Error fetching data:', err)); 
   }, []);
 
   return (
       <Router basename="/NUSplanner">
         <Routes>
-          <Route path="/" element={<Home />} /> {/* Default route */}
+          <Route path="/" element={<Home />} /> 
           <Route path="/home" element={<Home />} />
           <Route path="/studyPlan" element={<StudyPlan />} />
           <Route path="/timetable" element={<Timetable />} />

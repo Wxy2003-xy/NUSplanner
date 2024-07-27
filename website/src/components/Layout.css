@@ -17,8 +17,8 @@ header {
   padding: 20px 25px;
   display: flex;
   align-items: center;
-  justify-content: space-between; /* Ensures proper spacing */
-  width: 100%; /* Full width */
+  justify-content: space-between; 
+  width: 100%; 
 }
 
 .header-left {
@@ -28,7 +28,7 @@ header {
 
 .logo-link {
   text-decoration: none;
-  color: inherit; /* Ensures the text color is inherited */
+  color: inherit; 
 }
 
 .logo-link:hover {
@@ -64,8 +64,8 @@ header {
   display: flex;
   justify-content: right;
   align-items: center;
-  overflow: hidden; /* Hide overflow to create the scrolling effect */
-  white-space: nowrap; /* Prevents wrapping of the content */
+  overflow: hidden; 
+  white-space: nowrap; 
   margin-right: 45px;
 }
 
@@ -77,8 +77,8 @@ header {
 }
 
 .home-scroll-content a {
-  color: #ADD8E6; /* Change link color to light blue */
-  text-decoration: underline; /* Underline links */
+  color: #ADD8E6; 
+  text-decoration: underline; 
 }
 
 .home-scroll-content a:hover {
@@ -88,7 +88,7 @@ header {
 .date-container {
   font-size: 16px;
   color: white;
-  margin-right: 60px; /* Adjust right margin */
+  margin-right: 60px; 
 }
 
 .layout {
@@ -126,37 +126,36 @@ nav ul {
 }
 
 nav ul li {
-  margin: 0; /* Remove margin between list items */
+  margin: 0; 
   
 }
 
 .nav-button {
   width: 100%;
-  height: 88px; /* Set height for the buttons */
+  height: 88px; 
   background-size: 50%;
-  background-position: right -15px bottom -15px; /* Position the background image in the right bottom corner with a vertical offset */
-  background-repeat: no-repeat; /* Ensure the background image does not tile */
-  border: none; /* Remove border */
-  color: white; /* Text color */
+  background-position: right -15px bottom -15px; 
+  background-repeat: no-repeat; 
+  border: none; 
+  color: white; 
   font-size: 18px;
   padding-right: 10px;
   background-color: #0a756d;
   display: flex;
   align-items: center;
-  justify-content: flex-start; /* Align content to the right */
+  justify-content: flex-start; 
   cursor: pointer;
-  text-decoration: none; /* Remove underline from text */
+  text-decoration: none; 
   transition: background-color 0.3s ease;
 }
 
 .nav-button span {
-  /* background-color: rgba(0, 0, 0, 0.5);  */
   padding: 5px 10px;
   border-radius: 5px;
 }
 
 .nav-button:hover {
-  background-color: rgba(0, 0, 0, 0.1); /* Slightly change background on hover */
+  background-color: rgba(0, 0, 0, 0.1); 
 }
 
 .page-content {
@@ -166,36 +165,36 @@ nav ul li {
 .join-us-container {
   display: flex;
   align-items: center;
-  margin-right: 20px; /* Space between the "Join us" section and the "About Us" section */
+  margin-right: 20px; 
   text-decoration: none;
 }
 
 .join-us-icon {
-  width: 24px; /* Adjust size as needed */
-  height: 24px; /* Adjust size as needed */
-  margin-right: 8px; /* Space between the icon and text */
-  transition: transform 0.3s ease; /* Smooth transition for icon enlargement */
+  width: 24px;
+  height: 24px; 
+  margin-right: 8px; 
+  transition: transform 0.3s ease; 
 }
 
 .join-us-container .join-us-icon:hover {
-  transform: scale(1.1); /* Slightly enlarge the icon on hover */
+  transform: scale(1.1); 
 }
 
 .join-us-text {
-  color: white; /* Adjust color as needed */
+  color: white; 
   text-decoration: none;
 }
 
 .join-us-container .join-us-text:hover {
-  color: antiquewhite; /* Light color on hover (anti-white) */
+  color: antiquewhite; 
 }
 
 .about-us-container {
-  margin-right: 20px; /* Space between the "About Us" section and the date */
+  margin-right: 20px; 
 }
 
 .about-us-link {
-  color: white; /* Adjust color as needed */
+  color: white;
   text-decoration: none;
 }
 

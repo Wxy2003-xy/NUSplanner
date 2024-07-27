@@ -29,16 +29,16 @@
 
 .title-container h1 {
   margin: 0;
-  font-size: clamp(2.2rem, 5vw, 3.5rem); /* Increased sizes */
-  font-weight: 1700; /* Makes the font bolder, which is good for headings */
+  font-size: clamp(2.2rem, 5vw, 3.5rem); 
+  font-weight: 1700; 
   font-family: Arial, sans-serif;
 }
 
 .title-container p {
   margin: 0;
   font-family: Arial, sans-serif;
-  font-size: clamp(1rem, 2vw, 1.5rem); /* Increased sizes */
-  font-weight: 400; /* Regular weight for paragraph text */
+  font-size: clamp(1rem, 2vw, 1.5rem); 
+  font-weight: 400; 
 }
 
 .logo-container {

@@ -15,7 +15,6 @@
   align-items: center;
 }
 
-
 .tmp {
   font-size: 5px;
 }
@@ -23,11 +22,11 @@
 .timetablecontainer {
   display: flex;
   flex-direction: row;
-  width: 100%; /* Ensure the container takes full width */
+  width: 100%; 
 }
 
 .timetablecontainer > div {
-  flex-grow: 1; /* Makes each child div expand to fill available space */
+  flex-grow: 1;
 }
 
 .timing {
@@ -121,4 +120,12 @@ button:hover {
 
 .to-map-button {
   margin-top: 14px;
+}
+
+
+.loading-indicator {
+  font-size: 24px;
+  color: #0a756d;
+  text-align: center;
+  margin-top: 20px;
 }

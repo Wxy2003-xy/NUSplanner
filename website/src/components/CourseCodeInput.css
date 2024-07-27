@@ -1,41 +1,39 @@
-/* CourseCodeInput.css */
 .container {
     margin: 20px;
     padding: 20px;
-    background-color: #f8f8f9; /* light grey background for better contrast */
+    background-color: #f8f8f9; 
     border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1); /* subtle shadow for depth */
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1); 
     display: flex;
     flex-direction: column;
     align-items: center;
 }
 
 .input-field {
-    width: 80%; /* responsive width */
+    width: 80%; 
     padding: 10px 15px;
     margin: 10px 0;
-    font-size: 1rem; /* readable font size */
-    border: 2px solid #0056b3; /* solid border with a color */
-    border-radius: 4px; /* rounded corners */
-    outline: none; /* removes default focus outline */
-    transition: border-color 0.3s; /* smooth transition for interactions */
+    font-size: 1rem; 
+    border: 2px solid #0056b3; 
+    border-radius: 4px;
+    outline: none;
+    transition: border-color 0.3s; 
 }
 
 .input-field:focus {
-    border-color: #004494; /* darker border on focus for visibility */
+    border-color: #004494; 
 }
 
 .input-label {
-    font-size: 1.2rem; /* slightly larger label text */
-    color: #333; /* dark grey for better readability */
-    margin-bottom: 5px; /* space between label and input */
+    font-size: 1.2rem; 
+    color: #333; 
+    margin-bottom: 5px; 
 }
 
 .input-field::placeholder {
-    color: #666; /* lighter text for placeholder */
+    color: #666;
 }
 
-/* Responsive adjustments for smaller screens */
 @media (max-width: 600px) {
     .container {
         padding: 15px;

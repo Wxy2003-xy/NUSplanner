@@ -1,16 +1,16 @@
 // utils/loadVenues.js
 import { venueData } from "../data/venues";
 export const loadVenuesX = (roomName:string) => {
-  console.log('Searching for:', roomName); // Debug to see what is being searched
+  console.log('Searching for:', roomName); 
   for (const key in venueData) {
     console.log(key)
     if (JSON.stringify(key) === roomName) {
-      console.log('Found:', venueData[key].roomName); // Debug to confirm match
+      console.log('Found:', venueData[key].roomName); 
       return venueData[key].location.x;
     }
   }
-  console.log('No venue found matching:', roomName); // Debug to confirm no match
-  return 0; // Return 0 if no matching venue is found
+  console.log('No venue found matching:', roomName); 
+  return 0; 
 };
 
 export const loadVenuesY = (roomName:string) => {
@@ -19,5 +19,5 @@ export const loadVenuesY = (roomName:string) => {
       return venueData[key].location.y;
     }
   }
-  return 0; // Return 0 if no matching venue is found
+  return 0; 
 };

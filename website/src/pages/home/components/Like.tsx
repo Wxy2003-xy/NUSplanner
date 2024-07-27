@@ -2,15 +2,15 @@ import { useState } from 'react';
 import './Like.css';
 
 function Like() {
-    const [count, setCount] = useState(0); // Using useState for reactivity
-    const [count2, setCount2] = useState(0); // Using useState for reactivity
+    const [count, setCount] = useState(0);
+    const [count2, setCount2] = useState(0); 
 
     const handleClick = () => {
-        setCount(count + 1); // Update state in a way that triggers re-render
+        setCount(count + 1); 
         console.log(count);
     }
     const handleClick2 = () => {
-        setCount2(count2 + 1); // Update state in a way that triggers re-render
+        setCount2(count2 + 1);
         console.log(count2);
     }
 

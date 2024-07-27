@@ -26,12 +26,12 @@
 
 .about-content section h2{
   margin-bottom: 20px;
-  transition: all 0.3s ease; /* Smooth transition for hover effects */
+  transition: all 0.3s ease; 
 }
 
 .about-content section h2:hover {
-  color: black; /* Change color to black on hover */
-  transform: scale(1.01); /* Enlarge the element on hover */
+  color: black; 
+  transform: scale(1.01); 
 }
 
 .about-content h2 {

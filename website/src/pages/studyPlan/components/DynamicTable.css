@@ -31,7 +31,7 @@
   display:inline-flex;
   padding: 10px;
   margin-top: 10px;
-  gap: 20px; /* Increased space between columns for better separation */
+  gap: 20px; 
   box-sizing: border-box;
   transform: translateX(-4px);
 }
@@ -43,11 +43,11 @@
 .semester-dropdown-list, .faculty-dropdown-list, .program-dropdown-list, .major-drop-down-list {
   size: 1em;
   padding: 5px;
-  border-radius: 8px; /* Smoother border radius */
+  border-radius: 8px; 
   margin-bottom: 15px;
   margin-right: 20px;
-  background-color: #f8f9fa; /* Light grey background */
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+  background-color: #f8f9fa; 
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); 
 }
 
 .dropdown-list-box {
@@ -60,43 +60,43 @@
 .dropdown-row {
   color:#333;
   display: flex;
-  align-items: center; /* Align items vertically */
-  justify-content: start; /* Align items to the start of the row */
-  gap: 10px; /* Space between each dropdown and button */
+  align-items: center; 
+  justify-content: start;
+  gap: 10px;
   margin-bottom: 0.12em;
 }
 
 .dropdown-row-minor {
   color:#333;
   display: flex;
-  align-items: center; /* Align items vertically */
-  justify-content: start; /* Align items to the start of the row */
-  gap: 10px; /* Space between each dropdown and button */
+  align-items: center;
+  justify-content: start; 
+  gap: 10px; 
   margin-bottom: 0.12em;
 
 }
 
 .dropdown-select {
-  flex-grow: 1; /* Allows select elements to take up available space */
+  flex-grow: 1; 
   padding: 2px;
   border-radius: 4px;
   border: 1px solid #ccc;
 }
 
 .dropdown-select-minor {
-  flex-grow: 1; /* Allows select elements to take up available space */
+  flex-grow: 1; 
   padding: 2px;
   border-radius: 4px;
   border: 1px solid #ccc;
 }
 
 .remove-minor-button {
-  padding: 2px 6px; /* Slightly larger padding for better touch target */
-  background-color: #f44336; /* Red color for deletion actions */
+  padding: 2px 6px; 
+  background-color: #f44336;
   color: white;
   border: none;
   border-radius: 4px;
-  cursor: pointer; /* Makes it clear the button is clickable */
+  cursor: pointer; 
 }
 
 .headerline {
@@ -110,39 +110,39 @@
 .vcolumns {
   display: flex;
   flex-direction: column;
-  align-items: center;  /* Ensure the items are centered within the column */
-  padding: 10px;        /* Add padding inside the columns */
-  margin: -6px;         /* Add some space between columns */
-  border: 1px solid #00aeff; /* Blue border for visibility */
-  border-radius: 8px;   /* Optional: Adds rounded corners to the column */
-  background-color: #f0f9f9; /* Light grey background to distinguish columns */
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Optional: Adds depth with a subtle shadow */
+  align-items: center;  
+  padding: 10px;        
+  margin: -6px;         
+  border: 1px solid #00aeff; 
+  border-radius: 8px;  
+  background-color: #f0f9f9; 
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); 
 }
 
 .notification {
-  position: fixed;      /* Fixed position to stay in place even when scrolling */
-  bottom: 20px;         /* Distance from the bottom of the viewport */
-  left: 20px;           /* Distance from the left of the viewport */
-  padding: 10px 20px;   /* Padding around the text for better appearance */
-  background-color: #f8d7da; /* Light red background color */
-  color: #721c24;       /* Dark red text color */
-  border: 1px solid #f5c6cb; /* Light red border */
-  border-radius: 4px;   /* Rounded corners */
-  box-shadow: 0 2px 6px rgba(0,0,0,0.2); /* Subtle shadow for better visibility */
+  position: fixed;     
+  bottom: 20px;       
+  left: 20px;          
+  padding: 10px 20px;   
+  background-color: #f8d7da; 
+  color: #721c24;      
+  border: 1px solid #f5c6cb; 
+  border-radius: 4px;  
+  box-shadow: 0 2px 6px rgba(0,0,0,0.2); 
   z-index: 10000
 }
 
 
  .clash-notification{
-  position: fixed;      /* Fixed position to stay in place even when scrolling */
-  bottom: 20px;         /* Distance from the bottom of the viewport */
-  left: 20px;           /* Distance from the left of the viewport */
-  padding: 10px 20px;   /* Padding around the text for better appearance */
-  background-color: #f8d7da; /* Light red background color */
-  color: #721c24;       /* Dark red text color */
-  border: 1px solid #f5c6cb; /* Light red border */
-  border-radius: 4px;   /* Rounded corners */
-  box-shadow: 0 2px 6px rgba(0,0,0,0.2); /* Subtle shadow for better visibility */
+  position: fixed;   
+  bottom: 20px;        
+  left: 20px;      
+  padding: 10px 20px;   
+  background-color: #f8d7da; 
+  color: #721c24;     
+  border: 1px solid #f5c6cb;
+  border-radius: 4px;  
+  box-shadow: 0 2px 6px rgba(0,0,0,0.2); 
   z-index: 100000
 }
 
@@ -150,80 +150,84 @@
 
 
 .card {
-  border: 1px solid #8b8b8b; /* Lighter border color */
+  border: 1px solid #8b8b8b; 
   padding: 10px;
-  border-radius: 5px; /* Rounded corners for the card */
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); /* Enhanced shadow for 3D effect */
+  border-radius: 5px; 
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); 
 }
 
 .sem-title{
-  text-align: center; /* Centering text for consistency */
-  background-color: #e0ecf5; /* Uniform background for grouping elements */
+  text-align: center; 
+  background-color: #e0ecf5; 
   color:#333;
   padding: 6px;
   margin: 4px;
-  border-radius: 2px; /* Consistent border radius */
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.4); /* Adds depth */
+  border-radius: 2px; 
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.4); 
   font-size: 14px;
   width:max-content;
 }
 
 .sem-mc-count{
-  text-align: center; /* Centering text for consistency */
-  background-color: #f4faff; /* Uniform background for grouping elements */
+  text-align: center; 
+  background-color: #f4faff; 
   color:#333;
   padding: 6px;
   margin: 4px;
-  border-radius: 2px; /* Consistent border radius */
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2); /* Adds depth */
+  border-radius: 2px; 
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2); 
   font-size: 12px;
   width:max-content;
 }
 
 .add-button {
-  text-align: center; /* Centering text for consistency */
-  background-color: #bdedf0; /* Uniform background for grouping elements */
+  text-align: center; 
+  background-color: #bdedf0; 
   color:#333;
   width: 80%;
   padding: 10px;
   margin: 10px 0;
-  border-radius: 5px; /* Consistent border radius */
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.4); /* Adds depth */
+  border-radius: 5px; 
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.4); 
   font-size: 12px;
 }
 
 .to-timetable-button, .to-map-button {
-  text-align: center; /* Centering text for consistency */
-  background-color: #bdedf0; /* Uniform background for grouping elements */
+  text-align: center; 
+  background-color: #bdedf0;
   color:#333;
   width: 80%;
   padding: 10px;
   margin: 10px 0;
-  border-radius: 5px; /* Consistent border radius */
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.4); /* Adds depth */
+  border-radius: 5px; 
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.4); 
   font-size: 12px;
 }
 
 .confirmation-dialog {
-  color: #333;
+  border-radius: 8px;
+  padding: 10px;
+  color: white;
   align-items: flex-start;
+  background-color: #1a9e81;
 }
 
 .grade-dropdown-list, .classification-dropdown-list {
   size: 1em;
   padding: 5px;
-  border-radius: 8px; /* Smoother border radius */
+  border-radius: 8px;
   margin-bottom: 15px;
   margin-right: 20px;
-  background-color: #f8f9fa; /* Light grey background */
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+  background-color: #f8f9fa;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); 
 }
 
 .yes-button, .no-button, .update-grade-button, .update-classification-button {
-  text-align: left;  /* Align text inside the button to the left */
-  display: block;    /* Make each button a block element */
-  width: auto;       /* Let each button size according to its text/content */
-  margin: 5px 0;     /* Provide some vertical space between buttons */
+  text-align: left; 
+  display: block;   
+  width: auto;       
+  margin: 5px 0;     
+  background-color: #0e5a4a;
 }
 
 .text-box {
@@ -248,4 +252,16 @@
   display: inline;
   height: 40px;
   width: 90%;
+}
+
+.selection-section {
+  display: flex;
+  flex-direction: row;
+  justify-content: start;
+  gap: 5%;
+}
+
+.remove-confirmation, .updategrade-selection, .updateclassification-section {
+  display: flex;
+  flex-direction: column;
 }

@@ -1,21 +1,32 @@
 import { ClassTimeSlotTypeUnion } from "../types/timetable";
-  
+  /**
+   * TimeTable class is responsible for managing the arrangement of class time slots.
+   * It maintains a grid to track the availability of time slots for each day of the week.
+   */
   export class TimeTable {
     private grid: Map<string, boolean[]>;
-  
     constructor() {
       this.grid = new Map();
       ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'].forEach(day => {
-        this.grid.set(day, new Array(36).fill(false)); // 36 slots from 6am to 12pm
+        this.grid.set(day, new Array(36).fill(false)); 
       });
     }
-  
+    /**
+     * Converts a time string (HHMM format) to an interval index.
+     * @param time- The time string in HHMM format.
+     * @returns The interval index corresponding to the given time.
+     */
     private timeToIntervalIndex(time: string): number {
       const hours = parseInt(time.substring(0, 2));
       const minutes = parseInt(time.substring(2, 4));
       return (hours - 6) * 2 + Math.floor(minutes / 30);
     }
-  
+    /**
+     * Generates an array of interval tokens for a given time range.
+     * @param startTime - The start time string in HHMM format.
+     * @param endTime - The end time string in HHMM format.
+     * @returns An array of interval tokens representing the time range.
+     */
     private generateTokens(startTime: string, endTime: string): number[] {
       const start = this.timeToIntervalIndex(startTime);
       const end = this.timeToIntervalIndex(endTime);
@@ -25,18 +36,25 @@ import { ClassTimeSlotTypeUnion } from "../types/timetable";
       }
       return tokens;
     }
-  
+    /**
+     * Checks if a given slot can be added to the timetable without conflicts.
+     * @param slot - The class time slot to be added.
+     * @returns True if the slot can be added, false otherwise.
+     */
     public canAddSlot(slot: ClassTimeSlotTypeUnion): boolean {
       for (let i = 0; i < slot.startTime.length; i++) {
         const day = slot.day[i];
         const tokens = this.generateTokens(slot.startTime[i], slot.endTime[i]);
         if (tokens.some(token => this.grid.get(day)?.[token])) {
-          return false; // Overlap detected
+          return false; 
         }
       }
       return true;
     }
-  
+    /**
+     * Adds a given slot to the timetable.
+     * @param slot - The class time slot to be added.
+     */
     public addSlot(slot: ClassTimeSlotTypeUnion): void {
       for (let i = 0; i < slot.startTime.length; i++) {
         const day = slot.day[i];
@@ -46,7 +64,10 @@ import { ClassTimeSlotTypeUnion } from "../types/timetable";
         });
       }
     }
-  
+    /**
+     * Removes a given slot from the timetable.
+     * @param slot - The class time slot to be removed.
+     */
     public removeSlot(slot: ClassTimeSlotTypeUnion): void {
       for (let i = 0; i < slot.startTime.length; i++) {
         const day = slot.day[i];
@@ -56,7 +77,11 @@ import { ClassTimeSlotTypeUnion } from "../types/timetable";
         });
       }
     }
-  
+    /**
+     * Gets the available time slots for a given day.
+     * @param day - The day for which available slots are to be retrieved.
+     * @returns An array of available time slots in HH:MM format.
+     */
     public getAvailableSlots(day: string): string[] {
       const intervals = this.grid.get(day);
       const availableSlots: string[] = [];
@@ -73,14 +98,18 @@ import { ClassTimeSlotTypeUnion } from "../types/timetable";
   
       return availableSlots;
     }
-  
+    /**
+     * Finds a valid arrangement of class time slots from given partitions.
+     * @param partitions - An array of arrays containing class time slot partitions.
+     * @returns An array of class time slots representing a valid arrangement, or null if no valid arrangement is found.
+     */
     public findValidArrangement(partitions: ClassTimeSlotTypeUnion[][]): ClassTimeSlotTypeUnion[] | null {
       const result: ClassTimeSlotTypeUnion[] = [];
       
       const dfs = (index: number): boolean => {
         console.log('recurse')
         if (index === partitions.length) {
-          return true; // All partitions have been successfully placed
+          return true;
         }
         
         for (const slot of partitions[index]) {
@@ -92,18 +121,15 @@ import { ClassTimeSlotTypeUnion } from "../types/timetable";
               return true;
             }
   
-            // Prune: remove the slot and try the next one
             this.removeSlot(slot);
             result.pop();
           }
         }
-        return false; // No valid arrangement found for this partition
+        return false; 
       }
-  
       if (dfs(0)) {
         return result;
       }
-  
-      return null; // No valid arrangement found
+      return null; 
     }
   }
