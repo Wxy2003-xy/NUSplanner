@@ -1,3 +1,7 @@
+.test-box{
+  color: red
+}
+
 
 .collapsible-content {
   padding: 15px;
@@ -68,7 +72,8 @@
   align-items: center; /* Align items vertically */
   justify-content: start; /* Align items to the start of the row */
   gap: 10px; /* Space between each dropdown and button */
-  margin-bottom: -2.35em;
+  margin-bottom: 0.12em;
+
 }
 
 .dropdown-select {
@@ -126,6 +131,7 @@
   box-shadow: 0 2px 6px rgba(0,0,0,0.2); /* Subtle shadow for better visibility */
   z-index: 10000
 }
+
 
  .clash-notification{
   position: fixed;      /* Fixed position to stay in place even when scrolling */
@@ -186,7 +192,7 @@
   font-size: 12px;
 }
 
-.to-timetable-button {
+.to-timetable-button, .to-map-button {
   text-align: center; /* Centering text for consistency */
   background-color: #bdedf0; /* Uniform background for grouping elements */
   color:#333;
@@ -224,3 +230,22 @@
   color:#333
 }
 
+
+
+.joyride-step__overlay {
+  z-index: 9999;
+}
+
+.joyride-tooltip {
+  z-index: 10000;
+}
+
+.joyride-tooltip__button {
+  background-color: #0cb591;
+  color: #fff;
+}
+.counter-box {
+  display: inline;
+  height: 40px;
+  width: 90%;
+}

@@ -78,15 +78,17 @@ header {
 }
 
 .home-left-section {
-  width: 50%;
+  width: 90%;
   background-color: #f8f9fa; /* Optional: Background color for the left section */
   padding: 15px;
   padding-left: 15px;
   padding-top: 10px;
+  line-height: 1.6;
 }
 
 .home-left-top {
-  flex: 0 0 30%;
+  margin-top: 10px;
+  flex: 0 0 10%;
   position: relative;
   height: 30%; 
   overflow: hidden; /* Hide overflow to ensure no scrollbars */
@@ -108,7 +110,7 @@ header {
   left: 0;
   transition: opacity 1s ease-in-out; /* Smooth transition */
   filter: brightness(80%) contrast(120%); /* Enhance image appearance */
-  border-radius: 1%;
+  border-radius: 8px;
 }
 
 /* Ensure only one image is visible at a time */
@@ -146,12 +148,13 @@ header {
   background-color: white; /* Pale gray background */
   border-radius: 8px; /* Rounded corners for a modern look */
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
-  margin-top: 15px;
+  margin-top: 14px;
+  padding: 20px;
 }
 
 .home-left-bottom .home-leftbottom-content {
-  font-size: 18px; /* Readable font size */
-  line-height: 1.6; /* Improved readability */
+  font-size: 16px; /* Readable font size */
+  line-height: 1.2; /* Improved readability */
   color: #333; /* Dark text color for contrast */
   margin-bottom: 16px; /* Space between paragraphs */
 }
@@ -183,7 +186,7 @@ header {
   color: white; /* Ensure text is readable over the background image */
   text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.4); /* Add text shadow for readability */
   height: 100%; /* Ensure it takes full height */
-  width: 50%; /* Occupies half of the screen width */
+  width: 80%; /* Occupies half of the screen width */
   background-color: #ffffff; /* Optional: Background color for the right section */
   padding: 0px;
   margin: 0px
@@ -234,26 +237,33 @@ header {
 
 /* New styles for rectangle boxes */
 .home-right-section .link-box {
-  width: 280px; /* Set width of the boxes */
-  height: 160px; /* Set height of the boxes */
-  background-color: rgba(101, 171, 195, 0.8); /* Semi-transparent background */
-  margin: 10px 0; /* Spacing between boxes */
+  width: 46%; /* Set width of the boxes */
+  height: 205px; /* Set height of the boxes */
+  background-color: #0a756d; /* Semi-transparent background */
+  margin: 0px 0; /* Spacing between boxes */
   display: flex;
+  flex-direction: row;
   align-items: center;
   justify-content: center;
   border-radius: 8px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
   transition: transform 0.3s; /* Smooth hover effect */
   text-decoration: none; /* Remove underline */
+  background-position: right -35px bottom -75px; /* Position the background image in the right bottom corner with a vertical offset */
+  background-repeat: no-repeat; /* Ensure the background image does not tile */
+  background-size: 80%;
 }
 
 .home-right-section .link-box:hover {
-  transform: scale(1.05); /* Slightly expand on hover */
+  transform: scale(1.02); /* Slightly expand on hover */
 }
+
 
 .home-right-section .link-box span {
   color: white; /* Link color */
-  font-size: 22px;
+  transform: translateX(-20px);
+  font-size: 30px;
+  font-weight: 700;
 }
 
 /* Style for the h2 */
@@ -267,10 +277,10 @@ header {
 .home-right-section .link-box-container {
   display: flex;
   flex-wrap: wrap; /* Allow items to wrap to the next line */
-  gap: 10px; /* Space between boxes */
-  margin: 15px;
+  gap: 25px; /* Space between boxes */
+  margin-top: 20px;
   justify-content: center; /* Center the rows of boxes */
-  margin-left: 25px;
+  margin-left: 5px;
 }
 
 .home-scroll-container {
@@ -340,3 +350,11 @@ header {
   text-decoration: none;
   color:antiquewhite;
 }
+
+.hr-line {
+  color: #004d3f;
+}
+
+.footer-container {
+  z-index: 20;
+} 

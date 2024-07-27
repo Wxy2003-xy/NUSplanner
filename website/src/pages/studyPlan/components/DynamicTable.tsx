@@ -8,6 +8,7 @@ import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 import DraggableCard from './DraggableCard';
 import DroppableColumn from './DropColumn';
+import GuidedTour from './UserGuide';
 const allPrograms = {
   'School of Computing': [
     "Computer Science", 
@@ -129,7 +130,17 @@ const DynamicTable: React.FC<DynamicTableProps> = ({ tempCard, setTempCard }) =>
   // notification, default nothing
   const [notification, setNotification] = useState<string | null>(null);
   const [clashNotification, setClashNotification] = useState<string | null>(null);
+  const [showTour, setShowTour] = useState(() => {
+    const storedShowTour = localStorage.getItem('showTourState');
+    return storedShowTour === null ? true : storedShowTour === 'true';
+  });
 
+  // Existing useEffect hooks and functions...
+
+  const handleTourClose = () => {
+    setShowTour(true);
+    localStorage.setItem('showTourState', 'true');
+  };
   useEffect(() => { 
     let timer;
     if (notification) {
@@ -270,10 +281,15 @@ const DynamicTable: React.FC<DynamicTableProps> = ({ tempCard, setTempCard }) =>
 };
   const navigate = useNavigate();
   const handleToTimetable = (columnIndex: number) => {
-    const column = cards[columnIndex].map(card => card.name);
+    const column:string[] = cards[columnIndex].map(card => card.name);
     const semester = (columnIndex % 2 === 1 ? 1 : 2);
     navigate("/timetable", { state: { courseList: column, semester: semester } });
   };
+
+  const handleToMap = (columnIndex: number) => {
+    const column = cards[columnIndex].map(card => card.name);
+    navigate("/map", { state: { courseList: column} });
+  }
 
   
   useEffect(() => {
@@ -532,6 +548,7 @@ const DynamicTable: React.FC<DynamicTableProps> = ({ tempCard, setTempCard }) =>
 
   // Save the cards state to localStorage whenever it changes
   useEffect(() => {
+    console.log('getting table cache')
     localStorage.setItem('cards', JSON.stringify(cards));
   }, [cards]);
   
@@ -728,6 +745,7 @@ const DynamicTable: React.FC<DynamicTableProps> = ({ tempCard, setTempCard }) =>
   return (
     <div className='global-container'>
       {notification && <div className="notification">{notification}</div>}
+      {showTour && <GuidedTour startTour={showTour} onClose={handleTourClose} />}
       {clashNotification && <div className="clash-notification">{clashNotification}</div>}
     <button className="collapse-button"onClick={toggleCollapse}>Major Setting</button>
     <div>
@@ -813,7 +831,10 @@ const DynamicTable: React.FC<DynamicTableProps> = ({ tempCard, setTempCard }) =>
 </div>
   <h1 className='headerline'>{headerTitle}</h1>
   <h3 className='subline'>{headerSub}</h3>
-    <MCbreakDown cards={cards}/>
+  <div className='mc-breakdonw-box'>
+  <MCbreakDown cards={cards}/>
+  </div>
+    
     <DndProvider backend={HTML5Backend}>
       <div className='table'>
         {cards.map((columnCards, columnIndex) => (
@@ -842,7 +863,9 @@ const DynamicTable: React.FC<DynamicTableProps> = ({ tempCard, setTempCard }) =>
                 classification={card.classification}/>
             ))}
             <button className="add-button" onClick={() => addCard(columnIndex)}>Add Course</button>
-            <button className="to-timetable-button" onClick={() => handleToTimetable(columnIndex)}>View Timetable for Current Academic Year</button>
+            <button className="to-timetable-button" onClick={() => handleToTimetable(columnIndex)}>View Timetable</button>
+            {/* <button className="to-map-button" onClick={() => handleToMap(columnIndex)}>View Map</button> */}
+
           </DroppableColumn>
         ))}
       </div>
@@ -898,6 +921,8 @@ const DynamicTable: React.FC<DynamicTableProps> = ({ tempCard, setTempCard }) =>
       )}
     </DndProvider>
   </div>
+  <p className='notificationsite'></p>
+  <p className='course-query'></p>
 </div>
   );
 };

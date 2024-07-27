@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import Layout from '../../components/Layout'; // Adjust the path as needed
 import './home.css';
 import { NavLink } from 'react-router-dom';
 import logoImage from '../../images/nusplannerLogo.png';
@@ -9,7 +8,13 @@ import nusSoc from '../../images/nusSoc.jpg';
 import nusFass from '../../images/nusFass.jpeg';
 import nusCde from '../../images/nusCde.jpeg';
 import NUS from '../../images/NUS.jpeg';
-
+import Footer from '../../components/Footer';
+import timetableImg from '../../assets/timetable.png';
+import plannerImg from '../../assets/planner.png'
+import calendarImg from '../../assets/calendar.png'
+import mapImg from '../../assets/map.png'
+import communityImg from '../../assets/community.png'
+import feedbackImg from '../../assets/feedback.png'
 
 const Home: React.FC = () => {
   const [currentDate, setCurrentDate] = useState<string>('');
@@ -126,18 +131,21 @@ const Home: React.FC = () => {
             <NavLink to="/studyplan" className="home-leftbottom-title">
               Study Plan
             </NavLink>           
+            <hr className='hr-line'></hr>
             <p className="home-leftbottom-content">
               Plan your courses effortlessly with our intuitive Study Plan feature, which organizes your courses, tracks prerequisites, and avoids exam clashes, all with a user-friendly interface. Focus on your academic goals without the stress of manual planning.
             </p>
             <NavLink to="/timetable" className="home-leftbottom-title">
               Timetable
             </NavLink>
+            <hr className='hr-line'></hr>
             <p className="home-leftbottom-content">
               But that's not all! Elevate your planning with our Timetable Recommendation feature. We create a personalized timetable for each semester, tailored to your preferences like free days and preferred start times, ensuring a balanced and efficient schedule with minimal adjustments.
             </p>
             <NavLink to="/map" className="home-leftbottom-title">
               Map
             </NavLink>
+            <hr className='hr-line'></hr>
             <p className="home-leftbottom-content">
               Additionally, our Map feature guides you directly from your timetable to a map page showing the locations of all your classes. This ensures you know exactly where to go, saving time and reducing campus navigation stress.
             </p>
@@ -150,27 +158,30 @@ const Home: React.FC = () => {
           
             {/* Add rectangle boxes with links */}
             <div className="link-box-container">
-              <NavLink to="/studyplan" className="link-box">
+              <NavLink to="/studyplan" className="link-box" style={{ backgroundImage: `url(${plannerImg})` }}>
                 <span>Study Plan</span>
               </NavLink>
-              <NavLink to="/timetable" className="link-box">
+              <NavLink to="/timetable" className="link-box" style={{ backgroundImage: `url(${timetableImg})` }}>
                 <span>Timetable</span>
               </NavLink>
-              <NavLink to="/community" className="link-box">
+              <NavLink to="/community" className="link-box" style={{ backgroundImage: `url(${communityImg})` }}>
                 <span>Community</span>
               </NavLink>
-              <NavLink to="/reminder" className="link-box">
+              <NavLink to="/reminder" className="link-box" style={{ backgroundImage: `url(${calendarImg})` }}>
                 <span>Reminder</span>
               </NavLink>
-              <NavLink to="/map" className="link-box">
+              <NavLink to="/map" className="link-box" style={{ backgroundImage: `url(${mapImg})` }}>
                 <span>Map</span>
               </NavLink>
-              <NavLink to="/feedback" className="link-box">
+              <NavLink to="/feedback" className="link-box" style={{ backgroundImage: `url(${feedbackImg})` }}>
                 <span>Feedback</span>
               </NavLink>
             </div>
           </div>
         </div>
+      </div>
+      <div className='footer-container'>
+        <Footer></Footer>
       </div>
     </div>
   );

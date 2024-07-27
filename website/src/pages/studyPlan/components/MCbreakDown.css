@@ -4,11 +4,10 @@
     align-items: center;
     justify-content: space-between;
     margin-top: -16px;
-    margin-bottom: -16px;
-
+    margin-bottom: -1px;
   }
-
 .counter-box {
+  
     position: relative; 
     background-color: #ffffff;
     color: #333;
@@ -33,12 +32,12 @@
 }
 
 .counter-box:hover .counter-box-breakdown {
-    display: flex;
+    display: block;
     justify-content: flex-start; /* Align content to the start */
 }
 
 .toggle-button {
-    margin-left: 20px;
+  transform: translateX(-1050px);
     padding: 4px 8px;
     font-size: 12px;
     background-color: #45d3a1;

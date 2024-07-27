@@ -1,6 +1,7 @@
 .studyplan-nav-right {
-  margin-top: 40px;
-  margin-left: 20px;
+  width: 98%;
+  margin-top: 10px;
+  margin-left: 10px;
     flex-grow: 1;
     position: relative;
     display: flex;
@@ -12,10 +13,8 @@
     height: 100%; /* Ensure it takes full height */
 }
 
-
-
 .dynamic-table-container {
-  max-width: 100%;
+  max-width: 80%;
   width: 100%;  /* Adjust width as needed */
   margin-top: 20px;  /* Space between ModuleForm and DynamicTable */
   margin-bottom: 20px;

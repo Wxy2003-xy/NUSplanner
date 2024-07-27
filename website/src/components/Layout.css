@@ -12,9 +12,9 @@ body {
 }
 
 header {  
-  background-color: #2C3E50;
+  background-color: #11182a;
   color: white;
-  padding: 10px 20px;
+  padding: 20px 25px;
   display: flex;
   align-items: center;
   justify-content: space-between; /* Ensures proper spacing */
@@ -47,7 +47,7 @@ header {
 }
 
 .logo-container span {
-  font-size: 28px;
+  font-size: 40px;
   font-weight: bold;
   margin-right: 20px;
   color: white;
@@ -56,7 +56,33 @@ header {
 
 .title-container p {
   margin: 0;
-  font-size: 24px;
+  font-size: 40px;
+}
+
+.home-scroll-container {
+  flex-grow: 1;
+  display: flex;
+  justify-content: right;
+  align-items: center;
+  overflow: hidden; /* Hide overflow to create the scrolling effect */
+  white-space: nowrap; /* Prevents wrapping of the content */
+  margin-right: 45px;
+}
+
+.home-scroll-content {
+  display: inline-block;
+  font-size: 16px;
+  color: white;
+  text-align: center;
+}
+
+.home-scroll-content a {
+  color: #ADD8E6; /* Change link color to light blue */
+  text-decoration: underline; /* Underline links */
+}
+
+.home-scroll-content a:hover {
+  color: #9FC4E6; 
 }
 
 .date-container {
@@ -77,17 +103,20 @@ header {
 }
 
 nav {
-  flex-shrink: 0;
-  background-color: #f0f0f0;
-  padding: 0;
-  width: 150px;
+  display:flex;
+  flex-direction: column;
+  flex-shrink: 0; 
+  background-color: #0a756d;
+  width: 180px;
   height: 100%;
   box-sizing: border-box;
   z-index: 10000;
+  font-size: 20px;
 }
 
 .nav-left {
   width: 100%;
+  height: 100vh;
 }
 
 nav ul {
@@ -97,33 +126,84 @@ nav ul {
 }
 
 nav ul li {
-  margin: 10px 0;
+  margin: 0; /* Remove margin between list items */
+  
 }
 
-nav ul li a {
-  color: gray;
-  text-decoration: none;
-  padding: 10px;
+.nav-button {
+  width: 100%;
+  height: 88px; /* Set height for the buttons */
+  background-size: 50%;
+  background-position: right -15px bottom -15px; /* Position the background image in the right bottom corner with a vertical offset */
+  background-repeat: no-repeat; /* Ensure the background image does not tile */
+  border: none; /* Remove border */
+  color: white; /* Text color */
+  font-size: 18px;
+  padding-right: 10px;
+  background-color: #0a756d;
   display: flex;
   align-items: center;
+  justify-content: flex-start; /* Align content to the right */
+  cursor: pointer;
+  text-decoration: none; /* Remove underline from text */
+  transition: background-color 0.3s ease;
 }
 
-nav ul li a.active {
-  color: green;
+.nav-button span {
+  /* background-color: rgba(0, 0, 0, 0.5);  */
+  padding: 5px 10px;
+  border-radius: 5px;
 }
 
-nav ul li a span {
-  margin-left: 8px;
-}
-
-nav ul li a:hover {
-  color: green;
-}
-
-nav ul li a:hover span {
-  text-decoration: underline;
+.nav-button:hover {
+  background-color: rgba(0, 0, 0, 0.1); /* Slightly change background on hover */
 }
 
 .page-content {
   flex-grow: 1;
+}
+
+.join-us-container {
+  display: flex;
+  align-items: center;
+  margin-right: 20px; /* Space between the "Join us" section and the "About Us" section */
+  text-decoration: none;
+}
+
+.join-us-icon {
+  width: 24px; /* Adjust size as needed */
+  height: 24px; /* Adjust size as needed */
+  margin-right: 8px; /* Space between the icon and text */
+  transition: transform 0.3s ease; /* Smooth transition for icon enlargement */
+}
+
+.join-us-container .join-us-icon:hover {
+  transform: scale(1.1); /* Slightly enlarge the icon on hover */
+}
+
+.join-us-text {
+  color: white; /* Adjust color as needed */
+  text-decoration: none;
+}
+
+.join-us-container .join-us-text:hover {
+  color: antiquewhite; /* Light color on hover (anti-white) */
+}
+
+.about-us-container {
+  margin-right: 20px; /* Space between the "About Us" section and the date */
+}
+
+.about-us-link {
+  color: white; /* Adjust color as needed */
+  text-decoration: none;
+}
+
+.about-us-link:hover {
+  text-decoration: none;
+  color: antiquewhite;
+}
+
+.footer-container {
+  z-index: 20;
 }

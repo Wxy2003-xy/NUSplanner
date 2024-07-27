@@ -164,6 +164,7 @@
   white-space: break-word; /* This will wrap text respecting line breaks */
   overflow-wrap: break-word;      /* Ensures wrapping for long words */
   word-break: normal; 
+
 }
 
 .post-actions {

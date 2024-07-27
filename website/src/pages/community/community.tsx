@@ -25,6 +25,9 @@ const Community = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalText, setModalText] = useState('');
   const modalRef = useRef<HTMLDivElement>(null);
+  const [notice, setNotice] = useState<string | null>('');
+
+
 
   useEffect(() => {
     const options: Intl.DateTimeFormatOptions = { year: 'numeric', month: 'long', day: 'numeric' };
@@ -129,6 +132,46 @@ const Community = () => {
       });
   };
 
+  const handleLikePost = async (postId: number) => {
+    try {
+      const response = await axios.post(`/v1/article/updateLike/${postId}`);
+      if (response.data) {
+        loadPosts();
+      }
+    } catch (error) {
+      console.error('Error liking post:', error);
+    }
+  };
+
+  const handleDislikePost = async (postId: number) => {
+    try {
+      const response = await axios.post(`/v1/article/updateDislike/${postId}`);
+      if (response.data) {
+        loadPosts();
+      }
+    } catch (error) {
+      console.error('Error disliking post:', error);
+    }
+  };
+
+  const handleReportPost = (post: Post) => {
+    const serviceID = 'service_j372can';
+    const templateID = 'template_bi1g9kb';
+    const userID = 'PtThpNOKmxSv-C1nB';
+    const templateParams = {
+      message: 'Reported Post: Title {' + post.title + '}' + ', Content {' + post.content + '}',
+      to_email: 'nusplanner2024@gmail.com',
+    };
+    emailjs.send(serviceID, templateID, templateParams, userID)
+      .then((response) => {
+        console.log('Report sent successfully!', response.status, response.text);
+        setModalText('Thank you for your report. Your report will be reviewed shortly.');
+        setIsModalOpen(true);
+      }, (error) => {
+        console.error('Failed to send report.', error);
+      });
+  };
+
   const openModal = () => {
     // Clear the input fields before opening the modal
     (document.getElementById('postTitle') as HTMLInputElement).value = '';
@@ -148,7 +191,7 @@ const Community = () => {
   };
 
   return (
-    <Layout>
+    <Layout notice={notice ? <div className="notice-message">{notice}</div> : null}>
       <div>
         <div className="community-nav-right">
           <div className="search-box">
@@ -215,5 +258,4 @@ const Community = () => {
 };
 
 export default Community;
-
 

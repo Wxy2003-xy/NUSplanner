@@ -3,11 +3,23 @@
   position: relative;
   display: flex;
   flex-direction: column; 
-  padding: 20px;
+  padding: 4px;
   box-sizing: border-box;
   color: #333; /* Ensure text is readable over the background image */
   text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.4); /* Add text shadow for readability */
-  height: 100%; /* Ensure it takes full height */
+}
+
+.credit-section {
+  font-size: 8px;
+}
+
+.venue-info-list {
+  font-size: 12px;
+}
+
+.credit-section {
+  font-size: 8px;
+  display: flex;
 }
 
 /*  */
