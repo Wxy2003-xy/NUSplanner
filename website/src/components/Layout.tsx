@@ -1,13 +1,33 @@
 import React, { useEffect, useState } from 'react';
-import { NavLink } from 'react-router-dom';
+import { NavLink, useNavigate } from 'react-router-dom';
 import logoImage from '../images/nusplannerLogo.png';
 import './Layout.css';
 import Footer from './Footer';
-import teleLogo from '../images/teleLogo.jpg'
+import teleLogo from '../images/teleLogo.jpg';
+import timetableImg from '../assets/timetable.png';
+import homeImg from '../assets/home.png'
+import plannerImg from '../assets/planner.png'
+import calendarImg from '../assets/calendar.png'
+import mapImg from '../assets/map.png'
+import communityImg from '../assets/community.png'
+import feedbackImg from '../assets/feedback.png'
+import aboutImg from '../assets/about.png'
 
 const Layout = ({ children }) => {
   const [currentDate, setCurrentDate] = useState('');
   const [currentSentenceIndex, setCurrentSentenceIndex] = useState(0);
+  const navigate = useNavigate();
+
+  const buttons = [
+    { path: '/', label: 'Home', className: 'home', bgImage: `url(${homeImg})` },
+    { path: '/studyplan', label: 'Study Plan', className: 'studyplan', bgImage: `url(${plannerImg})` },
+    { path: '/timetable', label: 'Timetable', className: 'timetable', bgImage: `url(${timetableImg})` },
+    { path: '/community', label: 'Community', className: 'community', bgImage: `url(${communityImg})` },
+    { path: '/reminder', label: 'Reminder', className: 'reminder', bgImage: `url(${calendarImg})` },
+    { path: '/map', label: 'Map', className: 'map', bgImage: `url(${mapImg})` },
+    { path: '/feedback', label: 'Feedback', className: 'feedback', bgImage: `url(${feedbackImg})` },
+    { path: '/about', label: 'About us', className: 'about', bgImage: `url(${aboutImg})` }
+  ];
 
   const sentences = [
     <>Any upcoming deadlines on <a href="https://canvas.nus.edu.sg" target="_blank" rel="noopener noreferrer">Canvas</a>?</>,
@@ -44,15 +64,20 @@ const Layout = ({ children }) => {
             <p></p>
           </div>
         </div>
-        <NavLink to="https://t.me/+c2TQvkafNAIzYmY9" className="join-us-container" target="_blank" rel="noopener noreferrer">
-          <img src={teleLogo} alt="Join Us" className="join-us-icon" />
-          <span className="join-us-text">Join us</span>
-        </NavLink>
-        <div className="scroll-container">
-          <div className="scroll-content">
+        <div className="home-scroll-container">
+          <div className="home-scroll-content">
             {sentences[currentSentenceIndex]}
           </div>
         </div>
+        <a href="https://t.me/+c2TQvkafNAIzYmY9" className="join-us-container" target="_blank" rel="noopener noreferrer">
+          <img src={teleLogo} alt="Join Us" className="join-us-icon" />
+          <span className="join-us-text">Join us</span>
+        </a>
+        <div className="about-us-container">
+          <NavLink to="/about" className="about-us-link">
+            <span>About Us</span>
+          </NavLink>
+        </div>             
         <div className="date-container">
           <span>{currentDate}</span>
         </div>
@@ -60,31 +85,17 @@ const Layout = ({ children }) => {
       <div className="content">
         <nav>
           <div className="nav-left">
-            <ul>
-              <li className="home">
-                <NavLink to="/" className={({ isActive }) => isActive ? "active" : ""}>🏠<span>Home</span></NavLink>
-              </li>
-              <li>
-                <NavLink to="/studyplan" className={({ isActive }) => isActive ? "active" : ""}>📘<span>Study Plan</span></NavLink>
-              </li>
-              <li className="timetable">
-                <NavLink to="/timetable" className={({ isActive }) => isActive ? "active" : ""}>📋<span>Timetable</span></NavLink>
-              </li>
-              <li className="community">
-                <NavLink to="/community" className={({ isActive }) => isActive ? "active" : ""}>👥️<span>Community</span></NavLink>
-              </li>
-              <li className="reminder">
-                <NavLink to="/reminder" className={({ isActive }) => isActive ? "active" : ""}>🗓️<span>Reminder</span></NavLink>
-              </li>
-              <li className="map">
-                <NavLink to="/map" className={({ isActive }) => isActive ? "active" : ""}>🗺️<span>Map</span></NavLink>
-              </li>
-              <li className="feedback">
-                <NavLink to="/feedback" className={({ isActive }) => isActive ? "active" : ""}>✏️<span>Feedback</span></NavLink>
-              </li>
-              <li className="about">
-                <NavLink to="/about" className={({ isActive }) => isActive ? "active" : ""}>ℹ️<span>About us</span></NavLink>
-              </li>
+            <ul className='nav-left-buttonlist'>
+              {buttons.map((button, index) => (
+                <li key={index} className={button.className}>
+                  <button 
+                    onClick={() => navigate(button.path)} 
+                    className="nav-button" 
+                    style={{ backgroundImage: button.bgImage }}>
+                    <span>{button.label}</span>
+                  </button>
+                </li>
+              ))}
             </ul>
           </div>
         </nav>
@@ -92,9 +103,14 @@ const Layout = ({ children }) => {
           {children}
         </div>
       </div>
-      <Footer/>
+      <div className='footer-container'>
+        <Footer />
+      </div>
     </div>
   );
 };
+
+
+
 
 export default Layout;

@@ -1,12 +1,17 @@
 .footer-box {
   display: flex; /* Use flexbox */
+  flex-direction: column;
   justify-content: flex-end; /* Align items to the right */
   padding: 4px; /* Padding for aesthetics */
-  background-color: #f0f0f0; /* Light grey background, adjust as needed */
-  color: #212529; /* Dark text, adjust as needed */
+  background-color: #0a756d; /* Light grey background, adjust as needed */
+  color: white; /* Dark text, adjust as needed */
 }
 
 .sym {
   margin-right: 20px;
   align-self: center; /* Center align vertically */
+}
+
+.credit-section {
+  font-size: 8px;
 }

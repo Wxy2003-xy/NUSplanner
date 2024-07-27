@@ -12,7 +12,7 @@ body {
 }
 
 header {  
-  background-color: #101625;
+  background-color: #11182a;
   color: white;
   padding: 20px 25px;
   display: flex;
@@ -59,7 +59,7 @@ header {
   font-size: 40px;
 }
 
-.scroll-container {
+.home-scroll-container {
   flex-grow: 1;
   display: flex;
   justify-content: right;
@@ -69,30 +69,21 @@ header {
   margin-right: 45px;
 }
 
-.scroll-content {
+.home-scroll-content {
   display: inline-block;
-  animation: scroll 3s infinite; /* Animation to smoothly transition sentences */
   font-size: 16px;
   color: white;
   text-align: center;
 }
 
-.scroll-content a {
-  color: #ADD8E6; /* Change link color to black */
-  text-decoration: underline; /* Remove underline from links */
+.home-scroll-content a {
+  color: #ADD8E6; /* Change link color to light blue */
+  text-decoration: underline; /* Underline links */
 }
 
-.scroll-content a:hover {
+.home-scroll-content a:hover {
   color: #9FC4E6; 
 }
-
-/*@keyframes scroll {
-  0% { opacity: 0; }
-  10% { opacity: 1; }
-  80% { opacity: 1; }
-  90% { opacity: 0; }
-  100% { opacity: 0; }
-}*/
 
 .date-container {
   font-size: 16px;
@@ -112,15 +103,15 @@ header {
 }
 
 nav {
-  line-height: 48px;
-  flex-shrink: 0;
-  background-color: #00755d;
-  padding-left: 6px;
-  width: 160px;
+  display:flex;
+  flex-direction: column;
+  flex-shrink: 0; 
+  background-color: #0a756d;
+  width: 180px;
   height: 100%;
   box-sizing: border-box;
   z-index: 10000;
-  font-size: 16px;
+  font-size: 20px;
 }
 
 .nav-left {
@@ -135,39 +126,42 @@ nav ul {
 }
 
 nav ul li {
-  margin: 10px 0;
+  margin: 0; /* Remove margin between list items */
+  
 }
 
-nav ul li a {
-  color: rgb(255, 255, 255);
-  font-weight: bold;
-
-  text-decoration: none;
-  padding: 10px;
+.nav-button {
+  width: 100%;
+  height: 88px; /* Set height for the buttons */
+  background-size: 50%;
+  background-position: right -15px bottom -15px; /* Position the background image in the right bottom corner with a vertical offset */
+  background-repeat: no-repeat; /* Ensure the background image does not tile */
+  border: none; /* Remove border */
+  color: white; /* Text color */
+  font-size: 18px;
+  padding-right: 10px;
+  background-color: #0a756d;
   display: flex;
   align-items: center;
+  justify-content: flex-start; /* Align content to the right */
+  cursor: pointer;
+  text-decoration: none; /* Remove underline from text */
+  transition: background-color 0.3s ease;
 }
 
-nav ul li a.active {
-  color: #00ffdd;
+.nav-button span {
+  /* background-color: rgba(0, 0, 0, 0.5);  */
+  padding: 5px 10px;
+  border-radius: 5px;
 }
 
-nav ul li a span {
-  margin-left: 8px;
-}
-
-nav ul li a:hover {
-  color: #00ffdd;
-}
-
-nav ul li a:hover span {
-  text-decoration: underline;
+.nav-button:hover {
+  background-color: rgba(0, 0, 0, 0.1); /* Slightly change background on hover */
 }
 
 .page-content {
   flex-grow: 1;
 }
-
 
 .join-us-container {
   display: flex;
@@ -194,4 +188,22 @@ nav ul li a:hover span {
 
 .join-us-container .join-us-text:hover {
   color: antiquewhite; /* Light color on hover (anti-white) */
+}
+
+.about-us-container {
+  margin-right: 20px; /* Space between the "About Us" section and the date */
+}
+
+.about-us-link {
+  color: white; /* Adjust color as needed */
+  text-decoration: none;
+}
+
+.about-us-link:hover {
+  text-decoration: none;
+  color: antiquewhite;
+}
+
+.footer-container {
+  z-index: 20;
 }

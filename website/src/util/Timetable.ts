@@ -78,6 +78,7 @@ import { ClassTimeSlotTypeUnion } from "../types/timetable";
       const result: ClassTimeSlotTypeUnion[] = [];
       
       const dfs = (index: number): boolean => {
+        console.log('recurse')
         if (index === partitions.length) {
           return true; // All partitions have been successfully placed
         }

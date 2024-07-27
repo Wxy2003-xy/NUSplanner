@@ -1,6 +1,6 @@
 import React, { useState, FormEvent, useEffect } from 'react';
 import PrereqTreeVisual from '../pages/studyPlan/components/TreeVisualization';
-
+import './fetchModuleInfo.css'
 import { ModuleInfo, ModuleFormProps, ExamInfo } from '../types/general';
 
 const ModuleForm: React.FC<ModuleFormProps> = ({ setTempCard }) => {
@@ -113,12 +113,13 @@ const ModuleForm: React.FC<ModuleFormProps> = ({ setTempCard }) => {
     };
 
     const infoBlockStyle = {
-        color: '#333',
-        backgroundColor: '#69c9a3',
-        padding: '20px',
+        
+        color: 'white',
+        backgroundColor: '#0a756d',
+        padding: '40px',
         fontFamily: 'Arial, sans-serif',
         margin: '20px auto',
-        width: '100%',
+        width: '92%',
         borderRadius: '10px',
         boxShadow: '0 10px 20px rgba(0,0,0,0.1)',
     };

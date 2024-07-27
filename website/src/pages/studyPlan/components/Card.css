@@ -12,6 +12,7 @@
 }
 
 .card {
+  line-height: 0.4;
     position: relative;
     align-self: center;
     align-items: center;

@@ -316,7 +316,7 @@ const timeToMinutes = (time: string): number => {
           <h3>No earlier than:</h3>
           <input type="time" value={minStartTime} onChange={handleStartTimeChange} />
         </div>
-        <div className="custom-slot-adder">
+        {/* <div className="custom-slot-adder">
           <h3>Add Custom Slot</h3>
           <form className="custom-form"onSubmit={(e) => { e.preventDefault(); handleAddCustomSlot(); }}>
             <label>
@@ -345,7 +345,7 @@ const timeToMinutes = (time: string): number => {
             </label>
             <button type="submit" className="add-slot-button">Add Slot</button>
           </form>
-        </div>
+        </div> */}
         <div className="timetable-container">
           <div>
             {arranged ? 

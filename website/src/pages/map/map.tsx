@@ -16,13 +16,6 @@ const getKey = (slot: ClassTimeSlotTypeUnion): string => {
   return key;
 }
 
-// const redIcon = new Icon({
-//   iconUrl: <a href="https://www.flaticon.com/free-icons/pin" title="pin icons">Pin icons created by Freepik - Flaticon</a>,
-//   iconSize: [25, 41], // Size of the icon
-//   iconAnchor: [12, 41], // Point of the icon which will correspond to marker's location
-//   popupAnchor: [1, -34],
-// })
-
 const tutIcon = L.icon({
   iconUrl: 'https://cdn-icons-png.flaticon.com/128/12034/12034802.png',
   iconSize: [38, 38],     // size of the icon
@@ -54,14 +47,13 @@ const defIcon = L.icon({
 
 const getIcon = (lessonType: string): any => {
   switch(lessonType) {
-    case 'Tutorial': return tutIcon;
-    case 'Laboratory': return labIcon;
-    case 'Lecture': return lecIcon;
-    case 'Sectional Teaching': return secIcon;    
-    case 'Seminar': return semIcon;
-    case 'Recitation': return recIcon;
-
-    default: return defIcon;
+    // case 'Tutorial': return tutIcon;
+    // case 'Laboratory': return labIcon;
+    // case 'Lecture': return lecIcon;
+    // case 'Sectional Teaching': return secIcon;    
+    // case 'Seminar': return semIcon;
+    // case 'Recitation': return recIcon;
+    default: return defIcon;  
   }
 }
 
@@ -78,11 +70,11 @@ const Map = () => {
       
       <div className="map-nav-right">
         
-        <div style={{ height: '100%' }}>
+        <div >
         
           <MapContainer center={[1.29495055860437, 103.77447075499941]} 
                         zoom={16} 
-                        style={{ height: '625px', width: '100%' }} 
+                        style={{ height: '900px', width: '100%' }} 
                         zoomControl={false}>
             <TileLayer
                 url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"

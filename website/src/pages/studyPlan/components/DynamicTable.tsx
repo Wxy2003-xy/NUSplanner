@@ -831,7 +831,10 @@ const DynamicTable: React.FC<DynamicTableProps> = ({ tempCard, setTempCard }) =>
 </div>
   <h1 className='headerline'>{headerTitle}</h1>
   <h3 className='subline'>{headerSub}</h3>
-    <MCbreakDown cards={cards}/>
+  <div className='mc-breakdonw-box'>
+  <MCbreakDown cards={cards}/>
+  </div>
+    
     <DndProvider backend={HTML5Backend}>
       <div className='table'>
         {cards.map((columnCards, columnIndex) => (

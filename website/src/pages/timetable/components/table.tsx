@@ -33,9 +33,15 @@ function Timetable({ timeSlots }: TimetableProps) {
   const gridItems = timeSlots.flatMap(slot =>
     slot.day.flatMap((day, index) => {
       const dayIndex = daysOfWeek.indexOf(day) + 2; // +2 because CSS grid starts from 1 and the first column is for time
-      const startHour = parseInt(slot.startTime[index], 10) / 100;
-      const endHour = parseInt(slot.endTime[index], 10) / 100;
-      const duration = endHour - startHour;
+      const startHour = parseInt(slot.startTime[index].substring(0, 2), 10);
+      const startMinute = parseInt(slot.startTime[index].substring(2), 10);
+      const endHour = parseInt(slot.endTime[index].substring(0, 2), 10);
+      const endMinute = parseInt(slot.endTime[index].substring(2), 10);
+
+      const startRow = (startHour - 8) * 2 + (startMinute === 30 ? 1 : 0) + 2;
+      const endRow = (endHour - 8) * 2 + (endMinute === 30 ? 1 : 0) + 2;
+      const span = endRow - startRow;
+
       const formattedStartTime = formatTime(slot.startTime[index]);
       const formattedEndTime = formatTime(slot.endTime[index]);
       return (
@@ -44,8 +50,8 @@ function Timetable({ timeSlots }: TimetableProps) {
           className="timetable-slot"
           style={{
             gridColumn: dayIndex,
-            gridRow: `${(startHour - 8) * 2 + 2} / span ${duration * 2}`,
-            backgroundColor: getColor(slot.lessonType?slot.lessonType:'', selectedPalette),
+            gridRow: `${startRow} / span ${span}`,
+            backgroundColor: getColor(slot.lessonType ? slot.lessonType : '', selectedPalette),
           }}>
           {slot.title} - {slot.lessonType} {'['}{slot.classNo}{']'} <br />
           {formattedStartTime} - {formattedEndTime} <br />

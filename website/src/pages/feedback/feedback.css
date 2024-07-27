@@ -81,9 +81,12 @@ textarea {
   background-color: #1abc9c;
   display: inline-block;
   margin: 20px;
+  border: none;
+  border-radius: 4px;
+  color: #fff;
 }
 
-button {
+.feedback-button, .submit-button {
   padding: 10px 20px;
   background-color: #1abc9c;
   color: #fff;

@@ -72,7 +72,8 @@
   align-items: center; /* Align items vertically */
   justify-content: start; /* Align items to the start of the row */
   gap: 10px; /* Space between each dropdown and button */
-  margin-bottom: -2.35em;
+  margin-bottom: 0.12em;
+
 }
 
 .dropdown-select {
@@ -242,4 +243,9 @@
 .joyride-tooltip__button {
   background-color: #0cb591;
   color: #fff;
+}
+.counter-box {
+  display: inline;
+  height: 40px;
+  width: 90%;
 }
