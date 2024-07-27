@@ -15,6 +15,11 @@
   width: 100%;
 }
 
+.feedback-nav-right h1 {
+  text-align: center;
+  color: #69707A;
+}
+
 .feedback-nav-right h2 {
   text-align: left;
   margin-top: 0;
@@ -24,6 +29,31 @@
   margin-bottom: 20px;
 }
 
+.feedback-nav-right p {
+  text-align: justify;
+  color: #888;
+  padding-left: 20px;
+  padding-right: 20px;
+  font-size: 20px;
+  margin: 0; /* Remove default margins */
+}
+
+.feedback-nav-right .feedback-prefix {
+  text-align: left;
+  color: #888;
+  font-size: 20px;
+  margin-bottom: 0px;
+}
+
+.feedback-nav-right .feedback-prefix .report-button {
+  margin-left: 40px;
+}
+
+.feedback-nav-right .form-group .feedbackform {
+  padding-left: 20px;
+  padding-right: 20px;
+  padding-top:0px;
+}
 
 
 .form-group {
@@ -45,7 +75,19 @@ textarea {
   box-sizing: border-box; /* Include padding and border in element's width and height */
 }
 
-button {
+.feedback-prefix button {
+  padding: 10px 20px; /* Adjust button padding */
+  font-size: 16px; /* Adjust font size */
+  cursor: pointer;
+  background-color: #1abc9c;
+  display: inline-block;
+  margin: 20px;
+  border: none;
+  border-radius: 4px;
+  color: #fff;
+}
+
+.feedback-button, .submit-button {
   padding: 10px 20px;
   background-color: #1abc9c;
   color: #fff;
@@ -77,7 +119,6 @@ button:hover {
   width: 100%;
   height: 100%;
   overflow: auto;
-  background-color: rgb(0, 0, 0);
   background-color: rgba(0, 0, 0, 0.4); /* Black w/ opacity */
 }
 
@@ -94,53 +135,21 @@ button:hover {
   max-width: 400px;
   text-align: center;
   border-radius: 4px;
+  position: relative;
 }
 
-.close {
-  color: #aaa;
-  float: right;
-  font-size: 28px;
-  font-weight: bold;
-}
-
-.close:hover,
-.close:focus {
-  color: black;
-  text-decoration: none;
-  cursor: pointer;
-}
-
-.modal {
-  display: none; /* Hidden by default */
-  position: fixed;
-  z-index: 1;
-  left: 0;
-  top: 0;
-  width: 100%;
-  height: 100%;
-  overflow: auto;
-  background-color: rgb(0, 0, 0);
-  background-color: rgba(0, 0, 0, 0.4); /* Black w/ opacity */
-}
-
-.modal.show {
-  display: block;
-}
-
-.modal-content {
-  background-color: #fefefe;
-  margin: 15% auto; /* 15% from the top and centered */
-  padding: 20px;
-  border: 1px solid #888;
-  width: 80%; /* Could be more or less, depending on screen size */
-  max-width: 400px;
+/* Changed: Added margin and padding to ensure the text is centered */
+.modal-content p {
+  margin: 0;  /* Added */
+  padding: 20px 0;  /* Added */
   text-align: center;
-  border-radius: 4px;
 }
 
 .close {
+  position: absolute;  
+  right: 20px;  
+  top: 10px;  
   color: #aaa;
-  float: right;
   font-size: 28px;
   font-weight: bold;
 }
