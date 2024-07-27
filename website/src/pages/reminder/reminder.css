@@ -65,41 +65,43 @@
   border: 1px solid #ddd; 
 }
 
-.reminder-col .reminder-number {
-  display: block;
-  margin-bottom: 5px;
-}
 
 .reminder-cell {
+  position: relative;
+
   min-height: 100px;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   background-color: #d4ebf2;
+  padding: 0;
+  overflow: hidden;
 }
 
-.reminder-cell.disabled {
-  /*background-color: #f0f0f0;*/
-  /*background-color: #fff9c4;*/
-  background-color: #d1e7fd;
-}
-
-.reminder-cell.selected {
-  background-color: #b2d4f0;
+.reminder-number {
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  font-size: 14px;
+  background: white;
+  padding: 0px;
+  border-radius: 4px;
+  box-shadow: 0 0 2px rgba(0, 0, 0, 0.1);
 }
 
 .reminder-textarea {
   width: 100%;
-  height: 60px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  padding: 5px;
+  height: 100%;
+  border: none;
+  padding: 25px 5px 5px 5px; /* Adjust padding to avoid overlap with the number */
   font-size: 14px;
   resize: none;
   box-sizing: border-box;
-  background-color: #f0f0f0;
+  background-color: white;
 }
 
 .reminder-textarea:focus {
-  border-color: #999;
+  outline: none;
+  border: none;
+  /* background-color: #e9ecef; */ /* Slight background change on focus */
 }

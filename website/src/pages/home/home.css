@@ -190,7 +190,6 @@ header {
   background-color: #ffffff; /* Optional: Background color for the right section */
   padding: 0px;
   margin: 0px
-  
 }
   
 .home-right-content {
@@ -282,7 +281,6 @@ header {
   margin-top: 20px;
   justify-content: center; /* Center the rows of boxes */
   margin-left: 5px;
-
 }
 
 .home-scroll-container {

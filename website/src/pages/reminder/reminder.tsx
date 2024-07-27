@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState } from 'react';
 import './reminder.css';
 import Layout from '../../components/Layout';
 import { format, startOfMonth, endOfMonth, startOfWeek, endOfWeek, addDays, addMonths, subMonths, isSameMonth, isSameDay } from 'date-fns';
@@ -26,7 +26,7 @@ const Reminder = () => {
     const dateFormat = "MMMM yyyy";
 
     return (
-      <div className="reminder-header remainder-row flex-middle">
+      <div className="reminder-header reminder-row flex-middle">
         <div className="reminder-col reminder-col-start">
           <div className="reminder-icon reminder-icon-left" onClick={prevMonth}></div>
         </div>
@@ -77,11 +77,7 @@ const Reminder = () => {
 
         days.push(
           <div
-            className={`reminder-col reminder-cell ${
-              !isSameMonth(day, monthStart)
-                ? "disabled"
-                : isSameDay(day, new Date()) ? "selected" : ""
-            }`}
+            className="reminder-col reminder-cell"
             key={day.toString()}
           >
             <span className="reminder-number">{formattedDate}</span>

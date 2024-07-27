@@ -161,9 +161,10 @@
   color: #666; /* Plain black color */
   text-align: left;
   word-wrap: break-word; /* This will break long words and wrap them */
-  white-space: pre-wrap; /* This will wrap text respecting line breaks */
+  white-space: break-word; /* This will wrap text respecting line breaks */
   overflow-wrap: break-word;      /* Ensures wrapping for long words */
-  word-break: break-all;          /* Allows breaking of long words */
+  word-break: normal; 
+
 }
 
 .post-actions {

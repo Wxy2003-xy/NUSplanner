@@ -89,7 +89,9 @@ const Feedback = () => {
       <div className="feedback-nav-right">
         <div className="form-group">
           <h1>Your Support Lights Our Way—Thank You!</h1>
-          <p>NUSPlanner is a wholly student-run, non-profit initiative that thrives on the ongoing support from the NUS student community. We deeply value your involvement, whether it’s through sharing your experiences, reporting issues, or suggesting enhancements. Your feedback and contributions are immensely appreciated and will be carefully considered as we strive to improve. Thank you for being an integral part of our journey!</p>
+          <p>
+            NUSPlanner is a wholly student-run, non-profit initiative that thrives on the ongoing support from the NUS student community. We deeply value your involvement, whether it is through sharing your experiences, reporting issues, or suggesting enhancements. Your feedback and contributions are immensely appreciated and will be carefully considered as we strive to improve. Thank you for being an integral part of our journey!
+          </p>
           
           <p className="feedback-prefix">I would like to:     
             <button className="report-button" onClick={() => showForm('Report')}>Report Issues</button>
@@ -107,7 +109,7 @@ const Feedback = () => {
                 value={message}
                 onChange={(e) => setMessage(e.target.value)}
               />
-              <button className='submit-button' type="submit">Submit</button>
+              <button className="submit-button" type="submit">Submit</button>
             </form>
           )}
         </div>
