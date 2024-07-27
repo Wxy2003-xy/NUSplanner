@@ -32,7 +32,7 @@ function Timetable({ timeSlots }: TimetableProps) {
 
   const gridItems = timeSlots.flatMap(slot =>
     slot.day.flatMap((day, index) => {
-      const dayIndex = daysOfWeek.indexOf(day) + 2; // +2 because CSS grid starts from 1 and the first column is for time
+      const dayIndex = daysOfWeek.indexOf(day) + 2; 
       const startHour = parseInt(slot.startTime[index].substring(0, 2), 10);
       const startMinute = parseInt(slot.startTime[index].substring(2), 10);
       const endHour = parseInt(slot.endTime[index].substring(0, 2), 10);
@@ -44,9 +44,13 @@ function Timetable({ timeSlots }: TimetableProps) {
 
       const formattedStartTime = formatTime(slot.startTime[index]);
       const formattedEndTime = formatTime(slot.endTime[index]);
+      const weekInfoPre = JSON.stringify(slot.weeks);
+      const weekInfo = weekInfoPre === '[1,2,3,4,5,6,7,8,9,10,11,12,13]' ? '' 
+                          : weekInfoPre === '[3,4,5,6,7,8,9,10,11,12,13]' ? 'Week 3 - 13'
+                          : 'Week: ' + weekInfoPre;
       return (
         <div
-          key={`${slot.title}${slot.lessonType}${slot.classNo}${day}${slot.startTime[index]}`} // Unique key for React elements
+          key={`${slot.title}${slot.lessonType}${slot.classNo}${day}${slot.startTime[index]}`} 
           className="timetable-slot"
           style={{
             gridColumn: dayIndex,
@@ -56,6 +60,7 @@ function Timetable({ timeSlots }: TimetableProps) {
           {slot.title} - {slot.lessonType} {'['}{slot.classNo}{']'} <br />
           {formattedStartTime} - {formattedEndTime} <br />
           {slot.venue as string} <br />
+          {weekInfo} <br />
         </div>
       );
     })
@@ -206,10 +211,7 @@ const colorPalettes = {
 
 function getColor(type: string, palette: string) {
   const typeColors = colorPalettes[palette] || colorPalettes.google;
-  return typeColors[type] || 'grey'; // Default color
+  return typeColors[type] || 'grey';
 }
-
-
-// Utility function to assign colors based on the class type
 
 export default Timetable;

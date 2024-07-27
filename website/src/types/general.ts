@@ -13,7 +13,7 @@ export interface ModuleInfo {
     preclusionRule: string[];
     prerequisites: string;
     prerequisiteRule: string;
-    prereqTree?: PrereqTreeNode; // Optional detailed prerequisite tree visualization
+    prereqTree?: PrereqTreeNode; 
     examInfo?: ExamInfo[];
 }
 

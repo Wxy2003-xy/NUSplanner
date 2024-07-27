@@ -1,5 +1,3 @@
-/* TreeVisualization.css */
-
 .link {
   fill: none;
   stroke: white;
@@ -30,12 +28,10 @@
   margin: auto;
 }
 
-/* Card.css */
-
 .card {
   position: relative;
   width: 90%;
-  background-color: #88f7c5; /* Default color */
+  background-color: #88f7c5; 
   border-radius: 5px;
   overflow: hidden;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
@@ -50,7 +46,7 @@
 }
 
 .card.prereq-not-satisfied {
-  background-color: #ff9999; /* Different color for unmet prerequisites */
+  background-color: #ff9999;
 }
 
 .card:hover {

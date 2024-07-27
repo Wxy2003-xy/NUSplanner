@@ -8,7 +8,6 @@ const Reminder = () => {
   const [reminders, setReminders] = useState<{ [key: string]: string }>({});
 
   useEffect(() => {
-    // Load reminders from localStorage or any other storage
     const savedReminders = localStorage.getItem('reminders');
     if (savedReminders) {
       setReminders(JSON.parse(savedReminders));
@@ -18,7 +17,6 @@ const Reminder = () => {
   const handleReminderChange = (date: string, reminder: string) => {
     const newReminders = { ...reminders, [date]: reminder };
     setReminders(newReminders);
-    // Save reminders to localStorage or any other storage
     localStorage.setItem('reminders', JSON.stringify(newReminders));
   };
 

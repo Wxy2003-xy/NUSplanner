@@ -6,7 +6,6 @@ import Layout from '../../components/Layout';
 import './map.css';
 import { ClassTimeSlotTypeUnion } from '../../types/timetable';
 import { loadVenuesX, loadVenuesY } from '../../util/loadVenues';
-import {Icon} from 'leaflet'
 import L from 'leaflet'
 // import {Icon} from 'leaflet';
 
@@ -18,31 +17,31 @@ const getKey = (slot: ClassTimeSlotTypeUnion): string => {
 
 const tutIcon = L.icon({
   iconUrl: 'https://cdn-icons-png.flaticon.com/128/12034/12034802.png',
-  iconSize: [38, 38],     // size of the icon
+  iconSize: [38, 38],    
 });
 const labIcon = L.icon({
   iconUrl: 'https://cdn-icons-png.flaticon.com/128/2616/2616689.png',
-  iconSize: [38, 38],     // size of the icon
+  iconSize: [38, 38],    
 });
 const recIcon = L.icon({
   iconUrl: 'https://cdn-icons-png.flaticon.com/128/807/807281.png',
-  iconSize: [38, 38],     // size of the icon
+  iconSize: [38, 38],    
 });
 const lecIcon = L.icon({
   iconUrl: 'https://cdn-icons-png.flaticon.com/128/2991/2991117.png',
-  iconSize: [38, 38],     // size of the icon
+  iconSize: [38, 38],   
 });
 const secIcon = L.icon({
   iconUrl: 'https://cdn-icons-png.flaticon.com/128/7743/7743751.png',
-  iconSize: [38, 38],     // size of the icon
+  iconSize: [38, 38],    
 });
 const semIcon = L.icon({
   iconUrl: 'https://cdn-icons-png.flaticon.com/128/7743/7743751.png',
-  iconSize: [38, 38],     // size of the icon
+  iconSize: [38, 38],     
 });
 const defIcon = L.icon({
   iconUrl: 'https://cdn-icons-png.flaticon.com/512/684/684908.png',
-  iconSize: [38, 38],     // size of the icon
+  iconSize: [38, 38],    
 });
 
 const getIcon = (lessonType: string): any => {
@@ -84,7 +83,6 @@ const Map = () => {
               <>
               <Marker key={getKey(slot)} 
                       position={[loadVenuesY(JSON.stringify(slot.venue)) as number, loadVenuesX(JSON.stringify(slot.venue)) as number]} 
-                      // icon={greenIcon}
                       icon={getIcon(slot.lessonType)}
                       >
                 <Popup>

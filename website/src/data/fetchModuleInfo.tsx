@@ -13,7 +13,7 @@ const ModuleForm: React.FC<ModuleFormProps> = ({ setTempCard }) => {
     const [isLoading, setIsLoading] = useState<boolean>(false);
 
     const validateAcadYear = (year: string): boolean => {
-        return /^\d{4}$/.test(year); // Checks if the year is a four-digit number
+        return /^\d{4}$/.test(year); 
     };
 
     useEffect(() => {
@@ -25,19 +25,16 @@ const ModuleForm: React.FC<ModuleFormProps> = ({ setTempCard }) => {
     * @returns {string[]} return array of strings of course codes
     */
     function extractCourseCodes(rule: string): string[] {
-        // Define the pattern with a capturing group for the course code part before any ':'
         const coursePattern: RegExp = /\b([A-Z]{2,}[0-9]{4}[A-Z]{0,2}):[A-Z]\b/g;
         let matches: string[] = [];
         let match: RegExpExecArray | null;
-    
-        // Loop to extract all matches
         while ((match = coursePattern.exec(rule)) !== null) {
-            if (match[1]) { // Ensure the capturing group is not undefined
-                matches.push(match[1]); // Push the first capture group, the course code
+            if (match[1]) { 
+                matches.push(match[1]); 
             }
         }
     
-        return matches; // Return the array of course codes
+        return matches;
     }
 
     const fetchModuleInfo = (acadYear: string, moduleCode: string): void => {
@@ -118,8 +115,10 @@ const ModuleForm: React.FC<ModuleFormProps> = ({ setTempCard }) => {
         backgroundColor: '#0a756d',
         padding: '40px',
         fontFamily: 'Arial, sans-serif',
-        margin: '20px auto',
-        width: '92%',
+        marginBottom: '10px', 
+        marginTop: '-5px', 
+
+        width: '94%',
         borderRadius: '10px',
         boxShadow: '0 10px 20px rgba(0,0,0,0.1)',
     };
@@ -131,8 +130,8 @@ const ModuleForm: React.FC<ModuleFormProps> = ({ setTempCard }) => {
                     Academic Year (e.g., 2023):
                     <input
                         type="text"
-                        id="acadYear"  // Added id attribute
-                        name="acadYear"  // Added name attribute
+                        id="acadYear"  
+                        name="acadYear"  
                         value={acadYear}
                         onChange={e => setAcadYear(e.target.value)}
                         required
@@ -143,14 +142,14 @@ const ModuleForm: React.FC<ModuleFormProps> = ({ setTempCard }) => {
                     Module Code (e.g., CS1101S):
                     <input
                         type="text"
-                        id="moduleCode"  // Added id attribute
-                        name="moduleCode"  // Added name attribute
+                        id="moduleCode"  
+                        name="moduleCode"  
                         value={moduleCode}
                         onChange={e => setModuleCode(e.target.value.toLocaleUpperCase())}
                         required
                     />
                 </label>
-                <button type="submit">Fetch Module Info</button>
+                <button className='fetchinfo-button' type="submit">Fetch Module Info</button>
             </form>
             {isLoading && <p>Loading...</p>}
             {error && (
@@ -167,7 +166,7 @@ const ModuleForm: React.FC<ModuleFormProps> = ({ setTempCard }) => {
                     <p><strong>Prerequisite Rule:</strong> {moduleInfo.prerequisiteRule}</p>
                     <p><strong>Preclusions:</strong> {moduleInfo.preclusions}</p>
                     <p><strong>Preclusion Rule:</strong> {moduleInfo.preclusionRule}</p>
-                    <p><strong>Prereq tree:</strong> {JSON.stringify(moduleInfo.prereqTree)}</p>
+                    {/* <p><strong>Prereq tree:</strong> {JSON.stringify(moduleInfo.prereqTree)}</p> */}
                     <div>
                         <PrereqTreeVisual data={moduleInfo.prereqTree} />
                     </div> 

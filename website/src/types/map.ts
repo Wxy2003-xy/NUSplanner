@@ -5,5 +5,5 @@ export type Location = {
 export type Venue = {
     roomName: string;
     floor:number;
-    location: Location;     // coordination
+    location: Location;    
 };

@@ -31,14 +31,14 @@ const GuidedTourTimetable: React.FC<GuidedTourProps> = ({ startTour, onClose }) 
       target: '.select-time',
       content: 'Set a time such that no slots earlier than it will be arranged.',
     },
-    {
-      target: '.custom-slot-adder',
-      content: 'Add custom agenda to the timetable',
-    },
-    {
-      target: '.timetablecontainer',
-      content: 'Auto generated timetable based on criteria selected. Note that some slot may not be arranged if there exist no possible arrangement with given filters. Try relax them a little.',
-    },
+    // {
+    //   target: '.custom-slot-adder',
+    //   content: 'Add custom agenda to the timetable',
+    // },
+    // {
+    //   target: '.timetablecontainer',
+    //   content: 'Auto generated timetable based on criteria selected. Note that some slot may not be arranged if there exist no possible arrangement with given filters. Try relax them a little.',
+    // },
     {
       target: '.to-map-button',
       content: 'Click to see locations of the classes in timetable',

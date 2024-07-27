@@ -27,13 +27,12 @@ const DroppableColumn = ({ columnIndex, children, columnCards, handleMoveCard, g
     accept: 'CARD',
     drop: (item: DragItem, monitor) => {
       if (!monitor.didDrop()) {
-        const newIdx = columnCards.length; // Default to moving to the end if no specific index is targeted
+        const newIdx = columnCards.length; 
         handleMoveCard(item.columnIndex, item.index, columnIndex, newIdx);
       }
-      return { columnIndex }; // Inform the drop result about the column index
+      return { columnIndex }; 
     },
     hover: (item, monitor) => {
-      // Optional: Handle hover to provide real-time feedback
     }
   });
 

@@ -45,9 +45,9 @@ const Layout = ({ children }) => {
   useEffect(() => {
     const intervalId = setInterval(() => {
       setCurrentSentenceIndex((prevIndex) => (prevIndex + 1) % sentences.length);
-    }, 5000); // Change sentence every 5 seconds
+    }, 5000); 
 
-    return () => clearInterval(intervalId); // Cleanup interval on component unmount
+    return () => clearInterval(intervalId); 
   }, [sentences.length]);
 
   return (

@@ -47,26 +47,18 @@ const Home: React.FC = () => {
   useEffect(() => {
     const intervalId = setInterval(() => {
       setCurrentSentenceIndex((prevIndex) => (prevIndex + 1) % sentences.length);
-    }, 5000); // Change sentence every 5 seconds
+    }, 5000);
 
-    return () => clearInterval(intervalId); // Cleanup interval on component unmount
+    return () => clearInterval(intervalId); 
   }, [sentences.length]);
 
-  {/*
-  useEffect(() => {
-    const imageIntervalId = setInterval(() => {
-      setCurrentImageIndex((prevIndex) => (prevIndex + 1) % images.length);
-    }, 3000); // Change image every 3 seconds
-
-    return () => clearInterval(imageIntervalId); // Cleanup interval on component unmount
-  }, [images.length]); */}
 
   useEffect(() => {
     const autoSlideIntervalId = setInterval(() => {
       setCurrentSlideIndex((prevIndex) => (prevIndex + 1) % slides.length);
-    }, 3000); // Change image every 3 seconds
+    }, 3000); 
 
-    return () => clearInterval(autoSlideIntervalId); // Cleanup interval on component unmount
+    return () => clearInterval(autoSlideIntervalId); 
   }, [slides.length]);
 
   const nextSlide = () => {

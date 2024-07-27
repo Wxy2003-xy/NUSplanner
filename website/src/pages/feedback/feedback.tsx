@@ -9,7 +9,7 @@ const Feedback = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [currentDate, setCurrentDate] = useState('');
   const [formVisible, setFormVisible] = useState(false);
-  const [feedbackType, setFeedbackType] = useState(''); // State to manage feedback type
+  const [feedbackType, setFeedbackType] = useState(''); 
 
   const modalRef = useRef<HTMLDivElement>(null);
 
@@ -37,7 +37,7 @@ const Feedback = () => {
     const userID = 'PtThpNOKmxSv-C1nB';
     const templateParams = {
       message: feedbackContent,
-      type: feedbacktype, // Include feedback type in the email
+      type: feedbacktype, 
       to_email: 'nusplanner2024@gmail.com',
     };
     emailjs.send(serviceID, templateID, templateParams, userID)
@@ -55,10 +55,10 @@ const Feedback = () => {
       setModalText('Please provide your feedback before submitting.');
     } else {
       setModalText('Thank you for your feedback!');
-      sendFeedback(trimmedMessage, feedbackType); // Send feedback type along with the message
-      setMessage(''); // Clear the message input
+      sendFeedback(trimmedMessage, feedbackType); 
+      setMessage(''); 
     }
-    setIsModalOpen(true); // Show the modal in both cases
+    setIsModalOpen(true);
   };
 
   const closeModal = () => {
@@ -66,11 +66,10 @@ const Feedback = () => {
   };
 
   const showForm = (type: string) => {
-    setFeedbackType(type); // Set the feedback type
+    setFeedbackType(type); 
     setFormVisible(true);
   };
 
-  // Determine placeholder based on feedbackType
   const getPlaceholder = () => {
     switch (feedbackType) {
       case 'Report':
@@ -105,7 +104,7 @@ const Feedback = () => {
               <textarea
                 id="message"
                 name="message"
-                placeholder={getPlaceholder()} // Use dynamic placeholder
+                placeholder={getPlaceholder()} 
                 value={message}
                 onChange={(e) => setMessage(e.target.value)}
               />

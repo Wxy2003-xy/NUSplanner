@@ -1,5 +1,5 @@
 import React, { useState, ChangeEvent } from "react";
-import './CourseCodeInput.css'; // Ensure the CSS file is imported
+import './CourseCodeInput.css'; 
 
 const CourseCodeInput: React.FC = () => {
     const [courseCode, setCourseCode] = useState<string>("");

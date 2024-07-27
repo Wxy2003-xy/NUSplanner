@@ -14,7 +14,7 @@ const Card: React.FC<CardProps> = ({
         : '#00c99e' 
       : prereqNotSatisfied 
         ? '#ff9999' 
-        : color;    // original color
+        : color;  
 
   const cardClass = classnames('card', {
     'selected': isSelected,
