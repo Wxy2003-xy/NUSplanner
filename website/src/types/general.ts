@@ -1,4 +1,4 @@
-import { PrereqTreeNode } from "./studyplan";
+import { PrereqTreeNode, CardType } from './studyplan';
 export interface ExamInfo {
     examTime?: string;
     examDuration?: number;
@@ -27,4 +27,17 @@ export interface ModuleFormProps {
         preclusionRule: string[];
         prereqTree?: PrereqTreeNode}) => void;
         examInfo?: ExamInfo[];
+}
+
+export interface ModuleSelectionBoxProps {
+    setTempCard: (card: { 
+        id: number; 
+        name: string; 
+        semester: number[];
+        content: string; 
+        courseCredit: number; 
+        preclusionRule: string[];
+        prereqTree?: PrereqTreeNode}) => void;
+        examInfo?: ExamInfo[];
+    onConfirm: (card: CardType) => void;
 }

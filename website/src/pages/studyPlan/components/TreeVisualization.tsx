@@ -52,9 +52,9 @@ const PrereqTreeVisual: React.FC<PrereqTreeProps> = ({ data }) => {
     if (!svgRef.current) return;
 
     const svg = d3.select(svgRef.current);
-    const margin = { top: 20, right: 120, bottom: 20, left: 120 };
-    const width = 800 - margin.left - margin.right;
-    const height = 600 - margin.top - margin.bottom;
+    const margin = { top: 20, right: 30, bottom: 20, left: 30 };
+    const width = 600 - margin.left - margin.right;
+    const height = 450 - margin.top - margin.bottom;
 
     const treeLayout = d3.tree().size([height, width]);
     const root = d3.hierarchy(parsePrereqTree(data), d => d.children);
@@ -81,9 +81,9 @@ const PrereqTreeVisual: React.FC<PrereqTreeProps> = ({ data }) => {
       .attr('class', d => `node ${d.children ? 'node--internal' : 'node--leaf'}`)
       .attr('transform', d => `translate(${d.y},${d.x})`);
 
-    const rectWidth = 100;
-    const rectHeight = 30;
-    const rectRadius = 10;
+    const rectWidth = 70;
+    const rectHeight = 20;
+    const rectRadius = 5;
 
     node.append('rect')
       .attr('width', rectWidth)
@@ -102,7 +102,7 @@ const PrereqTreeVisual: React.FC<PrereqTreeProps> = ({ data }) => {
 
   return (
     <div className="svg-container">
-      <svg ref={svgRef} width="800" height="600"></svg>
+      <svg ref={svgRef} viewBox="0 0 600 450" preserveAspectRatio="xMidYMid meet"></svg>
     </div>
   );
 };

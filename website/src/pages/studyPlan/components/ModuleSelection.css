@@ -1,0 +1,61 @@
+.module-selection-overlay {
+    position: fixed;
+    top: 30px; /* Adjust this value to position the overlay vertically */
+    left: 50%; /* Center the overlay horizontally */
+    transform: translateX(-100%); /* Center the overlay horizontally */
+    transform: translateY(-10%); /* Center the overlay horizontally */
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+    z-index: 1000; /* Ensure it's above everything else */
+    width: 80%; /* Adjust width as necessary */
+    background-color: #0a756d;
+    opacity:90% ;
+    color: white;
+  }
+  
+  .close-module-selection {
+    position: absolute;
+    top: 10px;  
+    right: 10px;    
+    background-color: rgb(187, 17, 17);
+    color: white;
+    padding: 5px 10px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  
+  .fetchinfo-button {
+    margin-top: 10px;
+    margin-left: 20px;
+    padding: 5px 10px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  
+  .fetchinfo-button:hover {
+    background-color: #45a049;
+  }
+  
+  .confirm-button {
+    margin-top: 10px;
+    margin-left: 20px;
+    padding: 10px 20px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  
+  .confirm-button:hover {
+    background-color: #45a049;
+  }
+  
+  .info-text {
+    font-size: 10px;
+  }

@@ -39,11 +39,6 @@ export type CardProps = {
     classification?: string;
   };
 
-export interface DynamicTableProps {
-  tempCard: CardType | null;
-  setTempCard: Dispatch<SetStateAction<CardType | null>>;
-}
-
 export interface SelectedCard extends CardType {
   columnIndex: number;
 }

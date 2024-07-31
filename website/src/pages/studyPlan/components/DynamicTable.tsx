@@ -9,6 +9,7 @@ import { HTML5Backend } from 'react-dnd-html5-backend';
 import DraggableCard from './DraggableCard';
 import DroppableColumn from './DropColumn';
 import GuidedTour from './UserGuide';
+import ModuleSelectionBox from './ModuleSelection';
 const allPrograms = {
   'School of Computing': [
     "Computer Science", 
@@ -86,7 +87,7 @@ const programOptions = [
   'Others'
 ];
 
-const DynamicTable: React.FC<DynamicTableProps> = ({ tempCard, setTempCard }) => {
+const DynamicTable: React.FC = () => {
   const [isCollapsed, setIsCollapsed] = useState(true);  
   const [columnCount, setColumnCount] = useState<number>(8);  
   const [faculty, setFaculty] = useState(() => localStorage.getItem('faculty') || 'School of Computing');
@@ -107,6 +108,9 @@ const DynamicTable: React.FC<DynamicTableProps> = ({ tempCard, setTempCard }) =>
   });
   const [headerTitle, setHeaderTitle] = useState('');
   const [headerSub, setHeaderSub] = useState('');
+  const [isModuleSelectionVisible, setIsModuleSelectionVisible] = useState<boolean>(false);
+  const [currentColumnIndex, setCurrentColumnIndex] = useState<number | null>(null);  
+  const [tempCard, setTempCard] = useState<CardType | null>(null);
   const [cards, setCards] = useState<Array<Array<CardType>>>(() => {
     const savedCards = localStorage.getItem('cards');
     return savedCards ? JSON.parse(savedCards) : new Array(8).fill([]).map(() => []);
@@ -243,12 +247,6 @@ const DynamicTable: React.FC<DynamicTableProps> = ({ tempCard, setTempCard }) =>
     const semester = (columnIndex % 2 === 1 ? 1 : 2);
     navigate("/timetable", { state: { courseList: column, semester: semester } });
   };
-
-  const handleToMap = (columnIndex: number) => {
-    const column = cards[columnIndex].map(card => card.name);
-    navigate("/map", { state: { courseList: column} });
-  }
-
   
   useEffect(() => {
     const newCards = calculatePrerequisites(cards);
@@ -327,7 +325,22 @@ const DynamicTable: React.FC<DynamicTableProps> = ({ tempCard, setTempCard }) =>
     return overlap;
   }
   
-  
+  const showModuleSelectionBox = (columnIndex: number) => {
+    setCurrentColumnIndex(columnIndex);
+    setIsModuleSelectionVisible(true);
+  };
+
+  const handleModuleSelectionClose = () => {
+    setIsModuleSelectionVisible(false);
+    setCurrentColumnIndex(null);
+  };
+
+  const handleModuleConfirm = (moduleInfo: CardType) => {
+    if (currentColumnIndex !== null) {
+      addCard(currentColumnIndex);
+    }
+    handleModuleSelectionClose();
+  };
 
   const addCard = (columnIndex: number) => {
     if (tempCard) {
@@ -811,13 +824,16 @@ const DynamicTable: React.FC<DynamicTableProps> = ({ tempCard, setTempCard }) =>
                 color={card.color}
                 classification={card.classification}/>
             ))}
-            <button className="add-button" onClick={() => addCard(columnIndex)}>Add Course</button>
+            {/* <button className="add-button" onClick={() => addCard(columnIndex)}>Add Course</button> */}
+            <button className="add-button" onClick={() => showModuleSelectionBox(columnIndex)}>Add Course</button>
+
             <button className="to-timetable-button" onClick={() => handleToTimetable(columnIndex)}>View Timetable</button>
             {/* <button className="to-map-button" onClick={() => handleToMap(columnIndex)}>View Map</button> */}
 
           </DroppableColumn>
         ))}
       </div>
+      <div className='info-on-select'>
       {selectedCard && (
         <div className="confirmation-dialog">
         <div className='selection-section'>
@@ -860,23 +876,38 @@ const DynamicTable: React.FC<DynamicTableProps> = ({ tempCard, setTempCard }) =>
           </select>
           <button className='update-classification-button'onClick={saveClassification}>Update Classification</button>
           </div>
+          <button className='close-detail-button' onClick={() => setSelectedCard(null)}>Close Details</button>
           </div>
-          <h3>Selected Course Details:</h3>
-          <h2><strong></strong> {selectedCard.name}</h2>
-          <p><strong>Course Name:</strong> {selectedCard.content}</p>
-          <p><strong>Course Credit:</strong> {selectedCard.courseCredit}</p>
-          <p><strong>Grade:</strong> {selectedCard.grade || 'Not Set'}</p>
-          <p><strong>Exam Info:</strong> {selectedCard.examInfo? selectedCard.examInfo[0].examTime : 'No Exam'}</p>
-          <h3>Prerequisite Tree:</h3>
-          <div className='tree-container'>
-            {selectedCard ? renderPrereqTreeVisual(selectedCard.prereqTree) 
-            : <p>Prerequisite tree not available.</p>}
+          <div className='all-info-container'>
+            <div>
+              <h3>Selected Course Details:</h3>
+              <h2><strong></strong> {selectedCard.name}</h2>
+              <p><strong>Course Name:</strong> {selectedCard.content}</p>
+              <p><strong>Course Credit:</strong> {selectedCard.courseCredit}</p>
+              <p><strong>Grade:</strong> {selectedCard.grade || 'Not Set'}</p>
+              <p><strong>Exam Info:</strong> {selectedCard.examInfo? selectedCard.examInfo[0].examTime : 'No Exam'}</p>
+            </div>
+            <div>
+              <h3>Prerequisite Tree:</h3>
+              <div className='tree-container'>
+                {selectedCard ? renderPrereqTreeVisual(selectedCard.prereqTree) 
+                : <p>Prerequisite tree not available.</p>}
+              </div>
+              <p><strong>Prerequisites Satisfied:</strong> {selectedCard.prereqNotSatisfied ? 'No' : 'Yes'}</p>
+            </div>
           </div>
-          <p><strong>Prerequisites Satisfied:</strong> {selectedCard.prereqNotSatisfied ? 'No' : 'Yes'}</p>
-          <button onClick={() => setSelectedCard(null)}>Close Details</button>
+          
+          
         </div> 
       )}
+      </div>
     </DndProvider>
+    {isModuleSelectionVisible && (
+        <div className='module-selection-overlay-table'>
+          <ModuleSelectionBox setTempCard={setTempCard} onConfirm={handleModuleConfirm} />
+          <button className='close-module-selection' onClick={handleModuleSelectionClose}>Close</button>
+        </div>
+      )}
   </div>
   <p className='notificationsite'></p>
   <p className='course-query'></p>
