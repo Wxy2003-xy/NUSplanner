@@ -66,7 +66,6 @@ const GuidedTour: React.FC<GuidedTourProps> = ({ startTour, onClose }) => {
       run={run}
       callback={handleJoyrideCallback}
       disableScrolling={true}
-      disableScrollParentFix={true}
       styles={{
         options: {
             zIndex: 10000,

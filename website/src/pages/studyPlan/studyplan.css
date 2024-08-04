@@ -1,6 +1,7 @@
 .studyplan-nav-right {
   width: 98%;
-  margin-top: 10px;
+  margin-top: 4.79em;
+
   margin-left: 10px;
     flex-grow: 1;
     position: relative;
@@ -22,5 +23,9 @@
   box-sizing: border-box;
   height: 100%;
   overflow:visible;
+}
+
+@media (max-width: 768px) {
+
 }
 

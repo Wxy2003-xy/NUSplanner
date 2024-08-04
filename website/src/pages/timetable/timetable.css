@@ -1,5 +1,6 @@
 
 .timetable-nav-right {
+    margin-top: 5em;
     flex-grow: 1;
     position: relative;
     display: flex;

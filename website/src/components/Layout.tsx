@@ -5,13 +5,13 @@ import './Layout.css';
 import Footer from './Footer';
 import teleLogo from '../images/teleLogo.jpg';
 import timetableImg from '../assets/timetable.png';
-import homeImg from '../assets/home.png'
-import plannerImg from '../assets/planner.png'
-import calendarImg from '../assets/calendar.png'
-import mapImg from '../assets/map.png'
-import communityImg from '../assets/community.png'
-import feedbackImg from '../assets/feedback.png'
-import aboutImg from '../assets/about.png'
+import homeImg from '../assets/home.png';
+import plannerImg from '../assets/planner.png';
+import calendarImg from '../assets/calendar.png';
+import mapImg from '../assets/map.png';
+import communityImg from '../assets/community.png';
+import feedbackImg from '../assets/feedback.png';
+import aboutImg from '../assets/about.png';
 
 const Layout = ({ children }) => {
   const [currentDate, setCurrentDate] = useState('');
@@ -20,13 +20,13 @@ const Layout = ({ children }) => {
 
   const buttons = [
     { path: '/', label: 'Home', className: 'home', bgImage: `url(${homeImg})` },
-    { path: '/studyplan', label: 'Study Plan', className: 'studyplan', bgImage: `url(${plannerImg})` },
-    { path: '/timetable', label: 'Timetable', className: 'timetable', bgImage: `url(${timetableImg})` },
-    { path: '/community', label: 'Community', className: 'community', bgImage: `url(${communityImg})` },
-    { path: '/reminder', label: 'Reminder', className: 'reminder', bgImage: `url(${calendarImg})` },
-    { path: '/map', label: 'Map', className: 'map', bgImage: `url(${mapImg})` },
-    { path: '/feedback', label: 'Feedback', className: 'feedback', bgImage: `url(${feedbackImg})` },
-    { path: '/about', label: 'About us', className: 'about', bgImage: `url(${aboutImg})` }
+    { path: '/studyplan', label: 'Study Plan', bgImage: `url(${plannerImg})` },
+    { path: '/timetable', label: 'Timetable', bgImage: `url(${timetableImg})` },
+    { path: '/community', label: 'Community', bgImage: `url(${communityImg})` },
+    { path: '/reminder', label: 'Reminder', bgImage: `url(${calendarImg})` },
+    { path: '/map', label: 'Map', bgImage: `url(${mapImg})` },
+    { path: '/feedback', label: 'Feedback', bgImage: `url(${feedbackImg})` },
+    { path: '/about', label: 'About us', bgImage: `url(${aboutImg})` }
   ];
 
   const sentences = [
@@ -37,7 +37,7 @@ const Layout = ({ children }) => {
   ];
 
   useEffect(() => {
-    const options: Intl.DateTimeFormatOptions = { year: 'numeric', month: 'long', day: 'numeric' };
+    const options = { year: 'numeric', month: 'long', day: 'numeric' };
     const today = new Date();
     setCurrentDate(today.toLocaleDateString(undefined, options));
   }, []);
@@ -45,9 +45,8 @@ const Layout = ({ children }) => {
   useEffect(() => {
     const intervalId = setInterval(() => {
       setCurrentSentenceIndex((prevIndex) => (prevIndex + 1) % sentences.length);
-    }, 5000); 
-
-    return () => clearInterval(intervalId); 
+    }, 5000);
+    return () => clearInterval(intervalId);
   }, [sentences.length]);
 
   return (
@@ -77,7 +76,7 @@ const Layout = ({ children }) => {
           <NavLink to="/about" className="about-us-link">
             <span>About Us</span>
           </NavLink>
-        </div>             
+        </div>
         <div className="date-container">
           <span>{currentDate}</span>
         </div>
@@ -109,8 +108,5 @@ const Layout = ({ children }) => {
     </div>
   );
 };
-
-
-
 
 export default Layout;

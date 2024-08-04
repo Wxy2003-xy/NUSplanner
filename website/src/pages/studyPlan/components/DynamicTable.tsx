@@ -326,9 +326,16 @@ const DynamicTable: React.FC = () => {
   }
   
   const showModuleSelectionBox = (columnIndex: number) => {
-    setCurrentColumnIndex(columnIndex);
-    setIsModuleSelectionVisible(true);
-  };
+    if (isModuleSelectionVisible) {
+      console.log('close')
+        setIsModuleSelectionVisible(false);
+        setCurrentColumnIndex(null);
+    } else {
+      console.log('on')
+        setCurrentColumnIndex(columnIndex);
+        setIsModuleSelectionVisible(true);
+    }
+};
 
   const handleModuleSelectionClose = () => {
     setIsModuleSelectionVisible(false);
