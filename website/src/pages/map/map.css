@@ -1,24 +1,40 @@
 .map-nav-right {
+  margin-top: 5.8em;
   flex-grow: 1;
+  padding: 0.5em;
   position: relative;
   display: flex;
-  flex-direction: column; 
+  flex-direction: column;
   box-sizing: border-box;
-  color: #333; 
-  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.4); 
+  color: #333;
+  text-shadow: 0.0625rem 0.0625rem 0.125rem rgba(0, 0, 0, 0.4);
 }
 
 .credit-section {
-  font-size: 8px;
+  font-size: 0.5rem;
+  display: flex;
 }
 
 .venue-info-list {
-  font-size: 12px;
+  font-size: 0.75rem;
 }
 
 .credit-section {
-  font-size: 8px;
+  font-size: 0.5rem;
   display: flex;
 }
 
-/*  */
+@media (max-width: 768px) {
+  .map-nav-right {
+    margin-top: 6.2em;
+    text-shadow: 0.03125rem 0.03125rem 0.0625rem rgba(0, 0, 0, 0.4);
+  }
+
+  .credit-section {
+    font-size: 0.375rem;
+  }
+
+  .venue-info-list {
+    font-size: 0.625rem;
+  }
+}

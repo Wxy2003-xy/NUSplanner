@@ -19,12 +19,15 @@ header {
   align-items: center;
   justify-content: space-between;
   width: 100%;
-  position: fixed; /* Fix header at the top */
+  position: fixed;
   top: 0;
   left: 0;
-  z-index: 1000000; /* Ensure it's above other elements */
+  z-index: 1000000;
   box-sizing: border-box;
   height: 6em;
+  white-space: nowrap;      
+  overflow: hidden;         
+  text-overflow: ellipsis;
 }
 
 .header-left {
@@ -118,6 +121,9 @@ nav {
   box-sizing: border-box;
   z-index: 10000;
   font-size: 1.25rem;
+  white-space: nowrap;      
+  overflow: hidden;         
+  text-overflow: ellipsis;
 }
 
 .nav-left {
@@ -183,7 +189,7 @@ nav ul li {
 }
 
 .join-us-container .join-us-icon:hover {
-  transform: scale(1.1); 
+  transform: scale(1.05); 
 }
 
 .join-us-text {
@@ -211,88 +217,159 @@ nav ul li {
 
 .footer-container {
   width: 100%;
-  position: fixed; /* Fix footer at the bottom */
+  position: fixed;
   bottom: 0;
   left: 0;
-  color: white; /* Use the same text color as the header */
-  /* padding: 1.25rem 1.5rem; Ensure consistent padding */
+  color: white;
+ 
   display: flex;
-  z-index: 1000000; /* Ensure it's above other elements */
+  z-index: 1000000;
   box-sizing: border-box;
   height: 2.6em;
   line-height: 0;
   background-color: #0a756d;
 }
 
-/* Media Queries for responsiveness */
+
 @media (max-width: 768px) {
   header {
-    flex-direction: column;
-    align-items: flex-start;
+    flex-direction: row;
+    height: 3em;
+    align-items: center;
+    justify-content: space-evenly;
+    display: flex;
+    flex-direction: row;
+    white-space: nowrap;      
+    overflow: hidden;         
+    text-overflow: ellipsis;
+  }
+
+  .home-scroll-container {
+    visibility: hidden;
+  }
+
+  .logo-container img {
+    height: 1.75rem;
+    margin-right: 0.625rem;
+    margin-left: -0.45rem;
   }
 
   .nav-left {
+    position: fixed;
     width: 100%;
     height: auto;
   }
 
   nav {
+    margin-top: -3em;
     position: fixed;
-    flex-direction: row; /* Change to row direction */
-    width: 100%; /* Full width */
-    height: auto; /* Auto height */
-    overflow-x: auto; /* Allow horizontal scrolling if needed */
+    flex-direction: row;
+    height: auto;
+    overflow-x: auto;
   }
 
   nav ul {
-    display: flex; /* Display the ul as flex */
-    flex-direction: row; /* Make the ul horizontal */
-    width: 100%; /* Full width */
+    position: fixed;
+    flex: 1;
+    display: flex;
+    flex-direction: row;
   }
 
   nav ul li {
-    flex: 1; /* Allow li to grow and fill the space */
+    display: flex;
+    transform: translateY(0.65em);
+    font-size: 0.65em;
+    flex: 1;
+    font-weight: bold;
+  }
+
+  .nav-left-buttonlist {
+    display: flex;
+    flex: 0.1;
+    align-items: start;
   }
 
   .nav-button {
-    height: 4rem; /* Adjust as needed */
-    font-size: 1rem;
+    height: 2.75rem;
+    font-size: 0.55rem;
+    background-position: right -0.2375rem bottom -0.625rem;
+    background-size: 75%;
+    max-width: 66px;
   }
 
   .logo-container span {
-    font-size: 2rem;
+    font-size: 1rem;
   }
 
   .home-scroll-container {
     margin-right: 1.25rem;
   }
 
-  .date-container {
-    margin-right: 1.25rem;
-  }
-
-  .join-us-container {
-    margin-right: 1.25rem;
-  }
-
-  .about-us-container {
-    margin-right: 1.25rem;
-  }
-
   .layout {
-    height: auto; /* Allow height to adjust based on content */
+    height: auto;
   }
 
   .content {
-    flex-direction: column; /* Stack content vertically */
-    flex-grow: 0; /* Disable flex-grow */
+    flex-direction: column;
+    flex-grow: 0;
   }
 
   .page-content {
-    width: 100%; /* Full width for page content */
+    width: 100%;
   }
 
   .footer-container {
-    width: 100%; /* Full width for footer */
+    width: 100%;
+  }
+
+  .join-us-container {
+    margin-right: 0.45rem;
+  }
+
+  .about-us-container {
+    margin-right: 0.25rem;
+    align-self: center;
+    justify-content: center;
+    align-items: center;
+    justify-self: center;
+    transform: translateY(-0.12rem);
+  }
+  .join-us-text {
+    color: white; 
+    text-decoration: none;
+    font-size: 0.55em;
+  }
+
+  .join-us-icon {
+    width: 1rem;
+    height: 1rem; 
+    margin-right: 0.5rem; 
+    transition: transform 0.3s ease; 
+  }
+  
+  .join-us-container .join-us-text:hover {
+    color: antiquewhite; 
+    min-width: 4em;
+    justify-content: center;
+    align-items: center;
+  }
+  .about-us-link {
+    font-size: 0.55em;
+    color: white;
+    text-decoration: none;
+    line-height: 1;
+    min-width: 4em;
+    justify-content: center;
+    justify-self: center;
+    align-items: center;
+  }
+  .date-container {
+    font-size: 0.55rem;
+    color: white;
+    margin-right: 0.05rem; 
+    min-width: 4em;
+    justify-content: center;
+    align-items: center;
+    transform: translateY(0.0325rem);
   }
 }

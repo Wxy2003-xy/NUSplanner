@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import './App.css';
 import { HashRouter as Router, Routes, Route } from 'react-router-dom';
 import Home from './pages/home/home';

@@ -90,6 +90,13 @@ const DynamicTimeTable = () => {
   }, [selectedDays, minStartTime]);
 
   useEffect(() => {
+    const cachedData = localStorage.getItem('cachedTimeSlots');
+    if (cachedData) {
+      console.log('Cached data:', JSON.parse(cachedData));
+    }
+  }, []);
+
+  useEffect(() => {
     const fetchData = async () => {
       setLoading(true); 
       try {
@@ -118,7 +125,7 @@ const DynamicTimeTable = () => {
     alert('Time slots saved successfully!');
   };
 
-  const handleDayChange = (day) => {
+  const handleDayChange = (day:string) => {
     const newDays = selectedDays.includes(day)
       ? selectedDays.filter(d => d !== day)
       : [...selectedDays, day];

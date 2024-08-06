@@ -1,3 +1,44 @@
+.container {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(120px, 0fr)); 
+}
+
+.card {
+  line-height: 0.4em;
+  position: relative;
+  align-self: center;
+  align-items: center;
+  justify-self: center;
+  max-width: 18em;
+  width: 95%;
+  border-radius: 0.125em;
+  overflow: hidden;
+  box-shadow: 0 0.25em 0.5em rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  box-sizing: border-box;
+  padding: 0.175em;
+  padding-top: -0.175em;
+  margin-top: 0.125em;
+  margin-bottom: 0.125em;
+  margin-left: 0;
+  margin-right: 0;
+  border: 0.06em solid #333;
+}
+
+
+.card.selected {
+  background-color: #72e3ca;
+}
+
+.card.prereq-not-satisfied {
+  background-color: #ff9999;
+}
+
+.card:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
+}
+
 .card-title {
   font-size: 0.8em;
   align-self: center;
@@ -6,72 +47,43 @@
   margin: 10px 0;
 }
 
-.container {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(120px, 0fr)); 
+.card-text {
+  font-size: 0.6em;
+  line-height: 1.2;
+  color: #5c5c5c;
+  margin: 5px 0;
+  flex-grow: 1;
 }
 
-.card {
-  line-height: 0.4;
-    position: relative;
-    align-self: center;
-    align-items: center;
-    width: 85%;
-    background-color: #88f7c5;
-    border-radius: 4px;
-    overflow: hidden;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-    box-sizing: border-box;
-    transform: translateX(9px);
-    padding: 5px;
-    margin-top: 5px;
-    margin-bottom: 5px;
-  }
-  
-  .card.selected {
-    background-color: #72e3ca;
-  }
-  
-  .card.prereq-not-satisfied {
-    background-color: #ff9999;
-  }
-  
-  .card:hover {
-    transform: translateY(-1px);
-    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
-  }
-  
-  
-  
-  .card-text {
-    font-size: 0.6em;
-    line-height: 1.2;
-    color: #5c5c5c;
-    margin: 5px 0;
-    flex-grow: 1;
-  }
-  
-  .card-mc-grade {
-    font-size: 0.6em;
-    color: #333;
-    margin: 10px 0;
-  }
+.card-mc-grade {
+  font-size: 0.6em;
+  color: #333;
+  margin: 10px 0;
+}
 
-  .card-classification {
-    font-size: 0.6em;
-    color: #333;
-    margin: 10px 0;
-    line-height: 1;
+.card-classification {
+  font-size: 0.6em;
+  color: #333;
+  margin: 10px 0;
+  line-height: 1;
+}
+
+.overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(255, 255, 255, 0.5);
+  z-index: 1;
+}
+
+@media (max-width: 600px) {
+  .card {
+    width: 100%;
+    margin: 10px auto;
   }
-  
-  @media (max-width: 600px) {
-    .card {
-      width: 100%;
-      margin: 10px auto;
-    }
-    .card-image {
-      height: 120px;
-    }
+  .card-image {
+    height: 120px;
   }
-  
+}

@@ -1,18 +1,18 @@
 .link {
   fill: none;
   stroke: white;
-  stroke-width: 1px;
+  stroke-width: 0.1rem;
   stroke-opacity: 0.9;
 }
 
 .node rect {
   fill: #ffffff;
   stroke: steelblue;
-  stroke-width: 1px;
+  stroke-width: 0.1rem;
 }
 
 .node text {
-  font: 10px sans-serif;
+  font: 0.625rem sans-serif;
   fill: #333;
 }
 
@@ -33,59 +33,51 @@
   margin: auto;
 }
 
-.card {
+.tree-card {
   position: relative;
-  width: 90%;
-  background-color: #88f7c5; 
-  border-radius: 5px;
+  width: 80%;
+  background-color: #88f7c5;
+  border-radius: 0.3125rem;
   overflow: hidden;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 0.25rem 0.5rem rgba(0, 0, 0, 0.1);
   transition: transform 0.3s ease, box-shadow 0.3s ease;
   box-sizing: border-box;
-  transform: translateX(3px);
-  padding: 10px;
+  transform: translateX(0.1875rem);
+  padding: 0.625rem;
 }
 
-.card.selected {
-  background-color: #00c99e;
+.tree-card:hover {
+  transform: translateY(-0.3125rem);
+  box-shadow: 0 0.375rem 1rem rgba(0, 0, 0, 0.2);
 }
 
-.card.prereq-not-satisfied {
-  background-color: #ff9999;
-}
-
-.card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
-}
-
-.card-title {
-  font-size: 0.8em;
+.tree-card-title {
+  font-size: 0.7rem;
   font-weight: bold;
   color: #333;
-  margin: 10px 0;
+  margin: 0.625rem 0;
 }
 
-.card-text {
-  font-size: 0.6em;
+.tree-card-text {
+  font-size: 0.5rem;
   line-height: 1;
   color: #666;
-  margin: 4px 0;
+  margin: 0.25rem 0;
   flex-grow: 1;
 }
 
 .card-grade {
-  font-size: 10px;
+  font-size: 0.625rem;
   color: #333;
-  margin: 10px 0;
+  margin: 0.625rem 0;
 }
 
 @media (max-width: 600px) {
-  .card {
-    width: 90%;
-    margin: 10px auto;
+  .tree-card {
+    width: 80%;
+    margin: 0.625rem auto;
   }
-  .card-image {
-    height: 60px;
+  .tree-card-image {
+    height: 3.75rem;
   }
 }

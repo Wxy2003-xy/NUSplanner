@@ -1,31 +1,43 @@
 .studyplan-nav-right {
   width: 98%;
   margin-top: 4.79em;
-
-  margin-left: 10px;
-    flex-grow: 1;
-    position: relative;
-    display: flex;
-    flex-direction: column;
-    padding: 0px;
-    box-sizing: border-box;
-    color: black; 
-    /* text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.4);  */
-    height: 100%; 
+  margin-left: 1em;
+  flex-grow: 1;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  padding: 0;
+  box-sizing: border-box;
+  color: black; 
+ 
+  height: 100%;
 }
 
 .dynamic-table-container {
   max-width: 80%;
-  width: 100%; 
-  margin-top: 20px;  
-  margin-bottom: 20px;
-  padding: -5px;
+  width: 100%;
+  margin-top: 1.25em;
+  margin-bottom: 1.25em;
+  padding: 0;
   box-sizing: border-box;
   height: 100%;
-  overflow:visible;
+  overflow: visible;
 }
 
-@media (max-width: 768px) {
-
+@media (max-width: 48em) {
+   
+  .studyplan-nav-right {
+    width: 98%;
+    margin-top: 4.75em;
+    margin-left: 1em;
+    flex-grow: 1;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    padding: 0;
+    box-sizing: border-box;
+    color: black; 
+   
+    height: 100%;
+  }
 }
-

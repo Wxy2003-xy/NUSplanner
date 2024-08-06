@@ -1,9 +1,8 @@
-import './ModuleSelection.css';
 import React, { useState, FormEvent, useEffect } from 'react';
 import PrereqTreeVisual from './TreeVisualization';
 import { ModuleInfo, ModuleSelectionBoxProps, ExamInfo } from '../../../types/general';
 
-const ModuleSelectionBox: React.FC<ModuleSelectionBoxProps> = ({ setTempCard, onConfirm }) => {
+const ModuleSelectionBox: React.FC<ModuleSelectionBoxProps> = ({ setTempCard, onConfirm, onClose }) => {
     const [acadYear, setAcadYear] = useState<string>(() => {
         return localStorage.getItem('acadYear') || '';
     });
@@ -88,7 +87,8 @@ const ModuleSelectionBox: React.FC<ModuleSelectionBoxProps> = ({ setTempCard, on
     };
 
     return (
-        <div className="info-block">
+        <div className="module-selection-overlay show">
+            <button className="close-module-selection" onClick={onClose}>X</button>
             <form onSubmit={handleSubmit}>
                 <label>
                     Academic Year (e.g., 2023): {'   '}
@@ -109,7 +109,7 @@ const ModuleSelectionBox: React.FC<ModuleSelectionBoxProps> = ({ setTempCard, on
                         id="moduleCode"  
                         name="moduleCode"  
                         value={moduleCode}
-                        onChange={e => setModuleCode(e.target.value.toLocaleUpperCase())}
+                        onChange={e => setModuleCode(e.target.value.toUpperCase())}
                         required
                     />
                 </label>
@@ -123,15 +123,19 @@ const ModuleSelectionBox: React.FC<ModuleSelectionBoxProps> = ({ setTempCard, on
             )}
             {moduleInfo && (
                 <div className='info-text'>
-                    <h2>Module Information:</h2>
-                    <h3>{moduleInfo.name} {moduleInfo.content}</h3>
-                    <p><strong>Credit:</strong> {moduleInfo.courseCredit}</p>
-                    <p><strong>Prerequisites:</strong> {moduleInfo.prerequisites}</p>
-                    <p><strong>Preclusions:</strong> {moduleInfo.preclusions ? moduleInfo.preclusions : 'NA'}</p>
-                    <div className='tree-visual'>
-                        <PrereqTreeVisual data={moduleInfo.prereqTree} />
-                    </div> 
-                    <button className='confirm-button' onClick={onConfirm}>Confirm</button>
+                    <div>
+                        <h2>Module Information:</h2>
+                        <h3>{moduleInfo.courseCode} {moduleInfo.courseName}</h3>
+                        <p><strong>Credit:</strong> {moduleInfo.courseCredit}</p>
+                        <p><strong>Prerequisites:</strong> {moduleInfo.prerequisites}</p>
+                        <p><strong>Preclusions:</strong> {moduleInfo.preclusions ? moduleInfo.preclusions : 'NA'}</p>
+                    </div>
+                    <div>
+                        <div className='tree-container-select'>
+                            <PrereqTreeVisual data={moduleInfo.prereqTree} />
+                        </div> 
+                        <button className='confirm-button' onClick={onConfirm}>Confirm</button>
+                    </div>  
                 </div>
             )}
         </div>
@@ -139,3 +143,4 @@ const ModuleSelectionBox: React.FC<ModuleSelectionBoxProps> = ({ setTempCard, on
 };
 
 export default ModuleSelectionBox;
+

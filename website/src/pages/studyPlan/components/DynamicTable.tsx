@@ -87,6 +87,11 @@ const programOptions = [
   'Others'
 ];
 
+const colorSchemeOptions = [
+  'ashes', 'chalk', 'eighties', 'google', 'mocha', 'monokai', 
+  'ocean', 'oceanicNext', 'paraiso', 'railscasts', 'tomorrow', 'twilight'
+];
+
 const DynamicTable: React.FC = () => {
   const [isCollapsed, setIsCollapsed] = useState(true);  
   const [columnCount, setColumnCount] = useState<number>(8);  
@@ -121,13 +126,20 @@ const DynamicTable: React.FC = () => {
     const storedShowTour = localStorage.getItem('showTourState');
     return storedShowTour === null ? true : storedShowTour === 'true';
   });
+  const [colorScheme, setColorScheme] = useState<string>(() => localStorage.getItem('colorScheme') || 'google');
   const handleTourClose = () => {
     setShowTour(true);
     localStorage.setItem('showTourState', 'true');
   };
+  const handleColorSchemeChange = (event: ChangeEvent<HTMLSelectElement>) => {
+    const newColorScheme = event.target.value;
+    setColorScheme(newColorScheme);
+    localStorage.setItem('colorScheme', newColorScheme);
+    staticUpdateAllPrerequisites(cards); // Update all cards to reflect the new color scheme
+  };
   useEffect(() => { 
     let timer;
-    if (notification) {
+    if (notification) { 
       timer = setTimeout(() => {
         setNotification(null);
       }, 2000); 
@@ -371,7 +383,7 @@ const DynamicTable: React.FC = () => {
       if (tempCard.prereqTree) {
         try {
           const prereqTree:PrereqTreeNode | string = tempCard.prereqTree;
-          console.log(JSON.stringify(prereqTree))
+          console.log(JSON.stringify(prereqTree)) 
           if (!checkPrerequisites(prereqTree, columnIndex)) {
             prereqNotSatisfied = true;
             console.log("not satisfied, labelled");
@@ -717,6 +729,14 @@ const DynamicTable: React.FC = () => {
       {showTour && <GuidedTour startTour={showTour} onClose={handleTourClose} />}
       {clashNotification && <div className="clash-notification">{clashNotification}</div>}
     <button className="collapse-button"onClick={toggleCollapse}>Major Setting</button>
+    <div className="dropdown-row">
+            {' '}Color Scheme:{' '}
+            <select className="dropdown-select" value={colorScheme} onChange={handleColorSchemeChange}>
+              {colorSchemeOptions.map(scheme => (
+                <option key={scheme} value={scheme}>{scheme}</option>
+              ))}
+            </select>
+        </div>
     <div>
       <div className="collapsible-content" style={{ display: isCollapsed ? 'none' : 'block' }}>
       <div className="dropdown-row">
@@ -815,21 +835,21 @@ const DynamicTable: React.FC = () => {
                            semesterCount={semesterCount}>
             {columnCards.map((card, index) => (
               <DraggableCard
-                key={card.id}
-                id={card.id? card.id : Date.now()}
-                name={card.name}
-                courseCredit={card.courseCredit}
-                content={card.content}
-                columnIndex={columnIndex}
-                index={index}
-                handleMoveCard={handleMoveCard}
-                handleCardClick={handleCardClick}
-                selectedCard={selectedCard}
-                grade={card.grade}
-                prereqTree={card.prereqTree}
-                prereqNotSatisfied={card.prereqNotSatisfied}
-                color={card.color}
-                classification={card.classification}/>
+              key={card.id}
+              id={card.id ? card.id : Date.now()}
+              name={card.name}
+              courseCredit={card.courseCredit}
+              content={card.content}
+              columnIndex={columnIndex}
+              index={index}
+              handleMoveCard={handleMoveCard}
+              handleCardClick={handleCardClick}
+              selectedCard={selectedCard}
+              grade={card.grade}
+              prereqTree={card.prereqTree}
+              prereqNotSatisfied={card.prereqNotSatisfied}
+              colorScheme={colorScheme} // Pass the colorScheme prop
+              classification={card.classification} />
             ))}
             {/* <button className="add-button" onClick={() => addCard(columnIndex)}>Add Course</button> */}
             <button className="add-button" onClick={() => showModuleSelectionBox(columnIndex)}>Add Course</button>
@@ -903,18 +923,17 @@ const DynamicTable: React.FC = () => {
               <p><strong>Prerequisites Satisfied:</strong> {selectedCard.prereqNotSatisfied ? 'No' : 'Yes'}</p>
             </div>
           </div>
-          
-          
         </div> 
       )}
       </div>
     </DndProvider>
     {isModuleSelectionVisible && (
-        <div className='module-selection-overlay-table'>
-          <ModuleSelectionBox setTempCard={setTempCard} onConfirm={handleModuleConfirm} />
-          <button className='close-module-selection' onClick={handleModuleSelectionClose}>Close</button>
-        </div>
-      )}
+            <ModuleSelectionBox 
+              setTempCard={setTempCard} 
+              onConfirm={handleModuleConfirm}
+              onClose={handleModuleSelectionClose} 
+            />
+        )}
   </div>
   <p className='notificationsite'></p>
   <p className='course-query'></p>

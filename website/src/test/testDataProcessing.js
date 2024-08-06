@@ -1,4 +1,3 @@
-// This example assumes you are using Node.js 14 or later for ECMAScript Modules (ESM) supportcons
 const data = [
 	{
 		"classNo": "02C",

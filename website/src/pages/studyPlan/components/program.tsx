@@ -106,12 +106,12 @@ const ProgramTab: React.FC<ProgramProps> = ({ faculty, program}) => {
     useEffect(() => {
       setPrograms(allPrograms[faculty]);
       setSelectedMajor(allPrograms[faculty][0]?.name || 'Not Applicable');
-  }, [faculty, allPrograms]); // Ensure 'faculty' and 'allPrograms' are correct and updated
+  }, [faculty, allPrograms]); 
   
   useEffect(() => {
       setSecondPrograms(allPrograms[secondFaculty]);
       setSecondMajor(allPrograms[secondFaculty][0]?.name || 'Not Applicable');
-  }, [secondFaculty, allPrograms]); // Ensure 'secondFaculty' and 'allPrograms' are correct and updated
+  }, [secondFaculty, allPrograms]); 
   
 
     const handleMajorChange = (event: ChangeEvent<HTMLSelectElement>) => {

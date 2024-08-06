@@ -1,49 +1,49 @@
 .about-container {
-  max-width: 1289px;
-  margin: 0;
-  padding: 20px;
+  margin-top: 5.75em;
+  max-width: 80.56rem;
+  padding: 1.25rem;
   font-family: 'Arial', sans-serif;
   background-color: #f9f9f9;
-  border-radius: 10px;
-  box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+  border-radius: 0.625rem;
+  box-shadow: 0 0 1.25rem rgba(0, 0, 0, 0.1);
 }
 
 .about-header {
   text-align: left;
-  margin-bottom: 20px;
+  margin-bottom: 1.25rem;
 }
 
 .about-header h1 {
-  font-size: 36px;
+  font-size: 2.25rem;
   color: #333;
   margin: 0px;
 }
 
 .about-header p {
-  font-size: 14px;
+  font-size: 0.875rem;
   color: #777;
 }
 
-.about-content section h2{
-  margin-bottom: 20px;
-  transition: all 0.3s ease; 
+.about-content section h2 {
+  margin-bottom: 1.25rem;
+  transition: all 0.3s ease;
 }
 
 .about-content section h2:hover {
-  color: black; 
-  transform: scale(1.01); 
+  color: black;
+  transform: scale(1.01);
 }
 
 .about-content h2 {
-  font-size: 28px;
+  font-size: 1.75rem;
   color: #444;
-  border-bottom: 2px solid #ddd;
-  padding-bottom: 5px;
-  margin-bottom: 10px;
+  border-bottom: 0.125rem solid #ddd;
+  padding-bottom: 0.3125rem;
+  margin-bottom: 0.625rem;
 }
 
 .about-content p {
-  font-size: 16px;
+  font-size: 1rem;
   color: #555;
   line-height: 1.6;
 }
@@ -54,10 +54,10 @@
 }
 
 .about-content ul li {
-  font-size: 16px;
+  font-size: 1rem;
   color: #555;
   line-height: 1.6;
-  padding: 5px 0;
+  padding: 0.3125rem 0;
 }
 
 .about-development-team .about-team-member {
@@ -67,7 +67,35 @@
 }
 
 .about-development-team .about-team-member h3 {
-  font-size: 20px;
+  font-size: 1.25rem;
   color: black;
-  margin: 5px 0;
-} 
+  margin: 0.3125rem 0;
+}
+
+@media (max-width: 768px) {
+  .about-container {
+  margin-top: 5.75em; 
+    padding: 1rem;
+  }
+
+  .about-header h1 {
+    font-size: 1.75rem;
+  }
+
+  .about-header p {
+    font-size: 0.75rem;
+  }
+
+  .about-content h2 {
+    font-size: 1.25rem;
+  }
+
+  .about-content p,
+  .about-content ul li {
+    font-size: 0.875rem;
+  }
+
+  .about-development-team .about-team-member h3 {
+    font-size: 1rem;
+  }
+}

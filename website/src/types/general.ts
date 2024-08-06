@@ -40,4 +40,5 @@ export interface ModuleSelectionBoxProps {
         prereqTree?: PrereqTreeNode}) => void;
         examInfo?: ExamInfo[];
     onConfirm: (card: CardType) => void;
+    onClose: () => void
 }

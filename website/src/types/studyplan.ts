@@ -34,7 +34,7 @@ export type CardProps = {
     prereqTree?: PrereqTreeNode | string;
     prereqNotSatisfied?: boolean;
     examInfo?: ExamInfo[];
-    color?: string;
+    colorScheme?: string;
   
     classification?: string;
   };
