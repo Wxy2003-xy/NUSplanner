@@ -1,0 +1,16 @@
+{
+	"folders": [
+		{
+			"name": "NUSplanner",
+			"path": "../.."
+		},
+		{
+			"name": "nusplannerAPI",
+			"path": "../../../../Library/Containers/com.tencent.xinWeChat/Data/Library/Application Support/com.tencent.xinWeChat/2.0b4.0.9/380118f528bea36841f0191c8a88ec94/Message/MessageTemp/37bce9455955841d8b75e4df77aa331f/File/nusplannerAPI"
+		}
+	],
+	"settings": {
+		"java.compile.nullAnalysis.mode": "automatic",
+		"java.jdt.ls.vmargs": "-XX:+UseParallelGC -XX:GCTimeRatio=4 -XX:AdaptiveSizePolicyWeight=90 -Dsun.zip.disableMemoryMapping=true -Xmx2G -Xms100m -Xlog:disable"
+	}
+}
