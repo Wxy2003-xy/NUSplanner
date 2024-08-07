@@ -367,7 +367,8 @@ header {
 
 @media (max-width: 768px) {
   header {
-    flex-direction: column;
+    display: flex;
+    flex-direction: row-reverse;
     justify-content: space-between;
     align-items: flex-start;
     padding: 0.3125rem;
@@ -387,14 +388,15 @@ header {
 
   .date-container {
     font-size: 0.15em;
-    margin-right: 0.125rem;
+    margin-right: 1.325rem;
     min-width: 6em;
   }
 
   .home-main-content {
-    flex-direction: column;
+    flex-direction: column-reverse;
     height: auto;
-    margin-top: 3.125em;
+    margin-top: 2.5em;
+    flex-wrap: unset;
   }
 
   .home-left-section,
@@ -411,10 +413,6 @@ header {
   .home-right-section .link-box-container {
     gap: 0.625rem;
     margin-left: 0;
-  }
-
-  .home-left-bottom {
-    padding: 0.625rem;
   }
 
   .home-left-bottom .home-leftbottom-title {
@@ -474,5 +472,50 @@ header {
   text-decoration: none;
   color:antiquewhite;
 }
-
+.home-left-section {
+  max-width: 0px;
+  visibility:hidden;
+  background-color: #f8f9fa; 
+}
+.home-right-section {
+  max-width: 768px;
+  align-items: center;
+  justify-content: center;
+  justify-self: center;
+  flex: 1 1 100%;
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+  color: white; 
+  text-shadow: 0.0625rem 0.0625rem 0.125rem rgba(0, 0, 0, 0.4);
+  background-color: #ffffff;
+  padding: 0;
+  margin: 0;
+}
+.home-right-section .link-box {
+  width: 46%; 
+  height: 12rem;
+  background-color: #0a756d; 
+  margin: 0;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  border-radius: 0.5rem;
+  box-shadow: 0 0.25rem 0.5rem rgba(0, 0, 0, 0.2);
+  transition: transform 0.3s; 
+  text-decoration: none;
+  background-position: right -1.1875rem bottom -1.2875rem;
+  background-repeat: no-repeat; 
+  background-size: 80%;
+  box-sizing: border-box;
+  z-index: 10000; 
+}
+.home-right-section .link-box span {
+  color: white; 
+  transform: translateY(-2.25rem);
+  font-size: 1.275rem;
+  font-weight: 600;
+  text-align: center;
+}
 }

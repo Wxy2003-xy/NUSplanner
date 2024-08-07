@@ -47,6 +47,7 @@ function Timetable({ timeSlots }: TimetableProps) {
       const weekInfoPre = JSON.stringify(slot.weeks);
       const weekInfo = weekInfoPre === '[1,2,3,4,5,6,7,8,9,10,11,12,13]' ? '' 
                           : weekInfoPre === '[3,4,5,6,7,8,9,10,11,12,13]' ? 'Week 3 - 13'
+                          : weekInfoPre === '[2,3,4,5,6,7,8,9,10,11,12,13]' ? 'Week 2 - 13'
                           : 'Week: ' + weekInfoPre;
       return (
         <div

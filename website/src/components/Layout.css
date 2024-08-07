@@ -112,6 +112,7 @@ header {
 }
 
 nav {
+  position: fixed;
   display: flex;
   flex-direction: column;
   flex-shrink: 0; 
@@ -144,9 +145,9 @@ nav ul li {
 
 .nav-button {
   width: 100%;
-  height: 5.5rem;
+  height: 5.1rem;
   background-size: 50%;
-  background-position: right -0.9375rem bottom -0.9375rem;
+  background-position: right -0.9375rem bottom -1.4rem;
   background-repeat: no-repeat;
   border: none;
   color: white;

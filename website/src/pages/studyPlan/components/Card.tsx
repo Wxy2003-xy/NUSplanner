@@ -12,8 +12,8 @@ const colorPalettes = {
     "Minor requirement": '#A8C3D5',
     "Unrestricted Elective": '#C1B6C7',
     "Specialisation Primary": '#D7B9C2',
-    "Specialisation Elective": '#D7B9C2',
-    default: '#D7B9C2'
+    "Specialisation Elective": '#b38b97',
+    default: '#d1d1d1'
   },
   chalk: {
     "University level requirement": '#F0B6AC',
@@ -24,7 +24,7 @@ const colorPalettes = {
     "Unrestricted Elective": '#A3AFCF',
     "Specialisation Primary": '#C4B4C7',
     "Specialisation Elective": '#C4B4C7',
-    default: '#C4B4C7'
+    default: '#d1d1d1'
   },
   eighties: {
     "University level requirement": '#F0999A',
@@ -35,7 +35,7 @@ const colorPalettes = {
     "Unrestricted Elective": '#A58879',
     "Specialisation Primary": '#E8A77A',
     "Specialisation Elective": '#E8A77A',
-    default: '#E8A77A'
+    default: '#d1d1d1'
   },
   google: {
     "University level requirement": '#DB4437',
@@ -46,7 +46,7 @@ const colorPalettes = {
     "Unrestricted Elective": '#F0E68C',
     "Specialisation Primary": '#F0E68C',
     "Specialisation Elective": '#F0E68C',
-    default: '#a6a6a6'
+    default: '#d1d1d1'
   },
   mocha: {
     "University level requirement": '#A86C6B',
@@ -57,7 +57,7 @@ const colorPalettes = {
     "Unrestricted Elective": '#B0A3A2',
     "Specialisation Primary": '#C5A897',
     "Specialisation Elective": '#C5A897',
-    default: '#C5A897'
+    default: '#d1d1d1'
   },
   monokai: {
     "University level requirement": '#F92672',
@@ -68,7 +68,7 @@ const colorPalettes = {
     "Unrestricted Elective": '#9E6FFE',
     "Specialisation Primary": '#A2A2A2',
     "Specialisation Elective": '#A2A2A2',
-    default: '#A2A2A2'
+    default: '#d1d1d1'
   },
   ocean: {
     "University level requirement": '#AB6A5B',
@@ -79,7 +79,7 @@ const colorPalettes = {
     "Unrestricted Elective": '#B0A3A2',
     "Specialisation Primary": '#D3B9A2',
     "Specialisation Elective": '#D3B9A2',
-    default: '#D3B9A2'
+    default: '#d1d1d1'
   },
   oceanicNext: {
     "University level requirement": '#F77669',
@@ -90,7 +90,7 @@ const colorPalettes = {
     "Unrestricted Elective": '#D1B18B',
     "Specialisation Primary": '#E0D1B0',
     "Specialisation Elective": '#E0D1B0',
-    default: '#E0D1B0'
+    default: '#d1d1d1'
   },
   paraiso: {
     "University level requirement": '#FF3D3E',
@@ -101,7 +101,7 @@ const colorPalettes = {
     "Unrestricted Elective": '#8959A8',
     "Specialisation Primary": '#FE3E7D',
     "Specialisation Elective": '#FE3E7D',
-    default: '#FE3E7D'
+    default: '#d1d1d1'
   },
   railscasts: {
     "University level requirement": '#F99157',
@@ -112,7 +112,7 @@ const colorPalettes = {
     "Unrestricted Elective": '#C594C5',
     "Specialisation Primary": '#AB7967',
     "Specialisation Elective": '#AB7967',
-    default: '#AB7967'
+    default: '#d1d1d1'
   },
   tomorrow: {
     "University level requirement": '#FF4B82',
@@ -123,7 +123,7 @@ const colorPalettes = {
     "Unrestricted Elective": '#E69F66',
     "Specialisation Primary": '#F7F9F9',
     "Specialisation Elective": '#F7F9F9',
-    default: '#F7F9F9'
+    default: '#d1d1d1'
   },
   twilight: {
     "University level requirement": '#F2777A',
@@ -134,7 +134,7 @@ const colorPalettes = {
     "Unrestricted Elective": '#C0C0C0',
     "Specialisation Primary": '#A896C8',
     "Specialisation Elective": '#A896C8',
-    default: '#A896C8'
+    default: '#d1d1d1'
   }
 };
 

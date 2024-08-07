@@ -8,6 +8,7 @@
   box-sizing: border-box;
   color: #333;
   text-shadow: 0.0625rem 0.0625rem 0.125rem rgba(0, 0, 0, 0.4);
+  margin-left: 12.5rem;
 }
 
 .credit-section {
@@ -26,6 +27,8 @@
 
 @media (max-width: 768px) {
   .map-nav-right {
+    margin-left: 0;
+
     margin-top: 6.2em;
     text-shadow: 0.03125rem 0.03125rem 0.0625rem rgba(0, 0, 0, 0.4);
   }

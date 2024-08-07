@@ -8,6 +8,7 @@
     box-sizing: border-box;
     color: black;
     height: 100%; 
+    margin-left: 12rem;
 }
 
 .timetable-nav-right h2 {
@@ -19,6 +20,8 @@
         width: 100%;
         padding: 0.625em;
         margin-top: 5em;
+        margin-left: 0;
+
     }
 
     .timetable-nav-right h2 {

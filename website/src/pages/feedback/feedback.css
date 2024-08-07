@@ -1,6 +1,6 @@
 .feedback-nav-right {
   margin-top: 4.75em;
-  width: 100%;
+  width: 85%;
   flex-grow: 1;
   background-color: #FFFFFF;
   display: flex;
@@ -9,6 +9,9 @@
   padding: 1.25rem; 
   color: #333;
   box-sizing: border-box;
+  margin-left: 12.5rem;
+  margin-right: 2.5rem;
+
 }
 
 .feedback-nav-right > div {
@@ -162,6 +165,8 @@ button:hover {
 @media (max-width: 768px) {
   .feedback-nav-right {
     padding: 1rem;
+    margin-left: 0;
+
   }
 
   .feedback-nav-right h1 {

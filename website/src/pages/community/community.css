@@ -6,6 +6,8 @@
   padding: 1.25rem;
   box-sizing: border-box;
   border-left: 0;
+  margin-left: 12.5rem;
+
 }
 
 .community-nav-right > div {
@@ -200,6 +202,8 @@
 @media (max-width: 768px) {
   .community-nav-right {
     padding: 1rem;
+    margin-left: 0;
+
   }
 
   .search-box .logoImage,
