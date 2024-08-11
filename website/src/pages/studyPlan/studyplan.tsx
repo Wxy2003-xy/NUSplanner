@@ -1,6 +1,5 @@
 import './studyplan.css'; 
 import DynamicTable from './components/DynamicTable';
-import ModuleForm from '../../data/fetchModuleInfo';
 import { useState } from 'react';
 import React from 'react'
 import Layout from '../../components/Layout';

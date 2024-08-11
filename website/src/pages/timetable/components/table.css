@@ -58,7 +58,9 @@
   border-radius: 0.25em;
   padding: 0.25em;
   margin: 0.0625em;
-  font-size: 0.55em;
+  font-size: 1.45vh;
+  font-size: 0.75vw;
+
 }
 
 .palette-selector {
@@ -140,6 +142,6 @@
     font-weight: bold;
     grid-column: 1;
     border: 0.0625em solid #ccc;
-    font-size: 0.55em;
+    font-size: 0.55vh;
   }
 }

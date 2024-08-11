@@ -1,4 +1,4 @@
-import React, { useState, FormEvent, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import PrereqTreeVisual from './TreeVisualization';
 import { ModuleInfo, ModuleSelectionBoxProps, ExamInfo } from '../../../types/general';
 
@@ -10,14 +10,42 @@ const ModuleSelectionBox: React.FC<ModuleSelectionBoxProps> = ({ setTempCard, on
     const [moduleInfo, setModuleInfo] = useState<ModuleInfo | null>(null);
     const [error, setError] = useState<string>('');
     const [isLoading, setIsLoading] = useState<boolean>(false);
-
-    const validateAcadYear = (year: string): boolean => {
-        return /^\d{4}$/.test(year); 
-    };
+    const [moduleList, setModuleList] = useState<{ moduleCode: string, title: string }[]>([]);
+    const [suggestions, setSuggestions] = useState<string[]>([]);
 
     useEffect(() => {
         localStorage.setItem('acadYear', acadYear);
     }, [acadYear]);
+
+    useEffect(() => {
+        if (acadYear) {
+            fetchModuleList(acadYear);
+        }
+    }, [acadYear]);
+
+    const fetchModuleList = (acadYear: string) => {
+        const nextYear = parseInt(acadYear.split('-')[0], 10) + 1;
+        const apiUrl_modulelist = `https://api.nusmods.com/v2/${acadYear.split('-')[0]}-${nextYear}/moduleList.json`;
+
+        fetch(apiUrl_modulelist)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();
+            })
+            .then(data => {
+                const modules = data.map((module: { moduleCode: string, title: string }) => ({
+                    moduleCode: module.moduleCode,
+                    title: module.title
+                }));
+                setModuleList(modules);
+            })
+            .catch(error => {
+                console.error('Error fetching module list:', error);
+                setError('Failed to fetch module list.');
+            });
+    };
 
     function extractCourseCodes(rule: string): string[] {
         const coursePattern: RegExp = /\b([A-Z]{2,}[0-9]{4}[A-Z]{0,2}):[A-Z]\b/g;
@@ -31,15 +59,34 @@ const ModuleSelectionBox: React.FC<ModuleSelectionBoxProps> = ({ setTempCard, on
         return matches;
     }
 
+    const handleModuleCodeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const input = e.target.value.toUpperCase();
+        setModuleCode(input);
+        if (input.length >= 2) {
+            const filteredSuggestions = moduleList
+                .filter(module => module.moduleCode.startsWith(input))
+                .slice(0, 5)
+                .map(module => `${module.moduleCode} - ${module.title}`);
+            setSuggestions(filteredSuggestions);
+        } else {
+            setSuggestions([]);
+        }
+    };
+
+    const handleSuggestionClick = (suggestion: string) => {
+        const moduleCode = suggestion.split(' - ')[0];
+        setModuleCode(moduleCode); // Autofill the input field
+        setSuggestions([]); // Clear the suggestions list
+    };
+
     const fetchModuleInfo = (acadYear: string, moduleCode: string): void => {
-        if (!validateAcadYear(acadYear)) {
-            setError('Invalid academic year format. Please enter a four-digit year (e.g., 2023).');
-            setModuleInfo(null);
+        if (!acadYear) {
+            setError('Please select an academic year.');
             return;
         }
 
-        const nextYear = parseInt(acadYear, 10) + 1;
-        const apiUrl_moduleinfo = `https://api.nusmods.com/v2/${acadYear}-${nextYear}/modules/${moduleCode}.json`;
+        const nextYear = parseInt(acadYear.split('-')[0], 10) + 1;
+        const apiUrl_moduleinfo = `https://api.nusmods.com/v2/${acadYear.split('-')[0]}-${nextYear}/modules/${moduleCode}.json`;
         setIsLoading(true);
 
         fetch(apiUrl_moduleinfo)
@@ -50,7 +97,6 @@ const ModuleSelectionBox: React.FC<ModuleSelectionBoxProps> = ({ setTempCard, on
                 return response.json();
             })
             .then(data => {
-                console.log(data);
                 const card = {
                     id: Date.now(),
                     name: data.moduleCode,
@@ -61,12 +107,11 @@ const ModuleSelectionBox: React.FC<ModuleSelectionBoxProps> = ({ setTempCard, on
                     preclusionRule: extractCourseCodes(data.preclusionRule),
                     examInfo: data.semesterData.map(data => {
                         return {
-                            examTime: data.examDate,    
+                            examTime: data.examDate,
                             examDuration: data.examDuration
-                        }
+                        };
                     })
                 };
-                console.log("Setting tempCard:", card);
                 setTempCard(card);
                 setModuleInfo(card);
                 setError('');
@@ -81,38 +126,52 @@ const ModuleSelectionBox: React.FC<ModuleSelectionBoxProps> = ({ setTempCard, on
             });
     };
 
-    const handleSubmit = (event: FormEvent<HTMLFormElement>): void => {
+    const handleSubmit = (event: React.FormEvent<HTMLFormElement>): void => {
         event.preventDefault();
         fetchModuleInfo(acadYear, moduleCode);
     };
 
     return (
         <div className="module-selection-overlay show">
-            <button className="close-module-selection" onClick={onClose}>X</button>
+            <button className="close-module-selection" onClick={onClose}>Close</button>
             <form onSubmit={handleSubmit}>
                 <label>
-                    Academic Year (e.g., 2023): {'   '}
-                    <input
-                        type="text"
-                        id="acadYear"  
-                        name="acadYear"  
+                    Academic Year: {'   '}
+                    <select
+                        id="acadYear"
+                        name="acadYear"
                         value={acadYear}
                         onChange={e => setAcadYear(e.target.value)}
                         required
-                    />
+                    >
+                        <option value="">Select Academic Year</option>
+                        <option value="2024-2025">2024-2025</option>
+                        <option value="2023-2024">2023-2024</option>
+                        <option value="2022-2023">2022-2023</option>
+                        <option value="2021-2022">2021-2022</option>
+                    </select> 
                 </label>
-                <p></p>
+                <p className='notice-info-relevance'>{'  '} Note: Planning beyond current academic year will use course information of the most recent acadamic year, which may be subjected to changes in the future.</p>
                 <label>
                     Module Code (e.g., CS1101S): {'   '}
                     <input
                         type="text"
-                        id="moduleCode"  
-                        name="moduleCode"  
+                        id="moduleCode"
+                        name="moduleCode"
                         value={moduleCode}
-                        onChange={e => setModuleCode(e.target.value.toUpperCase())}
+                        onChange={handleModuleCodeChange}
                         required
                     />
                 </label>
+                {suggestions.length > 0 && (
+                    <ul className="suggestions-list">
+                        {suggestions.map((suggestion, index) => (
+                            <li key={index} onClick={() => handleSuggestionClick(suggestion)}>
+                                {suggestion}
+                            </li>
+                        ))}
+                    </ul>
+                )}
                 <button className='fetchinfo-button' type="submit">Search</button>
             </form>
             {isLoading && <p>Loading...</p>}
@@ -125,17 +184,17 @@ const ModuleSelectionBox: React.FC<ModuleSelectionBoxProps> = ({ setTempCard, on
                 <div className='info-text'>
                     <div>
                         <h2>Module Information:</h2>
-                        <h3>{moduleInfo.courseCode} {moduleInfo.courseName}</h3>
+                        <h3>{moduleInfo.courseCode}</h3>
                         <p><strong>Credit:</strong> {moduleInfo.courseCredit}</p>
                         <p><strong>Prerequisites:</strong> {moduleInfo.prerequisites}</p>
-                        <p><strong>Preclusions:</strong> {moduleInfo.preclusions ? moduleInfo.preclusions : 'NA'}</p>
+                        <p><strong>Preclusions:</strong> {moduleInfo.preclusionRule ? moduleInfo.preclusionRule.join(', ') : 'NA'}</p>
                     </div>
                     <div>
                         <div className='tree-container-select'>
                             <PrereqTreeVisual data={moduleInfo.prereqTree} />
-                        </div> 
+                        </div>
                         <button className='confirm-button' onClick={onConfirm}>Confirm</button>
-                    </div>  
+                    </div>
                 </div>
             )}
         </div>
@@ -143,4 +202,3 @@ const ModuleSelectionBox: React.FC<ModuleSelectionBoxProps> = ({ setTempCard, on
 };
 
 export default ModuleSelectionBox;
-
