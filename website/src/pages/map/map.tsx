@@ -6,7 +6,6 @@ import Layout from '../../components/Layout';
 import './map.css';
 import { ClassTimeSlotTypeUnion } from '../../types/timetable';
 import { loadVenuesX, loadVenuesY } from '../../util/loadVenues';
-import {Icon} from 'leaflet'
 import L from 'leaflet'
 // import {Icon} from 'leaflet';
 
@@ -16,52 +15,44 @@ const getKey = (slot: ClassTimeSlotTypeUnion): string => {
   return key;
 }
 
-// const redIcon = new Icon({
-//   iconUrl: <a href="https://www.flaticon.com/free-icons/pin" title="pin icons">Pin icons created by Freepik - Flaticon</a>,
-//   iconSize: [25, 41], // Size of the icon
-//   iconAnchor: [12, 41], // Point of the icon which will correspond to marker's location
-//   popupAnchor: [1, -34],
-// })
-
 const tutIcon = L.icon({
   iconUrl: 'https://cdn-icons-png.flaticon.com/128/12034/12034802.png',
-  iconSize: [38, 38],     // size of the icon
+  iconSize: [38, 38],    
 });
 const labIcon = L.icon({
   iconUrl: 'https://cdn-icons-png.flaticon.com/128/2616/2616689.png',
-  iconSize: [38, 38],     // size of the icon
+  iconSize: [38, 38],    
 });
 const recIcon = L.icon({
   iconUrl: 'https://cdn-icons-png.flaticon.com/128/807/807281.png',
-  iconSize: [38, 38],     // size of the icon
+  iconSize: [38, 38],    
 });
 const lecIcon = L.icon({
   iconUrl: 'https://cdn-icons-png.flaticon.com/128/2991/2991117.png',
-  iconSize: [38, 38],     // size of the icon
+  iconSize: [38, 38],   
 });
 const secIcon = L.icon({
   iconUrl: 'https://cdn-icons-png.flaticon.com/128/7743/7743751.png',
-  iconSize: [38, 38],     // size of the icon
+  iconSize: [38, 38],    
 });
 const semIcon = L.icon({
   iconUrl: 'https://cdn-icons-png.flaticon.com/128/7743/7743751.png',
-  iconSize: [38, 38],     // size of the icon
+  iconSize: [38, 38],     
 });
 const defIcon = L.icon({
   iconUrl: 'https://cdn-icons-png.flaticon.com/512/684/684908.png',
-  iconSize: [38, 38],     // size of the icon
+  iconSize: [38, 38],    
 });
 
 const getIcon = (lessonType: string): any => {
   switch(lessonType) {
-    case 'Tutorial': return tutIcon;
-    case 'Laboratory': return labIcon;
-    case 'Lecture': return lecIcon;
-    case 'Sectional Teaching': return secIcon;    
-    case 'Seminar': return semIcon;
-    case 'Recitation': return recIcon;
-
-    default: return defIcon;
+    // case 'Tutorial': return tutIcon;
+    // case 'Laboratory': return labIcon;
+    // case 'Lecture': return lecIcon;
+    // case 'Sectional Teaching': return secIcon;    
+    // case 'Seminar': return semIcon;
+    // case 'Recitation': return recIcon;
+    default: return defIcon;  
   }
 }
 
@@ -78,20 +69,11 @@ const Map = () => {
       
       <div className="map-nav-right">
         
-        <div style={{ height: '100%' }}>
-        <div>
-      {timeSlots ? (
-      timeSlots.map(slot => (
-        <div key={getKey(slot)}>
-          <p>{`${slot.title} classNo: ${slot.lessonType} ${slot.classNo} on ${slot.day} from ${slot.startTime} to ${slot.endTime} at ${slot.venue} `}</p>
-        </div>
-      ))
-      ) : <p>No valid arrangement found.</p>}
-
-      </div>
+        <div >
+        
           <MapContainer center={[1.29495055860437, 103.77447075499941]} 
                         zoom={16} 
-                        style={{ height: '625px', width: '100%' }} 
+                        style={{ height: '900px', width: '100%' }} 
                         zoomControl={false}>
             <TileLayer
                 url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
@@ -101,7 +83,6 @@ const Map = () => {
               <>
               <Marker key={getKey(slot)} 
                       position={[loadVenuesY(JSON.stringify(slot.venue)) as number, loadVenuesX(JSON.stringify(slot.venue)) as number]} 
-                      // icon={greenIcon}
                       icon={getIcon(slot.lessonType)}
                       >
                 <Popup>
@@ -116,6 +97,16 @@ const Map = () => {
             <ZoomControl position="topright" />
           </MapContainer>
         </div>
+        <div className='venue-info-list'>
+      {timeSlots ? (
+      timeSlots.map(slot => (
+        <div key={getKey(slot)}>
+          <p>{`${slot.title} classNo: ${slot.lessonType} ${slot.classNo} on ${slot.day} from ${slot.startTime} to ${slot.endTime} at ${slot.venue} `}</p>
+        </div>
+      ))
+      ) : <p>No valid arrangement found.</p>}
+
+      </div>
         <div className='credit-section'>
         <h3>Credit:</h3>
         <p><a href="https://www.flaticon.com/free-icons/slides" title="slides icons">Slides icons created by Freepik - Flaticon</a></p>

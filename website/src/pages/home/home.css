@@ -5,6 +5,7 @@ html, body {
   display: flex;
   flex-direction: column;
   z-index: 1000;
+  font-size: 16px;
 }
 
 body {
@@ -14,11 +15,12 @@ body {
 header {  
   background-color: #11182a;
   color: white;
-  padding: 20px 25px;
+  padding: 0.625rem 1.25rem;
   display: flex;
   align-items: center;
-  justify-content: space-between; /* Ensures proper spacing */
-  width: 100%; /* Full width */
+  justify-content: space-between; 
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .header-left {
@@ -28,7 +30,7 @@ header {
 
 .logo-link {
   text-decoration: none;
-  color: inherit; /* Ensures the text color is inherited */
+  color: inherit;
 }
 
 .logo-link:hover {
@@ -38,31 +40,31 @@ header {
 .logo-container {
   display: flex;
   align-items: center;
-  margin-right: 20px;
+  margin-right: 1.25rem;
 }
 
 .logo-container img {
-  height: 60px;
-  margin-right: 10px;
+  height: 3.75rem;
+  margin-right: 0.625rem;
 }
 
 .logo-container span {
-  font-size: 28px;
+  font-size: 1.75rem;
   font-weight: bold;
-  margin-right: 20px;
+  margin-right: 1.25rem;
   color: white;
   text-decoration: none;
 }
 
 .title-container p {
   margin: 0;
-  font-size: 24px;
+  font-size: 1.5rem;
 }
 
 .date-container {
-  font-size: 16px;
+  font-size: 1rem;
   color: white;
-  margin-right: 60px; /* Adjust right margin */
+  margin-right: 3.75rem;
 }
 
 .home-layout {
@@ -72,55 +74,58 @@ header {
 }
 
 .home-main-content {
+  margin-top: 5.75em;
   display: flex;
   width: 100%;
-  height: calc(100vh - 60px); /* Adjust height to fit below header */
+  flex-grow: 1;
+  height: calc(100vh - 3.75rem);
+  flex-wrap: wrap;
+  overflow: auto;
 }
 
 .home-left-section {
-  width: 90%;
-  background-color: #f8f9fa; /* Optional: Background color for the left section */
-  padding: 15px;
-  padding-left: 15px;
-  padding-top: 10px;
+  flex: 1 1 50%;
+  background-color: #f8f9fa; 
+  padding: 1rem;
+  padding-top: 0.625rem;
   line-height: 1.6;
+  box-sizing: border-box;
 }
 
 .home-left-top {
-  margin-top: 10px;
-  flex: 0 0 10%;
+  margin-top: 0.625rem;
+  flex: 0 0 30%;
   position: relative;
-  height: 30%; 
-  overflow: hidden; /* Hide overflow to ensure no scrollbars */
+  overflow: hidden; 
+  height: 30%;
 }
 
 .home-slideshow-container {
   position: relative;
-  height: 100%; /* Ensure the container takes full height of the top section */
+  height: 100%; 
   width: 100%;
-  overflow: hidden; /* Hide overflow */
+  overflow: hidden;
 }
 
 .home-slideshow-image {
   width: 100%;
   height: 100%;
-  object-fit: cover; /* Maintain aspect ratio while covering the container */
+  object-fit: cover;
   position: absolute;
   top: 0;
   left: 0;
-  transition: opacity 1s ease-in-out; /* Smooth transition */
-  filter: brightness(80%) contrast(120%); /* Enhance image appearance */
-  border-radius: 8px;
+  transition: opacity 1s ease-in-out; 
+  filter: brightness(80%) contrast(120%); 
+  border-radius: 0.5rem;
 }
 
-/* Ensure only one image is visible at a time */
 .home-slideshow-image.hidden {
   opacity: 0;
 }
 
 .home-slideshow-navigation {
   position: absolute;
-  top: 50%;
+  top: 10%;
   width: 100%;
   display: flex;
   justify-content: space-between;
@@ -128,40 +133,41 @@ header {
 }
 
 .home-slideshow-navigation button {
-  background: rgba(0, 0, 0, 0.5); /* Semi-transparent background for buttons */
+  background: rgba(0, 0, 0, 0.5); 
   border: none;
   color: white;
-  font-size: 24px;
+  font-size: 1.5rem;
   cursor: pointer;
-  padding: 10px;
+  padding: 0.625rem;
   border-radius: 0%;
   transition: 0.3s ease;
-  margin: 0px;
+  margin: 0;
 }
 
 .home-slideshow-navigation button:hover {
-  background: rgba(0, 0, 0, 0.8); /* Darker background on hover */
+  background: rgba(0, 0, 0, 0.8); 
 }
 
 .home-left-bottom {
-  flex: 0 0 70%;
-  background-color: white; /* Pale gray background */
-  border-radius: 8px; /* Rounded corners for a modern look */
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
-  margin-top: 14px;
-  padding: 20px;
+  flex: 1 1 auto;
+  background-color: white; 
+  border-radius: 0.5rem;
+  box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.1);
+  margin-top: 0.875rem;
+  padding: 1.25rem;
+  box-sizing: border-box;
 }
 
 .home-left-bottom .home-leftbottom-content {
-  font-size: 16px; /* Readable font size */
-  line-height: 1.2; /* Improved readability */
-  color: #333; /* Dark text color for contrast */
-  margin-bottom: 16px; /* Space between paragraphs */
+  font-size: 1rem;
+  line-height: 1.2; 
+  color: #333;
+  margin-bottom: 1rem;
 }
 
 .home-left-bottom .home-leftbottom-title {
   font-weight: bold;
-  margin-bottom: 5px;
+  margin-bottom: 0.3125rem;
   color: #00755d;
   text-decoration: none;
 }
@@ -172,29 +178,29 @@ header {
 }
 
 .home-left-bottom .home-leftbottom-content {
-  font-style: italic; /* Emphasize the first paragraph */
-  color: #005c4a; /* A distinct color for emphasis */
-  margin-top: 0px;
+  font-style: italic; 
+  color: #005c4a; 
+  margin-top: 0;
 }
 
 .home-right-section {
-  flex-grow: 1;
+  flex: 1 1 50%;
   position: relative;
   display: flex;
   flex-direction: column;
   box-sizing: border-box;
-  color: white; /* Ensure text is readable over the background image */
-  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.4); /* Add text shadow for readability */
-  height: 100%; /* Ensure it takes full height */
-  width: 80%; /* Occupies half of the screen width */
-  background-color: #ffffff; /* Optional: Background color for the right section */
-  padding: 0px;
-  margin: 0px;
+  color: white; 
+  text-shadow: 0.0625rem 0.0625rem 0.125rem rgba(0, 0, 0, 0.4);
+  background-color: #ffffff;
+  padding: 0;
+  margin: 0;
 }
   
 .home-right-content {
   display: flex;
   flex-grow: 1;
+  flex-direction: column;
+  box-sizing: border-box;
 }
 
 .home-right-section .background {
@@ -218,68 +224,68 @@ header {
   z-index: 1;
   display: flex;
   flex-direction: column;
-  align-items: flex-start; /* Align items to the left */
+  align-items: flex-start; 
   width: 100%;
-  padding: 0; /* Remove padding */
+  padding: 0;
+  box-sizing: border-box;
 }
 
 .centered-paragraph {
-  max-width: 800px;
-  background-color: rgba(255, 255, 224, 0.6); /* Pale yellow background with transparency */
-  padding: 40px;
-  border-radius: 8px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  max-width: 50rem;
+  background-color: rgba(255, 255, 224, 0.6); 
+  padding: 2.5rem;
+  border-radius: 0.5rem;
+  box-shadow: 0 0.25rem 0.5rem rgba(0, 0, 0, 0.1);
   text-align: center;
-  margin: 0 auto; /* Horizontally center the paragraph */
+  margin: 0 auto; 
   color: black;
-  font-size: 20px;
+  font-size: 1.25rem;
 }
 
-/* New styles for rectangle boxes */
 .home-right-section .link-box {
-  width: 46%; /* Set width of the boxes */
-  height: 205px; /* Set height of the boxes */
-  background-color: #0a756d; /* Semi-transparent background */
-  margin: 0px 0; /* Spacing between boxes */
+  width: 46%; 
+  height: 12rem;
+  background-color: #0a756d; 
+  margin: 0;
   display: flex;
   flex-direction: row;
   align-items: center;
   justify-content: center;
-  border-radius: 8px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-  transition: transform 0.3s; /* Smooth hover effect */
-  text-decoration: none; /* Remove underline */
-  background-position: right -35px bottom -75px; /* Position the background image in the right bottom corner with a vertical offset */
-  background-repeat: no-repeat; /* Ensure the background image does not tile */
+  border-radius: 0.5rem;
+  box-shadow: 0 0.25rem 0.5rem rgba(0, 0, 0, 0.2);
+  transition: transform 0.3s; 
+  text-decoration: none;
+  background-position: right -2.1875rem bottom -4.6875rem;
+  background-repeat: no-repeat; 
   background-size: 80%;
+  box-sizing: border-box;
 }
 
 .home-right-section .link-box:hover {
-  transform: scale(1.02); /* Slightly expand on hover */
+  transform: scale(1.02);
 }
 
 .home-right-section .link-box span {
-  color: white; /* Link color */
-  transform: translateX(-20px);
-  font-size: 30px;
+  color: white; 
+  transform: translateX(-1.25rem);
+  font-size: 1.875rem;
   font-weight: 700;
 }
 
-/* Style for the h2 */
 .home-right-section h2 {
-  color: black; /* Set color to black */
-  margin: 0; /* Remove default margins */
-  padding: 0; /* Remove padding */
-  align-self: flex-start; /* Align to the left */
+  color: black; 
+  margin: 0; 
+  padding: 0; 
+  align-self: flex-start; 
 }
 
 .home-right-section .link-box-container {
   display: flex;
-  flex-wrap: wrap; /* Allow items to wrap to the next line */
-  gap: 25px; /* Space between boxes */
-  margin-top: 20px;
-  justify-content: center; /* Center the rows of boxes */
-  margin-left: 5px;
+  flex-wrap: wrap; 
+  gap: 1.5625rem;
+  margin-top: 1.25rem;
+  justify-content: center; 
+  margin-left: 0.3125rem;
 }
 
 .home-scroll-container {
@@ -287,22 +293,22 @@ header {
   display: flex;
   justify-content: right;
   align-items: center;
-  overflow: hidden; /* Hide overflow to create the scrolling effect */
-  white-space: nowrap; /* Prevents wrapping of the content */
-  margin-right: 45px;
+  overflow: hidden; 
+  white-space: nowrap; 
+  margin-right: 2.8125rem;
 }
 
 .home-scroll-content {
   display: inline-block;
-  animation: scroll 3s infinite; /* Animation to smoothly transition sentences */
-  font-size: 16px;
+  animation: scroll 3s infinite; 
+  font-size: 1rem;
   color: white;
   text-align: center;
 }
 
 .home-scroll-content a {
-  color: #ADD8E6; /* Change link color to black */
-  text-decoration: underline; /* Remove underline from links */
+  color: #ADD8E6;
+  text-decoration: underline; 
 }
 
 .home-scroll-content a:hover {
@@ -312,36 +318,36 @@ header {
 .join-us-container {
   display: flex;
   align-items: center;
-  margin-right: 20px; /* Space between the "Join us" section and the "About Us" section */
+  margin-right: 1.25rem;
   text-decoration: none;
 }
 
 .join-us-icon {
-  width: 24px; /* Adjust size as needed */
-  height: 24px; /* Adjust size as needed */
-  margin-right: 8px; /* Space between the icon and text */
-  transition: transform 0.3s ease; /* Smooth transition for icon enlargement */
+  width: 1.5rem;
+  height: 1.5rem;
+  margin-right: 0.5rem;
+  transition: transform 0.3s ease;
 }
 
 .join-us-container .join-us-icon:hover {
-  transform: scale(1.1); /* Slightly enlarge the icon on hover */
+  transform: scale(1.1); 
 }
 
 .join-us-text {
-  color: white; /* Adjust color as needed */
+  color: white;
   text-decoration: none;
 }
 
 .join-us-container .join-us-text:hover {
-  color: antiquewhite; /* Light color on hover (anti-white) */
+  color: antiquewhite;
 }
 
 .about-us-container {
-  margin-right: 20px; /* Space between the "About Us" section and the date */
+  margin-right: 1.25rem;
 }
 
 .about-us-link {
-  color: white; /* Adjust color as needed */
+  color: white;
   text-decoration: none;
 }
 
@@ -359,7 +365,7 @@ header {
 }
 
 .home-login-container {
-  margin-right: 20px;
+  margin-right: 1.5em;
 }
 
 .home-login-link {
@@ -376,7 +382,7 @@ header {
   background-color: transparent;
 }
 
-/* Popup styles */
+
 .home-login-popup {
   position: fixed;
   top: 0;
@@ -434,8 +440,8 @@ header {
   margin-top: 5px;
   border: 1px solid #ccc;
   border-radius: 5px;
-  width: 100%;  /* Ensure inputs take full width within their container */
-  box-sizing: border-box;  /* Include padding and border in the element's total width and height */
+  width: 100%; 
+  box-sizing: border-box; 
 }
 
 .home-login-popup-content button {
@@ -463,4 +469,275 @@ header {
 
 .home-login-popup-content p a:hover {
   text-decoration: underline;
+}
+
+@media (max-width: 768px) {
+  header {
+    display: flex;
+    flex-direction: row-reverse;
+    justify-content: space-between;
+    align-items: flex-start;
+    padding: 0.3125rem;
+  }
+
+  .home-scroll-container {
+    visibility: hidden;
+  }
+
+  .logo-container span {
+    font-size: 1.25rem;
+  }
+
+  .title-container p {
+    font-size: 1rem;
+  }
+
+  .date-container {
+    font-size: 0.15em;
+    margin-right: 1.325rem;
+    min-width: 6em;
+  }
+
+  .home-main-content {
+    flex-direction: column-reverse;
+    height: auto;
+    margin-top: 2.5em;
+    flex-wrap: unset;
+  }
+
+  .home-left-section,
+  .home-right-section {
+    width: 100%;
+    padding: 0.625rem;
+  }
+
+  .home-right-section .link-box {
+    width: 100%;
+    height: auto;
+  }
+
+  .home-right-section .link-box-container {
+    gap: 0.625rem;
+    margin-left: 0;
+  }
+
+  .home-left-bottom .home-leftbottom-title {
+    font-size: 1rem;
+  }
+
+  .home-left-bottom .home-leftbottom-content {
+    font-size: 0.875rem;
+  }
+
+  .nav-left {
+    width: 100%;
+  }
+
+  .nav-button {
+    height: 3.75rem;
+  }
+
+
+.join-us-container {
+  display: flex;
+  align-items: center;
+  margin-right: 0.75rem;
+  text-decoration: none;
+}
+
+.join-us-icon {
+  width: 0.5rem;
+  height: 0.5rem;
+  margin-right: 0.2rem;
+  transition: transform 0.3s ease;
+}
+
+.join-us-container .join-us-icon:hover {
+  transform: scale(0.4); 
+}
+
+.join-us-text {
+  color: white;
+  text-decoration: none;
+}
+
+.join-us-container .join-us-text:hover {
+  color: antiquewhite;
+}
+
+.about-us-container {
+  min-width: 2.5em;
+  margin-right: 0.1em;
+}
+
+.about-us-link {
+  color: white;
+  text-decoration: none;
+}
+
+.about-us-link:hover {
+  text-decoration: none;
+  color:antiquewhite;
+}
+.home-left-section {
+  max-width: 0px;
+  max-height: 0px;
+  visibility:hidden;
+  background-color: #f8f9fa; 
+}
+.home-right-section {
+  max-width: 768px;
+  align-items: center;
+  justify-content: center;
+  justify-self: center;
+  flex: 1 1 100%;
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+  color: white; 
+  text-shadow: 0.0625rem 0.0625rem 0.125rem rgba(0, 0, 0, 0.4);
+  background-color: #ffffff;
+  padding: 0;
+  margin: 0;
+}
+.home-right-section .link-box {
+  width: 46%; 
+  height: 12rem;
+  background-color: #0a756d; 
+  margin: 0;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  border-radius: 0.5rem;
+  box-shadow: 0 0.25rem 0.5rem rgba(0, 0, 0, 0.2);
+  transition: transform 0.3s; 
+  text-decoration: none;
+  background-position: right -1.1875rem bottom -1.2875rem;
+  background-repeat: no-repeat; 
+  background-size: 80%;
+  box-sizing: border-box;
+  z-index: 10000; 
+}
+.home-right-section .link-box span {
+  color: white; 
+  transform: translateY(-2.25rem);
+  font-size: 1.275rem;
+  font-weight: 600;
+  text-align: center;
+}
+
+.home-login-container {
+  margin-right: 0.5em;
+}
+
+.home-login-link {
+  color: white;
+  text-decoration: none;
+  background: none;
+  border: none;
+  cursor: pointer;
+  transform: translateY(-0.1rem);
+  
+  font-size: 0.6rem;
+}
+
+.home-login-link:hover {
+  color: antiquewhite;
+  background-color: transparent;
+}
+
+
+.home-login-popup {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.home-login-popup-content {
+  background-color: white;
+  padding: 20px;
+  border-radius: 10px;
+  width: 300px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  position: relative;
+}
+
+.home-close-popup {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: none;
+  border: none;
+  font-size: 20px;
+  cursor: pointer;
+}
+
+.home-close-popup:hover {
+  color: antiquewhite;
+}
+
+.home-login-popup-content h2 {
+  margin-top: 0;
+}
+
+.home-login-popup-content form {
+  display: flex;
+  flex-direction: column;
+}
+
+.home-login-popup-content label {
+  margin-bottom: 10px;
+  display: flex;
+  flex-direction: column;
+  font-size: 16px;
+}
+
+.home-login-popup-content input {
+  padding: 8px;
+  margin-top: 5px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  width: 100%; 
+  box-sizing: border-box; 
+}
+
+.home-login-popup-content button {
+  padding: 10px;
+  background-color: #0a756d;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.home-login-popup-content button:hover {
+  background-color: #084d46;
+}
+
+.home-login-popup-content p {
+  margin-top: 10px;
+  text-align: center;
+}
+
+.home-login-popup-content p a {
+  color: #0a756d;
+  text-decoration: none;
+}
+
+.home-login-popup-content p a:hover {
+  text-decoration: underline;
+}
+.home-left-section {
+  max-width: 0px;
+  visibility:hidden;
+  background-color: #f8f9fa; 
+}
 }

@@ -1,14 +1,14 @@
 .header {
-    color:#333
+    color: #333;
 }
 
 .major-drop-down-list, .major-drop-down-list1, .major-drop-down-list2, 
 .second-faculty-dropdown-list, .major-drop-down-list3, 
-.major-drop-down-list4, .second-faculty-dropdown-list1, .second-faculty-dropdown-list2{
-    padding: 10px;
-    border-radius: 8px; /* Smoother border radius */
-    margin-bottom: 15px;
-    margin-right: 20px;
-    background-color: #f8f9fa; /* Light grey background */
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+.major-drop-down-list4, .second-faculty-dropdown-list1, .second-faculty-dropdown-list2 {
+    padding: 0.625em;
+    border-radius: 0.5em;
+    margin-bottom: 0.9375em;
+    margin-right: 1.25em;
+    background-color: #f8f9fa;
+    box-shadow: 0 0.125em 0.625em rgba(0, 0, 0, 0.1);
 }

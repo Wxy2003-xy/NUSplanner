@@ -160,7 +160,6 @@ const Community = () => {
   };
 
   const openModal = () => {
-    // Clear the input fields before opening the modal
     (document.getElementById('postTitle') as HTMLInputElement).value = '';
     (document.getElementById('postContent') as HTMLTextAreaElement).value = '';
     const modal = document.getElementById('postModal');

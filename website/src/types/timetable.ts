@@ -46,7 +46,6 @@ export interface CustomizableTimeSlot extends GenericTimeSlot {
     // endTime: EndTime;
     // day: Day;
     venue?: string;
-
 }
 
 export interface ClassTimeSlotType extends GenericTimeSlot {
@@ -64,7 +63,7 @@ export interface ClassTimeSlotTypeUnion {
     startTime: StartTime[];
     endTime: EndTime[];
     weeks?: Weeks;
-    venue?: Venue;
+    venue?: Venue | string;
     day: Day[];
     lessonType?: LessonType;
     title?: string;

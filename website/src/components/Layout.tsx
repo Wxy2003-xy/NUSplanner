@@ -21,13 +21,13 @@ const Layout = ({ children }) => {
 
   const buttons = [
     { path: '/', label: 'Home', className: 'home', bgImage: `url(${homeImg})` },
-    { path: '/studyplan', label: 'Study Plan', className: 'studyplan', bgImage: `url(${plannerImg})` },
-    { path: '/timetable', label: 'Timetable', className: 'timetable', bgImage: `url(${timetableImg})` },
-    { path: '/community', label: 'Community', className: 'community', bgImage: `url(${communityImg})` },
-    { path: '/reminder', label: 'Reminder', className: 'reminder', bgImage: `url(${calendarImg})` },
-    { path: '/map', label: 'Map', className: 'map', bgImage: `url(${mapImg})` },
-    { path: '/feedback', label: 'Feedback', className: 'feedback', bgImage: `url(${feedbackImg})` },
-    { path: '/about', label: 'About us', className: 'about', bgImage: `url(${aboutImg})` }
+    { path: '/studyplan', label: 'Study Plan', bgImage: `url(${plannerImg})` },
+    { path: '/timetable', label: 'Timetable', bgImage: `url(${timetableImg})` },
+    { path: '/community', label: 'Community', bgImage: `url(${communityImg})` },
+    { path: '/reminder', label: 'Reminder', bgImage: `url(${calendarImg})` },
+    { path: '/map', label: 'Map', bgImage: `url(${mapImg})` },
+    { path: '/feedback', label: 'Feedback', bgImage: `url(${feedbackImg})` },
+    { path: '/about', label: 'About us', bgImage: `url(${aboutImg})` }
   ];
 
   const sentences = [
@@ -38,7 +38,7 @@ const Layout = ({ children }) => {
   ];
 
   useEffect(() => {
-    const options: Intl.DateTimeFormatOptions = { year: 'numeric', month: 'long', day: 'numeric' };
+    const options = { year: 'numeric', month: 'long', day: 'numeric' };
     const today = new Date();
     setCurrentDate(today.toLocaleDateString(undefined, options));
   }, []);
@@ -47,7 +47,6 @@ const Layout = ({ children }) => {
     const intervalId = setInterval(() => {
       setCurrentSentenceIndex((prevIndex) => (prevIndex + 1) % sentences.length);
     }, 5000);
-
     return () => clearInterval(intervalId);
   }, [sentences.length]);
 
@@ -116,7 +115,6 @@ const Layout = ({ children }) => {
       <div className='footer-container'>
         <Footer />
       </div>
-
       {isLoginPopupVisible && (
         <div className="login-popup">
           <div className="login-popup-content">
@@ -137,6 +135,7 @@ const Layout = ({ children }) => {
           </div>
         </div>
       )}
+
     </div>
   );
 };

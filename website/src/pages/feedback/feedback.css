@@ -1,33 +1,65 @@
 .feedback-nav-right {
-  width: 100%;
+  margin-top: 4.75em;
+  width: 85%;
   flex-grow: 1;
   background-color: #FFFFFF;
   display: flex;
   justify-content: center;
   align-items: center;
-  padding: 20px;
-  /* box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.1); */
+  padding: 1.25rem; 
   color: #333;
   box-sizing: border-box;
+  margin-left: 12.5rem;
+  margin-right: 2.5rem;
+
 }
 
 .feedback-nav-right > div {
   width: 100%;
 }
 
+.feedback-nav-right h1 {
+  text-align: center;
+  color: #69707A;
+}
+
 .feedback-nav-right h2 {
   text-align: left;
   margin-top: 0;
   color: #2C3E50;
-  border-bottom: 2px solid #1abc9c;
-  padding-bottom: 10px;
-  margin-bottom: 20px;
+  border-bottom: 0.125rem solid #1abc9c; 
+  padding-bottom: 0.625rem; 
+  margin-bottom: 1.25rem; 
 }
 
+.feedback-nav-right p {
+  text-align: justify;
+  color: #888;
+  padding-left: 1.25rem;
+  padding-right: 1.25rem;
+  font-size: 1.25rem;
+  margin: 0; 
+}
 
+.feedback-nav-right .feedback-prefix {
+  text-align: left;
+  color: #888;
+  font-size: 1.25rem;
+  margin-bottom: 0;
+}
+
+.feedback-nav-right .feedback-prefix .report-button {
+  margin-left: 2.5rem;
+}
+
+.feedback-nav-right .form-group .feedbackform {
+  padding-left: 1.25rem;
+  padding-right: 1.25rem;
+  padding-top: 0;
+}
 
 .form-group {
-  margin-bottom: 20px;
+  margin-bottom: 1.25rem;
   width: 100%;
   margin-left: 0;
   margin-right: 0;
@@ -35,26 +67,38 @@
 
 textarea {
   width: 100%;
-  height: 200px;
-  padding: 10px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  font-size: 16px;
+  height: 12.5rem;
+  padding: 0.625rem;
+  border: 0.0625rem solid #ccc;
+  border-radius: 0.25rem;
+  font-size: 1rem;
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   resize: vertical;
-  box-sizing: border-box; /* Include padding and border in element's width and height */
+  box-sizing: border-box; 
 }
 
-button {
-  padding: 10px 20px;
+.feedback-prefix button {
+  padding: 0.625rem 1.25rem;
+  font-size: 1rem;
+  cursor: pointer;
+  background-color: #1abc9c;
+  display: inline-block;
+  margin: 1.25rem;
+  border: none;
+  border-radius: 0.25rem;
+  color: #fff;
+}
+
+.feedback-button, .submit-button {
+  padding: 0.625rem 1.25rem;
   background-color: #1abc9c;
   color: #fff;
   border: none;
-  border-radius: 4px;
+  border-radius: 0.25rem;
   cursor: pointer;
-  font-size: 16px;
+  font-size: 1rem;
   display: block;
-  margin: 20px auto; /* Center the button */
+  margin: 1.25rem auto;
 }
 
 button:hover {
@@ -62,14 +106,13 @@ button:hover {
 }
 
 #response-message {
-  margin-top: 20px;
+  margin-top: 1.25rem;
   color: green;
   text-align: center;
 }
 
-/* Modal styles */
 .modal {
-  display: none; /* Hidden by default */
+  display: none; 
   position: fixed;
   z-index: 1;
   left: 0;
@@ -77,8 +120,7 @@ button:hover {
   width: 100%;
   height: 100%;
   overflow: auto;
-  background-color: rgb(0, 0, 0);
-  background-color: rgba(0, 0, 0, 0.4); /* Black w/ opacity */
+  background-color: rgba(0, 0, 0, 0.4); 
 }
 
 .modal.show {
@@ -87,19 +129,28 @@ button:hover {
 
 .modal-content {
   background-color: #fefefe;
-  margin: 15% auto; /* 15% from the top and centered */
-  padding: 20px;
-  border: 1px solid #888;
-  width: 80%; /* Could be more or less, depending on screen size */
-  max-width: 400px;
+  margin: 15% auto; 
+  padding: 1.25rem;
+  border: 0.0625rem solid #888;
+  width: 80%; 
+  max-width: 25rem;
   text-align: center;
-  border-radius: 4px;
+  border-radius: 0.25rem;
+  position: relative;
+}
+
+.modal-content p {
+  margin: 0; 
+  padding: 1.25rem 0;
+  text-align: center;
 }
 
 .close {
+  position: absolute;  
+  right: 1.25rem;
+  top: 0.625rem;
   color: #aaa;
-  float: right;
-  font-size: 28px;
+  font-size: 1.75rem;
   font-weight: bold;
 }
 
@@ -110,45 +161,57 @@ button:hover {
   cursor: pointer;
 }
 
-.modal {
-  display: none; /* Hidden by default */
-  position: fixed;
-  z-index: 1;
-  left: 0;
-  top: 0;
-  width: 100%;
-  height: 100%;
-  overflow: auto;
-  background-color: rgb(0, 0, 0);
-  background-color: rgba(0, 0, 0, 0.4); /* Black w/ opacity */
-}
 
-.modal.show {
-  display: block;
-}
+@media (max-width: 768px) {
+  .feedback-nav-right {
+    padding: 1rem;
+    margin-left: 0;
 
-.modal-content {
-  background-color: #fefefe;
-  margin: 15% auto; /* 15% from the top and centered */
-  padding: 20px;
-  border: 1px solid #888;
-  width: 80%; /* Could be more or less, depending on screen size */
-  max-width: 400px;
-  text-align: center;
-  border-radius: 4px;
-}
+  }
 
-.close {
-  color: #aaa;
-  float: right;
-  font-size: 28px;
-  font-weight: bold;
-}
+  .feedback-nav-right h1 {
+    font-size: 1.5rem;
+  }
 
-.close:hover,
-.close:focus {
-  color: black;
-  text-decoration: none;
-  cursor: pointer;
-}
+  .feedback-nav-right h2 {
+    font-size: 1.25rem;
+    padding-bottom: 0.5rem;
+    margin-bottom: 1rem;
+  }
 
+  .feedback-nav-right p,
+  .feedback-nav-right .feedback-prefix,
+  .feedback-nav-right .feedback-prefix .report-button,
+  .feedback-nav-right .form-group .feedbackform,
+  textarea,
+  .feedback-prefix button,
+  .feedback-button,
+  .submit-button {
+    font-size: 0.875rem;
+  }
+
+  .feedback-nav-right p {
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+
+  textarea {
+    height: 10rem;
+    padding: 0.5rem;
+  }
+
+  .modal-content {
+    padding: 1rem;
+    max-width: 20rem;
+  }
+
+  .modal-content p {
+    padding: 1rem 0;
+  }
+
+  .close {
+    right: 1rem;
+    top: 0.5rem;
+    font-size: 1.5rem;
+  }
+}

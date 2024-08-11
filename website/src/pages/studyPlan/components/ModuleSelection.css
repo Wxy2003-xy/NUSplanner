@@ -1,0 +1,37 @@
+.fetchinfo-button {
+  margin-top: 0.625rem;
+  margin-left: 1.25rem;
+  padding: 0.3125rem 0.625rem;
+  background-color: #4CAF50;
+  color: white;
+  border: none;
+  border-radius: 0.3125rem;
+  cursor: pointer;
+}
+
+.fetchinfo-button:hover {
+  background-color: #45a049;
+}
+
+.confirm-button {
+  margin-top: 0.625rem;
+  margin-left: 1.25rem;
+  padding: 0.625rem 1.25rem;
+  background-color: #4CAF50;
+  color: white;
+  border: none;
+  border-radius: 0.3125rem;
+  cursor: pointer;
+}
+
+.confirm-button:hover {
+  background-color: #45a049;
+}
+
+.info-text {
+  display: flex;
+  flex-direction: row-reverse;
+}
+.notice-info-relevance {
+  font-size: 0.5em;
+}

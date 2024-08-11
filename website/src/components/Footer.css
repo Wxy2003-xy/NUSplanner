@@ -1,8 +1,22 @@
-.footer {
-    text-align: left; /* Aligns the text to the left */
-    padding: 10px 20px; /* Padding for aesthetics */
-    background-color: #f8f9fa; /* Light grey background, adjust as needed */
-    color: #212529; /* Dark text, adjust as needed */
-  }
+.footer-box {
+  max-height: 1em;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding-left: 1.25rem; /* 20px */
+  padding-right: 1.25rem; /* 20px */
+  padding-top: 1.5rem; /* 24px */
+  background-color: #0a756d;
+  color: white;
+  line-height: 0;
+}
 
-  
+.sym {
+  margin-right: 1.25rem; /* 20px */
+  align-self: center;
+}
+
+.credit-section {
+  justify-content: end;
+  align-items: baseline;
+}

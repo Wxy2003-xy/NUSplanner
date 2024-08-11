@@ -14,11 +14,20 @@ body {
 header {  
   background-color: #11182a;
   color: white;
-  padding: 20px 25px;
+  padding: 1.25rem 1.5rem;
   display: flex;
   align-items: center;
-  justify-content: space-between; 
-  width: 100%; 
+  justify-content: space-between;
+  width: 100%;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 1000000;
+  box-sizing: border-box;
+  height: 6em;
+  white-space: nowrap;      
+  overflow: hidden;         
+  text-overflow: ellipsis;
 }
 
 .header-left {
@@ -38,25 +47,25 @@ header {
 .logo-container {
   display: flex;
   align-items: center;
-  margin-right: 20px;
+  margin-right: 1.25rem;
 }
 
 .logo-container img {
-  height: 60px;
-  margin-right: 10px;
+  height: 3.75rem;
+  margin-right: 0.625rem;
 }
 
 .logo-container span {
-  font-size: 40px;
+  font-size: 2.5rem;
   font-weight: bold;
-  margin-right: 20px;
+  margin-right: 1.25rem;
   color: white;
   text-decoration: none;
 }
 
 .title-container p {
   margin: 0;
-  font-size: 40px;
+  font-size: 2.5rem;
 }
 
 .home-scroll-container {
@@ -64,14 +73,14 @@ header {
   display: flex;
   justify-content: right;
   align-items: center;
-  overflow: hidden; 
-  white-space: nowrap; 
-  margin-right: 30px;
+  overflow: hidden;
+  white-space: nowrap;
+  margin-right: 2.8125rem;
 }
 
 .home-scroll-content {
   display: inline-block;
-  font-size: 16px;
+  font-size: 1rem;
   color: white;
   text-align: center;
 }
@@ -86,9 +95,9 @@ header {
 }
 
 .date-container {
-  font-size: 16px;
+  font-size: 1rem;
   color: white;
-  margin-right: 60px; 
+  margin-right: 3.75rem; 
 }
 
 .layout {
@@ -103,18 +112,23 @@ header {
 }
 
 nav {
-  display:flex;
+  position: fixed;
+  display: flex;
   flex-direction: column;
   flex-shrink: 0; 
   background-color: #0a756d;
-  width: 180px;
+  width: 12.5rem;
   height: 100%;
   box-sizing: border-box;
   z-index: 10000;
-  font-size: 20px;
+  font-size: 1.25rem;
+  white-space: nowrap;      
+  overflow: hidden;         
+  text-overflow: ellipsis;
 }
 
 .nav-left {
+  margin-top: 4.79em;
   width: 100%;
   height: 100vh;
 }
@@ -127,80 +141,6 @@ nav ul {
 
 nav ul li {
   margin: 0; 
-  
-}
-
-.nav-button {
-  width: 100%;
-  height: 88px; 
-  background-size: 50%;
-  background-position: right -15px bottom -15px; 
-  background-repeat: no-repeat; 
-  border: none; 
-  color: white; 
-  font-size: 18px;
-  padding-right: 10px;
-  background-color: #0a756d;
-  display: flex;
-  align-items: center;
-  justify-content: flex-start; 
-  cursor: pointer;
-  text-decoration: none; 
-  transition: background-color 0.3s ease;
-}
-
-.nav-button span {
-  padding: 5px 10px;
-  border-radius: 5px;
-}
-
-.nav-button:hover {
-  background-color: rgba(0, 0, 0, 0.1); 
-}
-
-.page-content {
-  flex-grow: 1;
-}
-
-.join-us-container {
-  display: flex;
-  align-items: center;
-  margin-right: 20px; 
-  text-decoration: none;
-}
-
-.join-us-icon {
-  width: 24px;
-  height: 24px; 
-  margin-right: 8px; 
-  transition: transform 0.3s ease; 
-}
-
-.join-us-container .join-us-icon:hover {
-  transform: scale(1.1); 
-}
-
-.join-us-text {
-  color: white; 
-  text-decoration: none;
-}
-
-.join-us-container .join-us-text:hover {
-  color: antiquewhite; 
-}
-
-.about-us-container {
-  margin-right: 15px; 
-}
-
-.about-us-link {
-  color: white;
-  text-decoration: none;
-}
-
-.about-us-link:hover {
-  text-decoration: none;
-  color: antiquewhite;
 }
 
 .login-container {
@@ -227,11 +167,48 @@ nav ul li {
 
 .login-popup {
   position: fixed;
+  align-content: center;
+  justify-self: center;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
   background-color: rgba(0, 0, 0, 0.5);
+}
+
+.nav-button {
+  width: 100%;
+  height: 5.1rem;
+  background-size: 50%;
+  background-position: right -0.9375rem bottom -1.4rem;
+  background-repeat: no-repeat;
+  border: none;
+  color: white;
+  font-size: 1.125rem;
+  padding-right: 0.625rem;
+  background-color: #0a756d;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  cursor: pointer;
+  text-decoration: none;
+  transition: background-color 0.3s ease;
+}
+
+.nav-button span {
+  padding: 0.3125rem 0.625rem;
+  border-radius: 5px;
+}
+
+.nav-button:hover {
+  background-color: rgba(0, 0, 0, 0.1);
+}
+
+.page-content {
+  flex-grow: 1;
+}
+
+.join-us-container {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -239,6 +216,11 @@ nav ul li {
 }
 
 .login-popup-content {
+  left: 40%;
+  right: 60%;
+
+  justify-content: center;
+  position: fixed;
   background-color: white;
   padding: 20px;
   border-radius: 10px;
@@ -282,8 +264,8 @@ nav ul li {
   margin-top: 5px;
   border: 1px solid #ccc;
   border-radius: 5px;
-  width: 100%;  /* Ensure inputs take full width within their container */
-  box-sizing: border-box;  /* Include padding and border in the element's total width and height */
+  width: 100%; 
+  box-sizing: border-box; 
 }
 
 
@@ -312,4 +294,199 @@ nav ul li {
 
 .login-popup-content p a:hover {
   text-decoration: underline;
+  margin-right: 1.25rem; 
+  text-decoration: none;
+}
+
+.join-us-icon {
+  width: 1.5rem;
+  height: 1.5rem; 
+  margin-right: 0.5rem; 
+  transition: transform 0.3s ease; 
+}
+
+.join-us-container .join-us-icon:hover {
+  transform: scale(1.05); 
+}
+
+.join-us-text {
+  color: white; 
+  text-decoration: none;
+}
+
+.join-us-container .join-us-text:hover {
+  color: antiquewhite; 
+}
+
+.about-us-container {
+  margin-right: 1.25rem; 
+}
+
+.about-us-link {
+  color: white;
+  text-decoration: none;
+}
+
+.about-us-link:hover {
+  text-decoration: none;
+  color: antiquewhite;
+}
+
+.footer-container {
+  width: 100%;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  color: white;
+  
+  display: flex;
+  z-index: 1000000;
+  box-sizing: border-box;
+  height: 2em;
+  line-height: 0;
+  background-color: #0a756d;
+}
+
+
+@media (max-width: 768px) {
+  header {
+    flex-direction: row;
+    height: 3em;
+    align-items: center;
+    justify-content: space-evenly;
+    display: flex;
+    flex-direction: row;
+    white-space: nowrap;      
+    overflow: hidden;         
+    text-overflow: ellipsis;
+  }
+
+  .home-scroll-container {
+    visibility: hidden;
+  }
+
+  .logo-container img {
+    height: 1.75rem;
+    margin-right: 0.625rem;
+    margin-left: -0.45rem;
+  }
+
+  .nav-left {
+    position: fixed;
+    width: 100%;
+    height: auto;
+  }
+
+  nav {
+    margin-top: -3em;
+    position: fixed;
+    flex-direction: row;
+    height: auto;
+    overflow-x: auto;
+  }
+
+  nav ul {
+    position: fixed;
+    flex: 1;
+    display: flex;
+    flex-direction: row;
+  }
+
+  nav ul li {
+    display: flex;
+    transform: translateY(0.65em);
+    font-size: 0.65em;
+    flex: 1;
+    font-weight: bold;
+  }
+
+  .nav-left-buttonlist {
+    display: flex;
+    flex: 0.1;
+    align-items: start;
+  }
+
+  .nav-button {
+    height: 2.75rem;
+    font-size: 0.55rem;
+    background-position: right -0.2375rem bottom -0.625rem;
+    background-size: 75%;
+    max-width: 66px;
+  }
+
+  .logo-container span {
+    font-size: 1rem;
+  }
+
+  .home-scroll-container {
+    margin-right: 1.25rem;
+  }
+
+  .layout {
+    height: auto;
+  }
+
+  .content {
+    flex-direction: column;
+    flex-grow: 0;
+  }
+
+  .page-content {
+    width: 100%;
+  }
+
+  .footer-container {
+    width: 100%;
+  }
+
+  .join-us-container {
+    margin-right: 0.45rem;
+  }
+
+  .about-us-container {
+    margin-right: 0.25rem;
+    align-self: center;
+    justify-content: center;
+    align-items: center;
+    justify-self: center;
+    transform: translateY(-0.12rem);
+  }
+  .join-us-text {
+    color: white; 
+    text-decoration: none;
+    font-size: 0.55em;
+  }
+
+  .join-us-icon {
+    width: 1rem;
+    height: 1rem; 
+    margin-right: 0.5rem; 
+    transition: transform 0.3s ease; 
+  }
+  
+  .join-us-container .join-us-text:hover {
+    color: antiquewhite; 
+    min-width: 4em;
+    justify-content: center;
+    align-items: center;
+  }
+  .about-us-link {
+    font-size: 0.55em;
+    color: white;
+    text-decoration: none;
+    line-height: 1;
+    min-width: 4em;
+    justify-content: center;
+    justify-self: center;
+    align-items: center;
+  }
+  .date-container {
+    font-size: 0.55rem;
+    color: white;
+    margin-right: 0.05rem; 
+    min-width: 4em;
+    justify-content: center;
+    align-items: center;
+    transform: translateY(0.0325rem);
+  }
 }

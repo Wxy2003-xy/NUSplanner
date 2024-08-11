@@ -8,6 +8,8 @@ import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 import DraggableCard from './DraggableCard';
 import DroppableColumn from './DropColumn';
+import GuidedTour from './UserGuide';
+import ModuleSelectionBox from './ModuleSelection';
 const allPrograms = {
   'School of Computing': [
     "Computer Science", 
@@ -85,88 +87,80 @@ const programOptions = [
   'Others'
 ];
 
-const DynamicTable: React.FC<DynamicTableProps> = ({ tempCard, setTempCard }) => {
-  // State to manage the collapse of major setting, default hidden
+const colorSchemeOptions = [
+  'ashes', 'chalk', 'eighties', 'google', 'mocha', 'monokai', 
+  'ocean', 'oceanicNext', 'paraiso', 'railscasts', 'tomorrow', 'twilight'
+];
+
+const DynamicTable: React.FC = () => {
   const [isCollapsed, setIsCollapsed] = useState(true);  
-  // State to manage the number of columns of the table, default 8 semesters
   const [columnCount, setColumnCount] = useState<number>(8);  
-  // home faculty, default soc, cached
   const [faculty, setFaculty] = useState(() => localStorage.getItem('faculty') || 'School of Computing');
-  // programme, default single degree, cached
   const [programs, setPrograms] = useState(() => localStorage.getItem('programs') || 'Single Degree Program');
-  // primary major, default empty (first option), cached
   const [major, setMajor] = useState<string>(() => {
     const storedMajor = localStorage.getItem('major');
     return storedMajor && allPrograms[faculty].includes(storedMajor) 
             ? storedMajor 
-            : allPrograms[faculty][0];  // default empty
+            : allPrograms[faculty][0];  
   });
-  // second major faculty, default soc, cached
   const [secondFaculty, setSecondFaculty] = useState(() => localStorage.getItem('secondFaculty') || 'School of Computing');
-  // second major, default empty, cached
   const [secondMajor, setSecondMajor] = useState(() => localStorage.getItem('secondMajor') || '');
-  // state to manage if second major is shown in title, only when programme includes 2nd major or double degree etc
   const [showSecondMajor, setShowSecondMajor] = useState(() => programs.includes('2nd Major') || programs.includes('Double or Concurrent Degree'));
-  // state to manage if minors are shown in title, only when programme includes minors
   const [showMinors, setShowMinors] = useState(() => programs.includes('Minor(s)'));
-
-  // minor array, default empty, cached; type MinorDetail from website/src/types/studyplan.ts
   const [minors, setMinors] = useState<MinorDetails[]>(() => {
     const storedMinors = localStorage.getItem('minors');
     return storedMinors ? JSON.parse(storedMinors) : [];
   });
-  
-  // Title, rendered with useEffect 
   const [headerTitle, setHeaderTitle] = useState('');
-  // Sub-title(to show minor), rendered with useEffect
   const [headerSub, setHeaderSub] = useState('');
-  // 2D array representing the card table, using type CardType from website/src/types/studyplan.ts; cached
+  const [isModuleSelectionVisible, setIsModuleSelectionVisible] = useState<boolean>(false);
+  const [currentColumnIndex, setCurrentColumnIndex] = useState<number | null>(null);  
+  const [tempCard, setTempCard] = useState<CardType | null>(null);
   const [cards, setCards] = useState<Array<Array<CardType>>>(() => {
     const savedCards = localStorage.getItem('cards');
-    // default to 8 width table
     return savedCards ? JSON.parse(savedCards) : new Array(8).fill([]).map(() => []);
   });
-  // notification, default nothing
   const [notification, setNotification] = useState<string | null>(null);
   const [clashNotification, setClashNotification] = useState<string | null>(null);
-
+  const [showTour, setShowTour] = useState(() => {
+    const storedShowTour = localStorage.getItem('showTourState');
+    return storedShowTour === null ? true : storedShowTour === 'true';
+  });
+  const [colorScheme, setColorScheme] = useState<string>(() => localStorage.getItem('colorScheme') || 'google');
+  const handleTourClose = () => {
+    setShowTour(true);
+    localStorage.setItem('showTourState', 'true');
+  };
+  const handleColorSchemeChange = (event: ChangeEvent<HTMLSelectElement>) => {
+    const newColorScheme = event.target.value;
+    setColorScheme(newColorScheme);
+    localStorage.setItem('colorScheme', newColorScheme);
+    staticUpdateAllPrerequisites(cards); // Update all cards to reflect the new color scheme
+  };
   useEffect(() => { 
     let timer;
-    if (notification) {
-      // Set a timer to clear the notification after 2 seconds
+    if (notification) { 
       timer = setTimeout(() => {
         setNotification(null);
-      }, 2000); // 2000 milliseconds = 2 seconds
+      }, 2000); 
     }
-  
-    // Cleanup function to clear the timer if the component unmounts or the effect reruns
     return () => clearTimeout(timer);
-  }, [notification]); // Dependency array ensures effect runs only when notification changes
+  }, [notification]); 
   useEffect(() => { 
     let timer;
     if (clashNotification) {
-      // Set a timer to clear the notification after 2 seconds
       timer = setTimeout(() => {
         setClashNotification(null);
       }, 5000); 
     }
-  
-    // Cleanup function to clear the timer if the component unmounts or the effect reruns
     return () => clearTimeout(timer);
   }, [notification]);
-  // selected card, temproraily hold selected card object; type SelectedCard from website/src/types/studyplan.ts
   const [selectedCard, setSelectedCard] = useState<SelectedCard | null>(null);
-  // grade to be set of the selected card, default empty
   const [grade, setGrade] = useState<string>('');
-  // classification to be set of the selected card, default empty
   const [classification, setClassification] = useState<string>('');
-
-  // major setting toggle visibility function
   const toggleCollapse = () => {    
     setIsCollapsed(!isCollapsed);
   };
-
-  // handle number of columns change
   const handleColumnChange = (event: ChangeEvent<HTMLSelectElement>) => {
     const newCount = parseInt(event.target.value);   
     const newCards = new Array(newCount + 1)
@@ -175,8 +169,6 @@ const DynamicTable: React.FC<DynamicTableProps> = ({ tempCard, setTempCard }) =>
     setColumnCount(newCount);   // update column count state
     setCards(newCards);         // update card table state
   };
-
-  // handle faculty change
   const handleFacultyChange = (event: ChangeEvent<HTMLSelectElement>) => {
     const newFaculty = event.target.value;
     setFaculty(newFaculty);
@@ -185,8 +177,6 @@ const DynamicTable: React.FC<DynamicTableProps> = ({ tempCard, setTempCard }) =>
     setMajor(firstMajor);
     localStorage.setItem('major', firstMajor);
   }
-
-  // handle program change
   const handleProgramChange = (event: ChangeEvent<HTMLSelectElement>) => {
     const newProgram = event.target.value;
     setPrograms(newProgram);
@@ -195,20 +185,15 @@ const DynamicTable: React.FC<DynamicTableProps> = ({ tempCard, setTempCard }) =>
         || newProgram.includes('Double or Concurrent Degree'));
     setShowMinors(newProgram.includes('Minor(s)'));
   }
-
-  // handle primary major change
   const handleMajorChange = (event: ChangeEvent<HTMLSelectElement>) => {
     const newMajor = event.target.value;
     setMajor(newMajor);
   }
-
-  // handle second major change
   const handleSecondMajorChange = (event: ChangeEvent<HTMLSelectElement>, type: 'faculty' | 'major') => {
     const value = event.target.value;
     if (type === 'faculty') {
       setSecondFaculty(value);
       localStorage.setItem('secondFaculty', value);
-      // Reset the second major when the faculty changes
       setSecondMajor('');
     } else if (type === 'major') {
       setSecondMajor(value);
@@ -274,12 +259,6 @@ const DynamicTable: React.FC<DynamicTableProps> = ({ tempCard, setTempCard }) =>
     const semester = (columnIndex % 2 === 1 ? 1 : 2);
     navigate("/timetable", { state: { courseList: column, semester: semester } });
   };
-
-  const handleToMap = (columnIndex: number) => {
-    const column = cards[columnIndex].map(card => card.name);
-    navigate("/map", { state: { courseList: column} });
-  }
-
   
   useEffect(() => {
     const newCards = calculatePrerequisites(cards);
@@ -358,7 +337,29 @@ const DynamicTable: React.FC<DynamicTableProps> = ({ tempCard, setTempCard }) =>
     return overlap;
   }
   
-  
+  const showModuleSelectionBox = (columnIndex: number) => {
+    if (isModuleSelectionVisible) {
+      console.log('close')
+        setIsModuleSelectionVisible(false);
+        setCurrentColumnIndex(null);
+    } else {
+      console.log('on')
+        setCurrentColumnIndex(columnIndex);
+        setIsModuleSelectionVisible(true);
+    }
+};
+
+  const handleModuleSelectionClose = () => {
+    setIsModuleSelectionVisible(false);
+    setCurrentColumnIndex(null);
+  };
+
+  const handleModuleConfirm = (moduleInfo: CardType) => {
+    if (currentColumnIndex !== null) {
+      addCard(currentColumnIndex);
+    }
+    handleModuleSelectionClose();
+  };
 
   const addCard = (columnIndex: number) => {
     if (tempCard) {
@@ -382,7 +383,7 @@ const DynamicTable: React.FC<DynamicTableProps> = ({ tempCard, setTempCard }) =>
       if (tempCard.prereqTree) {
         try {
           const prereqTree:PrereqTreeNode | string = tempCard.prereqTree;
-          console.log(JSON.stringify(prereqTree))
+          console.log(JSON.stringify(prereqTree)) 
           if (!checkPrerequisites(prereqTree, columnIndex)) {
             prereqNotSatisfied = true;
             console.log("not satisfied, labelled");
@@ -664,14 +665,11 @@ const DynamicTable: React.FC<DynamicTableProps> = ({ tempCard, setTempCard }) =>
   const iterateCardByCourseCodeLeft = (courseCode: string, columnIdx: number): boolean => {
     const hasWildcard = courseCode.includes('%');
     let cleanCourseCode = courseCode.split(':')[0].trim(); // Strip the ":D" suffix if present
-
     // If there's a wildcard, remove it and any subsequent characters for matching
     if (hasWildcard) {
         cleanCourseCode = cleanCourseCode.split('%')[0].trim();
     }
-
     console.log('Checking course:', cleanCourseCode);
-
     // Check for exact matches or prefix matches based on wildcard presence
     for (let i = 0; i < columnIdx; i++) {
         if (hasWildcard) {
@@ -692,15 +690,12 @@ const DynamicTable: React.FC<DynamicTableProps> = ({ tempCard, setTempCard }) =>
 
   const countCardByCourseCodeLeft = (courseCode: string, columnIdx: number): number => {
     const cleanCourseCode = courseCode.split('%')[0].trim();
-    // console.log(cleanCourseCode)
     let count:number = 0;
     for (let i = 0; i < columnIdx; i++) {
       if (cards[i].some(card => card.name.includes(cleanCourseCode))) {
-        // console.log('found: ' + cleanCourseCode)
         count++; 
       }
     }
-    // console.log(count);
     return count;
   }
 
@@ -709,9 +704,6 @@ const DynamicTable: React.FC<DynamicTableProps> = ({ tempCard, setTempCard }) =>
   }
 
   const renderPrereqTreeVisual = (prereqData: PrereqTreeNode | string | undefined) => {
-    // console.log('tree: ' + prereqData)
-    // console.log('string: ' + JSON.stringify(prereqData))
-
     if (typeof prereqData === 'string') {
       try {
         const treeData = JSON.parse(prereqData);
@@ -734,8 +726,21 @@ const DynamicTable: React.FC<DynamicTableProps> = ({ tempCard, setTempCard }) =>
   return (
     <div className='global-container'>
       {notification && <div className="notification">{notification}</div>}
+      {showTour && <GuidedTour startTour={showTour} onClose={handleTourClose} />}
       {clashNotification && <div className="clash-notification">{clashNotification}</div>}
+    <div className='button-area'>
     <button className="collapse-button"onClick={toggleCollapse}>Major Setting</button>
+
+    <div className="dropdown-row-colorscheme">
+            {' '}Color Scheme:{' '}
+            <select className="dropdown-select" value={colorScheme} onChange={handleColorSchemeChange}>
+              {colorSchemeOptions.map(scheme => (
+                <option key={scheme} value={scheme}>{scheme}</option>
+              ))}
+            </select>
+        </div>
+    </div>
+    
     <div>
       <div className="collapsible-content" style={{ display: isCollapsed ? 'none' : 'block' }}>
       <div className="dropdown-row">
@@ -819,7 +824,10 @@ const DynamicTable: React.FC<DynamicTableProps> = ({ tempCard, setTempCard }) =>
 </div>
   <h1 className='headerline'>{headerTitle}</h1>
   <h3 className='subline'>{headerSub}</h3>
-    <MCbreakDown cards={cards}/>
+  <div className='mc-breakdonw-box'>
+  <MCbreakDown cards={cards}/>
+  </div>
+    
     <DndProvider backend={HTML5Backend}>
       <div className='table'>
         {cards.map((columnCards, columnIndex) => (
@@ -831,34 +839,41 @@ const DynamicTable: React.FC<DynamicTableProps> = ({ tempCard, setTempCard }) =>
                            semesterCount={semesterCount}>
             {columnCards.map((card, index) => (
               <DraggableCard
-                key={card.id}
-                id={card.id? card.id : Date.now()}
-                name={card.name}
-                courseCredit={card.courseCredit}
-                content={card.content}
-                columnIndex={columnIndex}
-                index={index}
-                handleMoveCard={handleMoveCard}
-                handleCardClick={handleCardClick}
-                selectedCard={selectedCard}
-                grade={card.grade}
-                prereqTree={card.prereqTree}
-                prereqNotSatisfied={card.prereqNotSatisfied}
-                color={card.color}
-                classification={card.classification}/>
+              key={card.id}
+              id={card.id ? card.id : Date.now()}
+              name={card.name}
+              courseCredit={card.courseCredit}
+              content={card.content}
+              columnIndex={columnIndex}
+              index={index}
+              handleMoveCard={handleMoveCard}
+              handleCardClick={handleCardClick}
+              selectedCard={selectedCard}
+              grade={card.grade}
+              prereqTree={card.prereqTree}
+              prereqNotSatisfied={card.prereqNotSatisfied}
+              colorScheme={colorScheme} // Pass the colorScheme prop
+              classification={card.classification} />
             ))}
-            <button className="add-button" onClick={() => addCard(columnIndex)}>Add Course</button>
+            {/* <button className="add-button" onClick={() => addCard(columnIndex)}>Add Course</button> */}
+            <button className="add-button" onClick={() => showModuleSelectionBox(columnIndex)}>Add Course</button>
+
             <button className="to-timetable-button" onClick={() => handleToTimetable(columnIndex)}>View Timetable</button>
-            <button className="to-map-button" onClick={() => handleToMap(columnIndex)}>View Map</button>
+            {/* <button className="to-map-button" onClick={() => handleToMap(columnIndex)}>View Map</button> */}
 
           </DroppableColumn>
         ))}
       </div>
+      <div className='info-on-select'>
       {selectedCard && (
         <div className="confirmation-dialog">
-          <p>Delete course {selectedCard.name} from {semesterCount(selectedCard.columnIndex)}?</p>
-          <button className='yes-button'onClick={removeCard}>Yes</button>
-          <button className='no-button'onClick={() => setSelectedCard(null)}>No</button>
+        <div className='selection-section'>
+          <div className='remove-confirmation'>
+            <p>Delete {selectedCard.name} from {semesterCount(selectedCard.columnIndex)}?</p>
+            <button className='yes-button'onClick={removeCard}>Yes</button>
+            <button className='no-button'onClick={() => setSelectedCard(null)}>No</button>
+          </div>
+          <div className='remove-confirmation'>
           <p>Update grade:</p>
           <select className="grade-dropdown-list"value={grade} onChange={updateGrade} required>
             <option value="">Select Grade</option>
@@ -876,6 +891,8 @@ const DynamicTable: React.FC<DynamicTableProps> = ({ tempCard, setTempCard }) =>
             <option value="F">F</option>
           </select>
           <button className='update-grade-button'onClick={saveGrade}>Update Grade</button>
+          </div>
+          <div className='remove-confirmation'>
           <p>Classify course:</p>
           <select className="classification-dropdown-list"value={classification} onChange={updateClassification} required>
             <option value="">Classify as:</option>
@@ -889,23 +906,41 @@ const DynamicTable: React.FC<DynamicTableProps> = ({ tempCard, setTempCard }) =>
             <option value="Specialisation Elective">Specialisation Elective</option>
           </select>
           <button className='update-classification-button'onClick={saveClassification}>Update Classification</button>
-          <h3>Selected Course Details:</h3>
-          <h2><strong></strong> {selectedCard.name}</h2>
-          <p><strong>Course Name:</strong> {selectedCard.content}</p>
-          <p><strong>Course Credit:</strong> {selectedCard.courseCredit}</p>
-          <p><strong>Grade:</strong> {selectedCard.grade || 'Not Set'}</p>
-          <p><strong>Exam Info:</strong> {selectedCard.examInfo? selectedCard.examInfo[0].examTime : 'No Exam'}</p>
-          <h3>Prerequisite Tree:</h3>
-          <div className='tree-container'>
-            {selectedCard ? renderPrereqTreeVisual(selectedCard.prereqTree) 
-            : <p>Prerequisite tree not available.</p>}
           </div>
-          <p><strong>Prerequisites Satisfied:</strong> {selectedCard.prereqNotSatisfied ? 'No' : 'Yes'}</p>
-          <button onClick={() => setSelectedCard(null)}>Close Details</button>
+          <button className='close-detail-button' onClick={() => setSelectedCard(null)}>Close Details</button>
+          </div>
+          <div className='all-info-container'>
+            <div>
+              <h3>Selected Course Details:</h3>
+              <h2><strong></strong> {selectedCard.name}</h2>
+              <p><strong>Course Name:</strong> {selectedCard.content}</p>
+              <p><strong>Course Credit:</strong> {selectedCard.courseCredit}</p>
+              <p><strong>Grade:</strong> {selectedCard.grade || 'Not Set'}</p>
+              <p><strong>Exam Info:</strong> {selectedCard.examInfo? selectedCard.examInfo[0].examTime : 'No Exam'}</p>
+            </div>
+            <div>
+              <h3>Prerequisite Tree:</h3>
+              <div className='tree-container'>
+                {selectedCard ? renderPrereqTreeVisual(selectedCard.prereqTree) 
+                : <p>Prerequisite tree not available.</p>}
+              </div>
+              <p><strong>Prerequisites Satisfied:</strong> {selectedCard.prereqNotSatisfied ? 'No' : 'Yes'}</p>
+            </div>
+          </div>
         </div> 
       )}
+      </div>
     </DndProvider>
+    {isModuleSelectionVisible && (
+            <ModuleSelectionBox 
+              setTempCard={setTempCard} 
+              onConfirm={handleModuleConfirm}
+              onClose={handleModuleSelectionClose} 
+            />
+        )}
   </div>
+  <p className='notificationsite'></p>
+  <p className='course-query'></p>
 </div>
   );
 };

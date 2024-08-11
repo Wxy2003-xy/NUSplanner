@@ -10,11 +10,11 @@ import nusCde from '../../images/nusCde.jpeg';
 import NUS from '../../images/NUS.jpeg';
 import Footer from '../../components/Footer';
 import timetableImg from '../../assets/timetable.png';
-import plannerImg from '../../assets/planner.png';
-import calendarImg from '../../assets/calendar.png';
-import mapImg from '../../assets/map.png';
-import communityImg from '../../assets/community.png';
-import feedbackImg from '../../assets/feedback.png';
+import plannerImg from '../../assets/planner.png'
+import calendarImg from '../../assets/calendar.png'
+import mapImg from '../../assets/map.png'
+import communityImg from '../../assets/community.png'
+import feedbackImg from '../../assets/feedback.png'
 
 const Home: React.FC = () => {
   const [currentDate, setCurrentDate] = useState<string>('');
@@ -152,6 +152,10 @@ const Home: React.FC = () => {
         </div>
         <div className="home-right-section">
           <div className="home-right-content">
+            {/*<h2>Welcome to NUSPlanner</h2>*/}
+            {/*<p>Your Smart StudyPlan & TimeTable Designer</p> */}
+          
+            {/* Add rectangle boxes with links */}
             <div className="link-box-container">
               <NavLink to="/studyplan" className="link-box" style={{ backgroundImage: `url(${plannerImg})` }}>
                 <span>Study Plan</span>

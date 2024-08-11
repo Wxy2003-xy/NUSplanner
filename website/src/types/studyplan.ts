@@ -34,15 +34,10 @@ export type CardProps = {
     prereqTree?: PrereqTreeNode | string;
     prereqNotSatisfied?: boolean;
     examInfo?: ExamInfo[];
-    color?: string;
+    colorScheme?: string;
   
     classification?: string;
   };
-
-export interface DynamicTableProps {
-  tempCard: CardType | null;
-  setTempCard: Dispatch<SetStateAction<CardType | null>>;
-}
 
 export interface SelectedCard extends CardType {
   columnIndex: number;
