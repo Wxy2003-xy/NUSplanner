@@ -12,9 +12,9 @@ body {
 }
 
 header {  
-  background-color: #2C3E50;
+  background-color: #11182a;
   color: white;
-  padding: 10px 20px;
+  padding: 20px 25px;
   display: flex;
   align-items: center;
   justify-content: space-between; /* Ensures proper spacing */
@@ -71,14 +71,113 @@ header {
   height: 100%;
 }
 
-.content {
+.home-main-content {
   display: flex;
-  flex-grow: 1;
+  width: 100%;
+  height: calc(100vh - 60px); /* Adjust height to fit below header */
 }
 
-.home-nav-right {
-  margin: 10px; /* Remove margin from left */
-  padding: 10px; /* Remove padding */
+.home-left-section {
+  width: 90%;
+  background-color: #f8f9fa; /* Optional: Background color for the left section */
+  padding: 15px;
+  padding-left: 15px;
+  padding-top: 10px;
+  line-height: 1.6;
+}
+
+.home-left-top {
+  margin-top: 10px;
+  flex: 0 0 10%;
+  position: relative;
+  height: 30%; 
+  overflow: hidden; /* Hide overflow to ensure no scrollbars */
+}
+
+.home-slideshow-container {
+  position: relative;
+  height: 100%; /* Ensure the container takes full height of the top section */
+  width: 100%;
+  overflow: hidden; /* Hide overflow */
+}
+
+.home-slideshow-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover; /* Maintain aspect ratio while covering the container */
+  position: absolute;
+  top: 0;
+  left: 0;
+  transition: opacity 1s ease-in-out; /* Smooth transition */
+  filter: brightness(80%) contrast(120%); /* Enhance image appearance */
+  border-radius: 8px;
+}
+
+/* Ensure only one image is visible at a time */
+.home-slideshow-image.hidden {
+  opacity: 0;
+}
+
+.home-slideshow-navigation {
+  position: absolute;
+  top: 50%;
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  transform: translateY(-50%);
+}
+
+.home-slideshow-navigation button {
+  background: rgba(0, 0, 0, 0.5); /* Semi-transparent background for buttons */
+  border: none;
+  color: white;
+  font-size: 24px;
+  cursor: pointer;
+  padding: 10px;
+  border-radius: 0%;
+  transition: 0.3s ease;
+  margin: 0px;
+}
+
+.home-slideshow-navigation button:hover {
+  background: rgba(0, 0, 0, 0.8); /* Darker background on hover */
+}
+
+.home-left-bottom {
+  flex: 0 0 70%;
+  background-color: white; /* Pale gray background */
+  border-radius: 8px; /* Rounded corners for a modern look */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+  margin-top: 14px;
+  padding: 20px;
+}
+
+.home-left-bottom .home-leftbottom-content {
+  font-size: 16px; /* Readable font size */
+  line-height: 1.2; /* Improved readability */
+  color: #333; /* Dark text color for contrast */
+  margin-bottom: 16px; /* Space between paragraphs */
+}
+
+.home-left-bottom .home-leftbottom-title {
+  font-weight: bold;
+  margin-bottom: 5px;
+  color: #00755d;
+  text-decoration: none;
+}
+
+.home-left-bottom .home-leftbottom-title:hover {
+  color: #004d3f;
+  text-decoration: none;
+}
+
+.home-left-bottom .home-leftbottom-content {
+  font-style: italic; /* Emphasize the first paragraph */
+  color: #005c4a; /* A distinct color for emphasis */
+  margin-top: 0px;
+}
+
+.home-right-section {
   flex-grow: 1;
   position: relative;
   display: flex;
@@ -87,9 +186,18 @@ header {
   color: white; /* Ensure text is readable over the background image */
   text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.4); /* Add text shadow for readability */
   height: 100%; /* Ensure it takes full height */
+  width: 80%; /* Occupies half of the screen width */
+  background-color: #ffffff; /* Optional: Background color for the right section */
+  padding: 0px;
+  margin: 0px;
+}
+  
+.home-right-content {
+  display: flex;
+  flex-grow: 1;
 }
 
-.home-nav-right .background {
+.home-right-section .background {
   position: absolute;
   top: 0;
   left: 0;
@@ -101,11 +209,11 @@ header {
   transition: opacity 1s ease-in-out;
 }
 
-.home-nav-right .background.hidden {
+.home-right-section .background.hidden {
   opacity: 0;
 }
 
-.home-nav-right .content {
+.home-right-section .home-right-content {
   position: relative;
   z-index: 1;
   display: flex;
@@ -128,41 +236,231 @@ header {
 }
 
 /* New styles for rectangle boxes */
-.home-nav-right .link-box {
-  width: 300px; /* Set width of the boxes */
-  height: 100px; /* Set height of the boxes */
-  background-color: rgba(101, 171, 195, 0.8); /* Semi-transparent background */
-  margin: 10px 0; /* Spacing between boxes */
+.home-right-section .link-box {
+  width: 46%; /* Set width of the boxes */
+  height: 205px; /* Set height of the boxes */
+  background-color: #0a756d; /* Semi-transparent background */
+  margin: 0px 0; /* Spacing between boxes */
   display: flex;
+  flex-direction: row;
   align-items: center;
   justify-content: center;
   border-radius: 8px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
   transition: transform 0.3s; /* Smooth hover effect */
   text-decoration: none; /* Remove underline */
+  background-position: right -35px bottom -75px; /* Position the background image in the right bottom corner with a vertical offset */
+  background-repeat: no-repeat; /* Ensure the background image does not tile */
+  background-size: 80%;
 }
 
-.home-nav-right .link-box:hover {
-  transform: scale(1.05); /* Slightly expand on hover */
+.home-right-section .link-box:hover {
+  transform: scale(1.02); /* Slightly expand on hover */
 }
 
-.home-nav-right .link-box span {
+.home-right-section .link-box span {
   color: white; /* Link color */
-  font-size: 18px;
+  transform: translateX(-20px);
+  font-size: 30px;
+  font-weight: 700;
 }
 
 /* Style for the h2 */
-.home-nav-right h2 {
+.home-right-section h2 {
   color: black; /* Set color to black */
   margin: 0; /* Remove default margins */
   padding: 0; /* Remove padding */
   align-self: flex-start; /* Align to the left */
 }
 
-.home-nav-right .link-box-container {
+.home-right-section .link-box-container {
   display: flex;
   flex-wrap: wrap; /* Allow items to wrap to the next line */
-  gap: 10px; /* Space between boxes */
-  margin: 15px;
+  gap: 25px; /* Space between boxes */
+  margin-top: 20px;
   justify-content: center; /* Center the rows of boxes */
+  margin-left: 5px;
+}
+
+.home-scroll-container {
+  flex-grow: 1;
+  display: flex;
+  justify-content: right;
+  align-items: center;
+  overflow: hidden; /* Hide overflow to create the scrolling effect */
+  white-space: nowrap; /* Prevents wrapping of the content */
+  margin-right: 45px;
+}
+
+.home-scroll-content {
+  display: inline-block;
+  animation: scroll 3s infinite; /* Animation to smoothly transition sentences */
+  font-size: 16px;
+  color: white;
+  text-align: center;
+}
+
+.home-scroll-content a {
+  color: #ADD8E6; /* Change link color to black */
+  text-decoration: underline; /* Remove underline from links */
+}
+
+.home-scroll-content a:hover {
+  color: #9FC4E6; 
+}
+
+.join-us-container {
+  display: flex;
+  align-items: center;
+  margin-right: 20px; /* Space between the "Join us" section and the "About Us" section */
+  text-decoration: none;
+}
+
+.join-us-icon {
+  width: 24px; /* Adjust size as needed */
+  height: 24px; /* Adjust size as needed */
+  margin-right: 8px; /* Space between the icon and text */
+  transition: transform 0.3s ease; /* Smooth transition for icon enlargement */
+}
+
+.join-us-container .join-us-icon:hover {
+  transform: scale(1.1); /* Slightly enlarge the icon on hover */
+}
+
+.join-us-text {
+  color: white; /* Adjust color as needed */
+  text-decoration: none;
+}
+
+.join-us-container .join-us-text:hover {
+  color: antiquewhite; /* Light color on hover (anti-white) */
+}
+
+.about-us-container {
+  margin-right: 20px; /* Space between the "About Us" section and the date */
+}
+
+.about-us-link {
+  color: white; /* Adjust color as needed */
+  text-decoration: none;
+}
+
+.about-us-link:hover {
+  text-decoration: none;
+  color:antiquewhite;
+}
+
+.hr-line {
+  color: #004d3f;
+}
+
+.footer-container {
+  z-index: 20;
+}
+
+.home-login-container {
+  margin-right: 20px;
+}
+
+.home-login-link {
+  color: white;
+  text-decoration: none;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+.home-login-link:hover {
+  color: antiquewhite;
+  background-color: transparent;
+}
+
+/* Popup styles */
+.home-login-popup {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.home-login-popup-content {
+  background-color: white;
+  padding: 20px;
+  border-radius: 10px;
+  width: 300px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  position: relative;
+}
+
+.home-close-popup {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: none;
+  border: none;
+  font-size: 20px;
+  cursor: pointer;
+}
+
+.home-close-popup:hover {
+  color: antiquewhite;
+}
+
+.home-login-popup-content h2 {
+  margin-top: 0;
+}
+
+.home-login-popup-content form {
+  display: flex;
+  flex-direction: column;
+}
+
+.home-login-popup-content label {
+  margin-bottom: 10px;
+  display: flex;
+  flex-direction: column;
+  font-size: 16px;
+}
+
+.home-login-popup-content input {
+  padding: 8px;
+  margin-top: 5px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  width: 100%;  /* Ensure inputs take full width within their container */
+  box-sizing: border-box;  /* Include padding and border in the element's total width and height */
+}
+
+.home-login-popup-content button {
+  padding: 10px;
+  background-color: #0a756d;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.home-login-popup-content button:hover {
+  background-color: #084d46;
+}
+
+.home-login-popup-content p {
+  margin-top: 10px;
+  text-align: center;
+}
+
+.home-login-popup-content p a {
+  color: #0a756d;
+  text-decoration: none;
+}
+
+.home-login-popup-content p a:hover {
+  text-decoration: underline;
 }
