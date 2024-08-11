@@ -16,6 +16,7 @@ import aboutImg from '../assets/about.png';
 const Layout = ({ children }) => {
   const [currentDate, setCurrentDate] = useState('');
   const [currentSentenceIndex, setCurrentSentenceIndex] = useState(0);
+  const [isLoginPopupVisible, setLoginPopupVisible] = useState(false);
   const navigate = useNavigate();
 
   const buttons = [
@@ -49,6 +50,10 @@ const Layout = ({ children }) => {
     return () => clearInterval(intervalId);
   }, [sentences.length]);
 
+  const toggleLoginPopup = () => {
+    setLoginPopupVisible(!isLoginPopupVisible);
+  };
+
   return (
     <div className="layout">
       <header>
@@ -76,6 +81,11 @@ const Layout = ({ children }) => {
           <NavLink to="/about" className="about-us-link">
             <span>About Us</span>
           </NavLink>
+        </div>
+        <div className="login-container">
+          <button className="login-link" onClick={toggleLoginPopup}>
+            <span>Login</span>
+          </button>
         </div>
         <div className="date-container">
           <span>{currentDate}</span>
@@ -105,6 +115,27 @@ const Layout = ({ children }) => {
       <div className='footer-container'>
         <Footer />
       </div>
+      {isLoginPopupVisible && (
+        <div className="login-popup">
+          <div className="login-popup-content">
+            <button className="close-popup" onClick={toggleLoginPopup}>&times;</button>
+            <h2>Login</h2>
+            <form>
+              <label>
+                Email:
+                <input type="email" name="email" placeholder="Please enter your NUS email"/>
+              </label>
+              <label>
+                Password:
+                <input type="password" name="password" placeholder="Please enter your password" />
+              </label>
+              <button type="submit">Login</button>
+            </form>
+            <p>Don't have an account? <a href="#">Sign up</a></p>
+          </div>
+        </div>
+      )}
+
     </div>
   );
 };

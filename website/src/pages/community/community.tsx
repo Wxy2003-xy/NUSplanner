@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState, useRef, useCallback } from 'react';
 import axios from 'axios';
 import emailjs from 'emailjs-com';
 import './community.css';
@@ -27,8 +27,6 @@ const Community = () => {
   const modalRef = useRef<HTMLDivElement>(null);
   const [notice, setNotice] = useState<string | null>('');
 
-
-
   useEffect(() => {
     const options: Intl.DateTimeFormatOptions = { year: 'numeric', month: 'long', day: 'numeric' };
     const today = new Date();
@@ -52,8 +50,10 @@ const Community = () => {
     try {
       const response = await axios.get('/v1/article/select');
       if (response.data && Array.isArray(response.data.data)) {
-        setPosts(response.data.data);
-        setFilteredPosts(response.data.data);
+        // Sort the posts in descending order by id before setting the state
+        const sortedPosts = response.data.data.sort((a: Post, b: Post) => b.id - a.id);
+        setPosts(sortedPosts);
+        setFilteredPosts(sortedPosts);
       } else {
         console.error('Fetched data is not an array:', response.data);
       }
@@ -61,7 +61,7 @@ const Community = () => {
       console.error('Error fetching posts:', error);
     }
   };
-
+  
   const savePost = async (post: Post) => {
     try {
       await axios.post('/v1/article/save', post);
@@ -71,18 +71,45 @@ const Community = () => {
     }
   }; 
 
-  const handleSearch = () => {
-    if (searchInput) {
-      const filtered = posts.filter(
-        post => post.title.toLowerCase().includes(searchInput.toLowerCase()) ||
-                post.content.toLowerCase().includes(searchInput.toLowerCase())
-      );
-      setFilteredPosts(filtered);
+  const handleSearch = useCallback((immediate: boolean = false) => {
+    const trimmedSearchInput = searchInput.trim().toLowerCase();
+  
+    const executeSearch = () => {
+      if (trimmedSearchInput) {
+        const filtered = posts.filter(post =>
+          post.title.toLowerCase().includes(trimmedSearchInput) ||
+          post.content.toLowerCase().includes(trimmedSearchInput)
+        );
+        setFilteredPosts(filtered);
+      } else {
+        setFilteredPosts(posts);
+      }
+  
+      if (immediate) {
+        // Only remove focus from the search input to hide the cursor when Enter is pressed
+        const searchBox = document.getElementById('search-input') as HTMLInputElement;
+        if (searchBox) {
+          searchBox.blur();
+        }
+      }
+    };
+  
+    if (immediate) {
+      executeSearch();
     } else {
-      setFilteredPosts(posts);
+      const delayDebounceFn = setTimeout(() => {
+        executeSearch();
+      }, 300); // Adjust debounce delay as needed
+  
+      return () => clearTimeout(delayDebounceFn);
     }
-  };
-
+  }, [searchInput, posts]);
+  
+  // Handle search with debounce for regular typing
+  useEffect(() => {
+    handleSearch(false); // Call with `false` to debounce during typing
+  }, [searchInput, handleSearch]);
+  
   const handleSubmitPost = async (id: number, title: string, content: string, thumbsup: number, dislike: number ) => {
     const newPost = { id, title, content, thumbsup, dislike};
     await savePost(newPost);
@@ -102,7 +129,7 @@ const Community = () => {
       console.error('Error liking post:', error);
     }
   };
-
+  
   const handleDislikePost = async (postId: number) => {
     try {
       const response = await axios.post(`/v1/article/updateDislike/${postId}`);
@@ -112,7 +139,7 @@ const Community = () => {
     } catch (error) {
       console.error('Error disliking post:', error);
     }
-  };
+  };  
 
   const handleReportPost = (post: Post) => {
     const serviceID = 'service_j372can';
@@ -148,7 +175,7 @@ const Community = () => {
     loadPosts();
     setSearchInput('');
   };
-
+  
   return (
     <Layout notice={notice ? <div className="notice-message">{notice}</div> : null}>
       <div>
@@ -162,9 +189,9 @@ const Community = () => {
               value={searchInput} 
               onChange={(e) => {
                 setSearchInput(e.target.value);
-                handleSearch();
+                //handleSearch();
               }} 
-              onKeyDown={(e) => { if (e.key === 'Enter') handleSearch() }} 
+              onKeyDown={(e) => { if (e.key === 'Enter') handleSearch(true) }} 
             />
             <img src={reloadIcon} alt="Refresh" className="reload-icon" onClick={handleRefresh} />
             <img src={pencilIcon} alt="Create Post" className="pencil-icon" onClick={openModal} />
