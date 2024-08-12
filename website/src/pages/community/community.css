@@ -135,6 +135,7 @@
 .post {
   margin-top: 1.25rem;
   padding: 0.9375rem;
+  padding-bottom: 0rem;
   border: 1px solid #ddd;
   border-radius: 0.5rem;
   background-color: #fff;
@@ -168,6 +169,14 @@
   display: flex;
   gap: 0.625rem;
   margin-top: 0.625rem;
+  justify-content: flex-end;
+}
+
+.post-actions {
+  display: flex;
+  gap: 0.625rem;
+  margin-top: auto; /* Make sure buttons are aligned to the bottom */
+  padding-top: 1rem; /* Add padding at the top to create space */
   justify-content: flex-end;
 }
 
