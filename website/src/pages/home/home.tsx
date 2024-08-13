@@ -20,7 +20,7 @@ const Home: React.FC = () => {
   const [currentDate, setCurrentDate] = useState<string>('');
   const [currentSentenceIndex, setCurrentSentenceIndex] = useState(0);
   const [currentSlideIndex, setCurrentSlideIndex] = useState(0);
-  {/*const [currentImageIndex, setCurrentImageIndex] = useState(0);*/}
+  const [isLoginPopupVisible, setLoginPopupVisible] = useState(false);
 
   const sentences = [
     <>Any upcoming deadlines on <a href="https://canvas.nus.edu.sg" target="_blank" rel="noopener noreferrer">Canvas</a>?</>,
@@ -29,7 +29,6 @@ const Home: React.FC = () => {
     <>Don't forget to check your Reminder!</>
   ];
 
-  {/*const images = [NUS, nusSoc, nusScience, nusFass, nusCde];*/}
   const slides = [
     { src: NUS},
     { src: nusSoc},
@@ -49,17 +48,20 @@ const Home: React.FC = () => {
       setCurrentSentenceIndex((prevIndex) => (prevIndex + 1) % sentences.length);
     }, 5000);
 
-    return () => clearInterval(intervalId); 
+    return () => clearInterval(intervalId);
   }, [sentences.length]);
-
 
   useEffect(() => {
     const autoSlideIntervalId = setInterval(() => {
       setCurrentSlideIndex((prevIndex) => (prevIndex + 1) % slides.length);
-    }, 3000); 
+    }, 3000);
 
-    return () => clearInterval(autoSlideIntervalId); 
+    return () => clearInterval(autoSlideIntervalId);
   }, [slides.length]);
+
+  const toggleLoginPopup = () => {
+    setLoginPopupVisible(!isLoginPopupVisible);
+  };
 
   const nextSlide = () => {
     setCurrentSlideIndex((prevIndex) => (prevIndex + 1) % slides.length);
@@ -96,7 +98,12 @@ const Home: React.FC = () => {
           <NavLink to="/about" className="about-us-link">
             <span>About Us</span>
           </NavLink>
-        </div>             
+        </div>  
+        <div className="home-login-container">
+          <button className="home-login-link" onClick={toggleLoginPopup}>
+            <span>Login</span>
+          </button>
+        </div>           
         <div className="date-container">
           <span>{currentDate}</span>
         </div>
@@ -175,6 +182,27 @@ const Home: React.FC = () => {
       <div className='footer-container'>
         <Footer></Footer>
       </div>
+
+      {isLoginPopupVisible && (
+        <div className="home-login-popup">
+          <div className="home-login-popup-content">
+            <button className="home-close-popup" onClick={toggleLoginPopup}>&times;</button>
+            <h2>Login</h2>
+            <form>
+              <label>
+                Email:
+                <input type="email" name="email" placeholder="Please enter your NUS email" />
+              </label>
+              <label>
+                Password:
+                <input type="password" name="password" placeholder="Please enter your password"/>
+              </label>
+              <button type="submit">Login</button>
+            </form>
+            <p>Don't have an account? <a href="#">Sign up</a></p>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

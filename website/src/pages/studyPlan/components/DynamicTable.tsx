@@ -728,8 +728,10 @@ const DynamicTable: React.FC = () => {
       {notification && <div className="notification">{notification}</div>}
       {showTour && <GuidedTour startTour={showTour} onClose={handleTourClose} />}
       {clashNotification && <div className="clash-notification">{clashNotification}</div>}
+    <div className='button-area'>
     <button className="collapse-button"onClick={toggleCollapse}>Major Setting</button>
-    <div className="dropdown-row">
+
+    <div className="dropdown-row-colorscheme">
             {' '}Color Scheme:{' '}
             <select className="dropdown-select" value={colorScheme} onChange={handleColorSchemeChange}>
               {colorSchemeOptions.map(scheme => (
@@ -737,6 +739,8 @@ const DynamicTable: React.FC = () => {
               ))}
             </select>
         </div>
+    </div>
+    
     <div>
       <div className="collapsible-content" style={{ display: isCollapsed ? 'none' : 'block' }}>
       <div className="dropdown-row">

@@ -4,6 +4,8 @@
   background-color: #f9f9f9;
   padding: 1.25rem;
   box-sizing: border-box;
+  margin-left: 12.5rem;
+
 }
 
 .reminder-header {
@@ -105,6 +107,8 @@
 @media (max-width: 768px) {
   .reminder-nav-right {
     margin-top: 4.25em;
+    margin-left: 0;
+
   }
 
   .reminder-header {

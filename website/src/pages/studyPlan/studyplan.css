@@ -1,7 +1,7 @@
 .studyplan-nav-right {
   width: 98%;
   margin-top: 4.79em;
-  margin-left: 1em;
+  margin-left: 13rem;
   flex-grow: 1;
   position: relative;
   display: flex;
@@ -27,6 +27,7 @@
 @media (max-width: 48em) {
    
   .studyplan-nav-right {
+    
     width: 98%;
     margin-top: 4.75em;
     margin-left: 1em;

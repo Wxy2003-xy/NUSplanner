@@ -58,7 +58,9 @@
   border-radius: 0.25em;
   padding: 0.25em;
   margin: 0.0625em;
-  font-size: 0.55em;
+  font-size: 1.45vh;
+  font-size: 0.75vw;
+
 }
 
 .palette-selector {
@@ -97,9 +99,12 @@
     margin-left: 0;
     font-size: 0.85em;
     line-height: 1;
-    grid-template-columns: 3em repeat(5, 1fr);
+    display: grid;
+    grid-template-columns: 24px repeat(5, minmax(61px, 1fr));
     grid-template-rows: auto repeat(28, 2em);
+    width: 100%; /* Ensure the grid takes the full width of the container */
   }
+  
 
   .palette-selector {
     margin-left: 0;
@@ -137,6 +142,6 @@
     font-weight: bold;
     grid-column: 1;
     border: 0.0625em solid #ccc;
-    font-size: 0.55em;
+    font-size: 0.55vh;
   }
 }

@@ -6,6 +6,8 @@
   padding: 1.25rem;
   box-sizing: border-box;
   border-left: 0;
+  margin-left: 12.5rem;
+
 }
 
 .community-nav-right > div {
@@ -133,6 +135,7 @@
 .post {
   margin-top: 1.25rem;
   padding: 0.9375rem;
+  padding-bottom: 0rem;
   border: 1px solid #ddd;
   border-radius: 0.5rem;
   background-color: #fff;
@@ -169,6 +172,14 @@
   justify-content: flex-end;
 }
 
+.post-actions {
+  display: flex;
+  gap: 0.625rem;
+  margin-top: auto; /* Make sure buttons are aligned to the bottom */
+  padding-top: 1rem; /* Add padding at the top to create space */
+  justify-content: flex-end;
+}
+
 .post-actions button {
   background: none;
   border: none;
@@ -200,6 +211,8 @@
 @media (max-width: 768px) {
   .community-nav-right {
     padding: 1rem;
+    margin-left: 0;
+
   }
 
   .search-box .logoImage,

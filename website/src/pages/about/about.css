@@ -6,6 +6,8 @@
   background-color: #f9f9f9;
   border-radius: 0.625rem;
   box-shadow: 0 0 1.25rem rgba(0, 0, 0, 0.1);
+  margin-bottom: 2%;
+  margin-left: 12.5rem;
 }
 
 .about-header {
@@ -76,6 +78,7 @@
   .about-container {
   margin-top: 5.75em; 
     padding: 1rem;
+    margin-left: 0;
   }
 
   .about-header h1 {
