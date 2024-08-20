@@ -84,8 +84,9 @@
   font-size: 0.875em;
 }
 
-.credit {
-  align-self: flex-end;
+.credit-timetable {
+  margin-left: 19.5em;
+  align-self: start;
   font-size: 0.625em;
 }
 

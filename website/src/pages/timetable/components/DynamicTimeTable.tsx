@@ -207,35 +207,120 @@ const DynamicTimeTable = () => {
     return Array.from(grouped.values());
   }
 
+  // const filterByDays = (days: string[], slots: ClassTimeSlotTypeUnion[]): ClassTimeSlotTypeUnion[] => {
+  //   const groups = slots.reduce((acc, slot) => {
+  //     const key = getPartialKeyUnion(slot);
+  //     if (!acc[key]) {
+  //       acc[key] = [];
+  //     }
+  //     acc[key].push(slot);
+  //     return acc;
+  //   }, {} as Record<string, ClassTimeSlotTypeUnion[]>);
+  //   const filteredGroups = Object.values(groups).filter(group =>
+  //       group.every(slot => slot.day.some(day => days.includes(day)))
+  //   );
+  //   return filteredGroups.flat();
+  // };
   const filterByDays = (days: string[], slots: ClassTimeSlotTypeUnion[]): ClassTimeSlotTypeUnion[] => {
+    const lessonTypeCountBefore = countLessonTypesPerCourse(slots);
+  
     const groups = slots.reduce((acc, slot) => {
-      const key = getPartialKeyUnion(slot);
+      const key = `${slot.title}${slot.lessonType}${slot.classNo}`;
       if (!acc[key]) {
         acc[key] = [];
       }
       acc[key].push(slot);
       return acc;
     }, {} as Record<string, ClassTimeSlotTypeUnion[]>);
+  
+    // Perform the filtering
     const filteredGroups = Object.values(groups).filter(group =>
-        group.every(slot => slot.day.some(day => days.includes(day)))
+      group.every(slot => slot.day.some(day => days.includes(day)))
     );
-    return filteredGroups.flat();
+  
+    const filteredSlots = filteredGroups.flat();
+    const lessonTypeCountAfter = countLessonTypesPerCourse(filteredSlots);
+  
+    // Identify slots that should be kept to avoid reducing lesson types
+    const slotsToKeep = [];
+    for (const [course, beforeCount] of lessonTypeCountBefore) {
+      const afterCount = lessonTypeCountAfter.get(course) || 0;
+      if (beforeCount !== afterCount) {
+        // Identify the slots that belong to the affected course
+        const affectedSlots = slots.filter(slot => slot.title === course);
+        slotsToKeep.push(...affectedSlots);
+      }
+    }
+  
+    // Merge the filtered slots with those that must be kept
+    const finalSlots = [...filteredSlots, ...slotsToKeep];
+  
+    // Remove any duplicate slots that might have been added twice
+    const uniqueSlots = Array.from(new Set(finalSlots.map(slot => `${slot.title}${slot.lessonType}${slot.classNo}${slot.startTime}${slot.day}`)))
+      .map(key => finalSlots.find(slot => `${slot.title}${slot.lessonType}${slot.classNo}${slot.startTime}${slot.day}` === key));
+  
+    return uniqueSlots;
   };
+  
+  
+  // const filterByStartTime = (startTime: string, slots: ClassTimeSlotTypeUnion[]): ClassTimeSlotTypeUnion[] => {
+  //   const startTimeInMinutes = timeToMinutes(startTime);
+  //   const groups = slots.reduce((acc, slot) => {
+  //     const key = getPartialKeyUnion(slot);
+  //     if (!acc[key]) {
+  //         acc[key] = [];
+  //     }
+  //     acc[key].push(slot);
+  //     return acc;
+  //   }, {} as Record<string, ClassTimeSlotTypeUnion[]>);
+  //   const filteredGroups = Object.values(groups).filter(group =>
+  //         group.every(slot => slot.startTime.some(time => timeToMinutes(time) >= startTimeInMinutes)));
+  //   return filteredGroups.flat();
+  // };
   const filterByStartTime = (startTime: string, slots: ClassTimeSlotTypeUnion[]): ClassTimeSlotTypeUnion[] => {
+    const lessonTypeCountBefore = countLessonTypesPerCourse(slots);
     const startTimeInMinutes = timeToMinutes(startTime);
+  
     const groups = slots.reduce((acc, slot) => {
-      const key = getPartialKeyUnion(slot);
+      const key = `${slot.title}${slot.lessonType}${slot.classNo}`;
       if (!acc[key]) {
-          acc[key] = [];
+        acc[key] = [];
       }
       acc[key].push(slot);
       return acc;
     }, {} as Record<string, ClassTimeSlotTypeUnion[]>);
+  
+    // Perform the filtering
     const filteredGroups = Object.values(groups).filter(group =>
-          group.every(slot => slot.startTime.some(time => timeToMinutes(time) >= startTimeInMinutes)));
-    return filteredGroups.flat();
+      group.every(slot => slot.startTime.some(time => timeToMinutes(time) >= startTimeInMinutes))
+    );
+  
+    const filteredSlots = filteredGroups.flat();
+    const lessonTypeCountAfter = countLessonTypesPerCourse(filteredSlots);
+  
+    // Identify slots that should be kept to avoid reducing lesson types
+    const slotsToKeep = [];
+    for (const [course, beforeCount] of lessonTypeCountBefore) {
+      const afterCount = lessonTypeCountAfter.get(course) || 0;
+      if (beforeCount !== afterCount) {
+        // Identify the slots that belong to the affected course
+        const affectedSlots = slots.filter(slot => slot.title === course);
+        slotsToKeep.push(...affectedSlots);
+      }
+    }
+  
+    // Merge the filtered slots with those that must be kept
+    const finalSlots = [...filteredSlots, ...slotsToKeep];
+  
+    // Remove any duplicate slots that might have been added twice
+    const uniqueSlots = Array.from(new Set(finalSlots.map(slot => `${slot.title}${slot.lessonType}${slot.classNo}${slot.startTime}${slot.day}`)))
+      .map(key => finalSlots.find(slot => `${slot.title}${slot.lessonType}${slot.classNo}${slot.startTime}${slot.day}` === key));
+  
+    return uniqueSlots;
   };
-
+  
+  
+  
   const timeToMinutes = (time: string): number => {
     const formattedTime = time.length === 4 ? `${time.slice(0, 2)}:${time.slice(2, 4)}` : time;
     const parts = formattedTime.split(':');
@@ -249,11 +334,12 @@ const DynamicTimeTable = () => {
   };
 
   const slotsArray = Object.values(timeSlots).flat() as ClassTimeSlotType[];
-  console.log(JSON.stringify(slotsArray))
+  // console.log(JSON.stringify(slotsArray))
   const slotsArrayUnioned = transformSlots(slotsArray);
-  console.log(JSON.stringify(slotsArrayUnioned))
+  // console.log(JSON.stringify(slotsArrayUnioned))
   const filterDays = filterByDays(selectedDays, slotsArrayUnioned);
   const filterStartTime = filterByStartTime(minStartTime, filterDays);
+
   const timeTable = new TimeTable();
   const partitionSlots = (timeslots: ClassTimeSlotTypeUnion[]): ClassTimeSlotTypeUnion[][] => {
     const courses = new Map<string, ClassTimeSlotTypeUnion[]>();

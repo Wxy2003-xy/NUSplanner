@@ -113,7 +113,17 @@ button:hover {
 }
 
 .to-map-button {
-  margin-top: 0.875em;
+  max-width: 8em;
+  min-height: 7.5em;
+  max-height: 8em;
+  z-index: 100000;
+  position: fixed;
+  bottom: 4em;
+  right: 2em; 
+  margin-top: 0;
+  border-radius: 4em;
+  color:#ffffff;
+  background-color: #0a756d;
 }
 
 .loading-indicator {

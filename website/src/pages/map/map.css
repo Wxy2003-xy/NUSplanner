@@ -25,6 +25,22 @@
   display: flex;
 }
 
+.custom-popup {
+  background: white;
+  padding: 10px;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+  z-index: 100000000;
+  white-space: nowrap;
+  pointer-events: none; /* Prevent interfering with map interactions */
+}
+
+.custom-popup-content {
+  text-align: center;
+}
+
+
+
 @media (max-width: 768px) {
   .map-nav-right {
     margin-left: 0;

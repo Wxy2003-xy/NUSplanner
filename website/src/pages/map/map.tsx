@@ -16,27 +16,27 @@ const getKey = (slot: ClassTimeSlotTypeUnion): string => {
 }
 
 const tutIcon = L.icon({
-  iconUrl: 'https://cdn-icons-png.flaticon.com/128/12034/12034802.png',
+  iconUrl: 'https://cdn-icons-png.flaticon.com/128/149/149060.png',
   iconSize: [38, 38],    
 });
 const labIcon = L.icon({
-  iconUrl: 'https://cdn-icons-png.flaticon.com/128/2616/2616689.png',
+  iconUrl: 'https://cdn-icons-png.flaticon.com/128/149/149060.png',
   iconSize: [38, 38],    
 });
 const recIcon = L.icon({
-  iconUrl: 'https://cdn-icons-png.flaticon.com/128/807/807281.png',
+  iconUrl: 'https://cdn-icons-png.flaticon.com/128/9458/9458883.png',
   iconSize: [38, 38],    
 });
 const lecIcon = L.icon({
-  iconUrl: 'https://cdn-icons-png.flaticon.com/128/2991/2991117.png',
+  iconUrl: 'https://cdn-icons-png.flaticon.com/512/684/684908.png',
   iconSize: [38, 38],   
 });
 const secIcon = L.icon({
-  iconUrl: 'https://cdn-icons-png.flaticon.com/128/7743/7743751.png',
+  iconUrl: 'https://cdn-icons-png.flaticon.com/128/11269/11269426.png',
   iconSize: [38, 38],    
 });
 const semIcon = L.icon({
-  iconUrl: 'https://cdn-icons-png.flaticon.com/128/7743/7743751.png',
+  iconUrl: 'https://cdn-icons-png.flaticon.com/128/11269/11269426.png',
   iconSize: [38, 38],     
 });
 const defIcon = L.icon({
@@ -46,12 +46,12 @@ const defIcon = L.icon({
 
 const getIcon = (lessonType: string): any => {
   switch(lessonType) {
-    // case 'Tutorial': return tutIcon;
-    // case 'Laboratory': return labIcon;
-    // case 'Lecture': return lecIcon;
-    // case 'Sectional Teaching': return secIcon;    
-    // case 'Seminar': return semIcon;
-    // case 'Recitation': return recIcon;
+    case 'Tutorial': return tutIcon;
+    case 'Laboratory': return labIcon;
+    case 'Lecture': return lecIcon;
+    case 'Sectional Teaching': return secIcon;    
+    case 'Seminar': return semIcon;
+    case 'Recitation': return recIcon;
     default: return defIcon;  
   }
 }
@@ -98,13 +98,13 @@ const Map = () => {
           </MapContainer>
         </div>
         <div className='venue-info-list'>
-      {timeSlots ? (
+      {/* {timeSlots ? (
       timeSlots.map(slot => (
         <div key={getKey(slot)}>
           <p>{`${slot.title} classNo: ${slot.lessonType} ${slot.classNo} on ${slot.day} from ${slot.startTime} to ${slot.endTime} at ${slot.venue} `}</p>
         </div>
       ))
-      ) : <p>No valid arrangement found.</p>}
+      ) : <p>No valid arrangement found.</p>} */}
 
       </div>
         <div className='credit-section'>
