@@ -138,15 +138,22 @@ const colorPalettes = {
   }
 };
 
-const getBackgroundColor = (palette: string, classification: string | undefined, isSelected: boolean, prereqNotSatisfied: boolean) => {
-  const colors = colorPalettes[palette as keyof typeof colorPalettes];
-  const color = colors[classification as keyof typeof colors] || colors.default;
-
+const getBackgroundColor = (
+  palette: string, 
+  classification: string | undefined, 
+  isSelected: boolean, 
+  prereqNotSatisfied: boolean
+) => {
+  const colors = colorPalettes[palette as keyof typeof colorPalettes] || {};
+  const defaultColor = '#e0e0e0'; // Customize this default color
+  const color = classification ? colors[classification as keyof typeof colors] || colors.default || defaultColor : defaultColor;
   if (isSelected) {
     return prereqNotSatisfied ? '#f06969' : '#00c99e';
   }
+
   return color;
 };
+
 
 const Card: React.FC<CardProps> = ({
   id, name, semester, courseCredit, content, onClick, isSelected = false, grade, prereqTree,

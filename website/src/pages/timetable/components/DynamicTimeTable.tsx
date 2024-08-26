@@ -359,6 +359,17 @@ const DynamicTimeTable = () => {
   const handleToMap = () => {
     navigate('/map', { state: { timeSlots: arranged } });
   };
+
+  const clearCache = () => {
+    localStorage.removeItem('cachedTimeSlots');
+    localStorage.removeItem('selectedDays');
+    localStorage.removeItem('minStartTime');
+    localStorage.removeItem('showTourState');
+    setTimeSlots({});
+    setSelectedDays(["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"]);
+    setMinStartTime('10:00');
+    alert('Cache cleared successfully!');
+  };
     return (
       <div> 
         {showTour && <GuidedTourTimetable startTour={showTour} onClose={handleTourClose} />}
@@ -406,11 +417,12 @@ const DynamicTimeTable = () => {
         ) : (
           <div>
             {arranged ? 
-            <Timetable timeSlots={arranged}></Timetable> : <p>No valid arrangement found.</p>} 
+            <Timetable timeSlots={arranged}></Timetable> : <p className="no-valid-arrangement">No valid arrangement found.</p>} 
           </div>
         )}
       </div>
         <button className="to-map-button" onClick={() => handleToMap()}>View Map</button>
+        <button className="clear-cache-button" onClick={clearCache}>Clear Table</button>
       </div>
     );
 };

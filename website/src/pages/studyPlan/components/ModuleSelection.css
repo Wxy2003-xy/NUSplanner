@@ -28,10 +28,66 @@
   background-color: #45a049;
 }
 
-.info-text {
+.info-text-mod {
   display: flex;
   flex-direction: row-reverse;
 }
+/* 
+.tree-section {
+  padding: 0%;
+  min-height: 300em;
+} */
+
 .notice-info-relevance {
   font-size: 0.5em;
+}
+
+/* Media Queries */
+
+/* Tablets and below */
+@media (max-width: 768px) {
+  .fetchinfo-button,
+  .confirm-button {
+    margin-top: 0.5rem;
+    margin-left: 0.75rem;
+    padding: 0.5rem 1rem;
+    font-size: 0.9em;
+  }
+
+  .info-text-mod {
+    font-size: small;
+    flex-direction: column-reverse;
+    align-items: center;
+    text-align: center;
+  }
+
+  .notice-info-relevance {
+    font-size: 0.45em;
+  }
+  .tree-section {
+    padding: 0%;
+    min-width: 40em;
+  }
+}
+
+/* Mobile phones */
+@media (max-width: 480px) {
+  .fetchinfo-button,
+  .confirm-button {
+    margin-top: 0.4rem;
+    margin-left: 0.5rem;
+    padding: 0.4rem 0.8rem;
+    font-size: 0.8em;
+  }
+
+  .info-text-mod {
+    font-size: small;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+
+  .notice-info-relevance {
+    font-size: 0.4em;
+  }
 }

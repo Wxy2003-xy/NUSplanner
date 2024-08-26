@@ -86,7 +86,7 @@ import './MCbreakDown.css'
     return (
         <div className="counter-box">
              <div className="mc-count-container">
-        <div>Total MC count: {getTotalMCCount(cards)}</div>
+        <div>{' |'} Total MC count: {getTotalMCCount(cards)}</div>
         <button
           onClick={toggleBreakdownVisibility}
           className={`toggle-button ${isBreakdownVisible ? 'collapse' : 'expand'}`}

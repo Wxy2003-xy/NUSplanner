@@ -133,6 +133,10 @@ button:hover {
   margin-top: 1.25em;
 }
 
+.no-valid-arrangement {
+  margin: 2em;
+}
+
 @media (max-width: 48em) {
   .time-slot {
     flex-direction: column;
@@ -149,12 +153,15 @@ button:hover {
   }
 
   .select-day, .select-time, .custom-slot-adder {
-    flex-direction: column;
+    flex-direction: row;
+    font-size: 0.525em;
     align-items: flex-start;
   }
 
   .select-day h3, .select-time h3, .custom-slot-adder h3 {
     margin-bottom: 0.5em;
+    font-size: small;
+
   }
 
   .custom-slot-adder form {
@@ -163,10 +170,12 @@ button:hover {
   }
 
   .add-slot-button {
-    align-self: flex-start;
+    align-self: flex-start; 
   }
 
   .weekday-header {
+    font-size: small;
+
     font-size: 0.125em;
   }
 }
