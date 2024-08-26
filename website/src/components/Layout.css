@@ -350,6 +350,9 @@ nav ul li {
 
 @media (max-width: 768px) {
   header {
+    max-width: 393px;
+    position: fixed;
+    justify-self: center;
     flex-direction: row;
     height: 3em;
     align-items: center;
@@ -411,7 +414,7 @@ nav ul li {
     font-size: 0.55rem;
     background-position: right -0.2375rem bottom -0.625rem;
     background-size: 75%;
-    max-width: 66px;
+    max-width: 3.5rem;
   }
 
   .logo-container span {
@@ -444,23 +447,36 @@ nav ul li {
   }
 
   .about-us-container {
-    margin-right: 0.25rem;
+    font-size: 0.95em;
+    margin-right: 0.0rem;
     align-self: center;
     justify-content: center;
     align-items: center;
     justify-self: center;
     transform: translateY(-0.12rem);
   }
-  .join-us-text {
+  .join-us-text, .login-text {
     color: white; 
     text-decoration: none;
     font-size: 0.55em;
   }
 
+  .login-container {
+    margin-left: -0.1em;
+    margin-right: 0.05em;
+    font-size: 0.55em;
+    transform: translateY(-0.125rem);
+  }
+
+  .login-link:hover {
+    color: white; 
+    text-decoration: none;
+  }
+
   .join-us-icon {
     width: 1rem;
     height: 1rem; 
-    margin-right: 0.5rem; 
+    margin-right: 0.1rem; 
     transition: transform 0.3s ease; 
   }
   
@@ -483,10 +499,10 @@ nav ul li {
   .date-container {
     font-size: 0.55rem;
     color: white;
-    margin-right: 0.05rem; 
+    margin-right: 0.5rem; 
     min-width: 4em;
     justify-content: center;
     align-items: center;
-    transform: translateY(0.0325rem);
+    transform: translateY(0.075rem);
   }
 }

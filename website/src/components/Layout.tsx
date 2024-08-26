@@ -84,7 +84,7 @@ const Layout = ({ children }) => {
         </div>
         <div className="login-container">
           <button className="login-link" onClick={toggleLoginPopup}>
-            <span>Login</span>
+            <span className='login-text'>Login</span>
           </button>
         </div>
         <div className="date-container">

@@ -45,3 +45,10 @@
   display: flex;
   justify-content: center;
 }
+@media (max-width: 768px) {
+  .Header {
+    position: fixed;
+    max-width: 394px;
+  }
+}
+

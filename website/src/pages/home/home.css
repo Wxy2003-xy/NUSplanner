@@ -628,7 +628,9 @@ header {
 }
 
 .home-login-container {
-  margin-right: 0.5em;
+  margin-right: 0.1em;
+  font-size: 0.55em;
+  transform: translateY(0.3em);
 }
 
 .home-login-link {

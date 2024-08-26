@@ -92,7 +92,7 @@ const Feedback = () => {
             NUSPlanner is a wholly student-run, non-profit initiative that thrives on the ongoing support from the NUS student community. We deeply value your involvement, whether it is through sharing your experiences, reporting issues, or suggesting enhancements. Your feedback and contributions are immensely appreciated and will be carefully considered as we strive to improve. Thank you for being an integral part of our journey!
           </p>
           
-          <p className="feedback-prefix">I would like to:     
+          <p className="feedback-prefix">    
             <button className="report-button" onClick={() => showForm('Report')}>Report Issues</button>
             <button className="suggest-button" onClick={() => showForm('Suggestion')}>Suggest Improvements</button>
             <button className="other-button" onClick={() => showForm('Other')}>Give Other Feedback</button> 
@@ -100,7 +100,7 @@ const Feedback = () => {
           
           {formVisible && (
             <form id="feedback-form" className="feedbackform" onSubmit={handleSubmit}>
-              <h2>Feedback Form</h2>
+              <h2 className='feedback-title-line'>Feedback Form</h2>
               <textarea
                 id="message"
                 name="message"
