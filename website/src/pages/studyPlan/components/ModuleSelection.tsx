@@ -79,6 +79,8 @@ const ModuleSelectionBox: React.FC<ModuleSelectionBoxProps> = ({ setTempCard, on
         setSuggestions([]); // Clear the suggestions list
     };
 
+    
+
     const fetchModuleInfo = (acadYear: string, moduleCode: string): void => {
         if (!acadYear) {
             setError('Please select an academic year.');
@@ -181,19 +183,19 @@ const ModuleSelectionBox: React.FC<ModuleSelectionBoxProps> = ({ setTempCard, on
                 </div>
             )}
             {moduleInfo && (
-                <div className='info-text'>
+                <div className='info-text-mod'>
                     <div>
                         <h2>Module Information:</h2>
                         <h3>{moduleInfo.courseCode}</h3>
                         <p><strong>Credit:</strong> {moduleInfo.courseCredit}</p>
                         <p><strong>Prerequisites:</strong> {moduleInfo.prerequisites}</p>
                         <p><strong>Preclusions:</strong> {moduleInfo.preclusionRule ? moduleInfo.preclusionRule.join(', ') : 'NA'}</p>
+                        <button className='confirm-button' onClick={onConfirm}>Confirm</button>
                     </div>
-                    <div>
+                    <div className='tree-section'>
                         <div className='tree-container-select'>
                             <PrereqTreeVisual data={moduleInfo.prereqTree} />
                         </div>
-                        <button className='confirm-button' onClick={onConfirm}>Confirm</button>
                     </div>
                 </div>
             )}

@@ -223,6 +223,58 @@ const DynamicTable: React.FC = () => {
     console.log('minor info set');
   } 
 
+
+  // Add event listener for keydown to listen for Escape key
+  const [highlightedIndex, setHighlightedIndex] = useState<number | null>(null);
+
+  // Example state for suggestions (this would normally come from props or fetched data)
+  const [suggestions, setSuggestions] = useState<string[]>([
+    'Suggestion 1',
+    'Suggestion 2',
+    'Suggestion 3',
+    'Suggestion 4'
+  ]);
+
+  // Function to handle keyboard navigation
+  const handleKeyDown = (event: KeyboardEvent) => {
+    if (event.key === 'Escape') {
+      // Close selected card details if open
+      if (selectedCard) {
+        setSelectedCard(null);
+      }
+      // Close module selection box if open
+      if (isModuleSelectionVisible) {
+        handleModuleSelectionClose();
+      }
+    } else if (event.key === 'ArrowDown') {
+      // Move down in the suggestion list
+      setHighlightedIndex((prevIndex) => {
+        if (prevIndex === null || prevIndex === suggestions.length - 1) {
+          return 0; // Loop to the top
+        }
+        return prevIndex + 1;
+      });
+    } else if (event.key === 'ArrowUp') {
+      // Move up in the suggestion list
+      setHighlightedIndex((prevIndex) => {
+        if (prevIndex === null || prevIndex === 0) {
+          return suggestions.length - 1; // Loop to the bottom
+        }
+        return prevIndex - 1;
+      });
+    }
+  };
+
+  // Add event listener for keydown to listen for Escape, ArrowDown, and ArrowUp keys
+  useEffect(() => {
+    window.addEventListener('keydown', handleKeyDown);
+
+    // Cleanup the event listener on component unmount
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [selectedCard, isModuleSelectionVisible, suggestions]); // Re-run effect if these dependencies change
+
   const handleMoveCard = (fromColumn: number, fromIndex: number, toColumn: number, toIndex = null) => {
     if (fromColumn === undefined || fromIndex === undefined || toColumn === undefined || toIndex === undefined) {
       console.error("Invalid move parameters", {fromColumn, fromIndex, toColumn, toIndex});
@@ -723,149 +775,375 @@ const DynamicTable: React.FC = () => {
   };
   
   
-  return (
-    <div className='global-container'>
-      {notification && <div className="notification">{notification}</div>}
-      {showTour && <GuidedTour startTour={showTour} onClose={handleTourClose} />}
-      {clashNotification && <div className="clash-notification">{clashNotification}</div>}
-    <div className='button-area'>
-    <button className="collapse-button"onClick={toggleCollapse}>Major Setting</button>
+//   return (
+//     <div className='global-container'>
+//       {notification && <div className="notification">{notification}</div>}
+//       {showTour && <GuidedTour startTour={showTour} onClose={handleTourClose} />}
+//       {clashNotification && <div className="clash-notification">{clashNotification}</div>}
+//     <div className='button-area'>
+//     <button className="collapse-button"onClick={toggleCollapse}>Major Setting</button>
 
-    <div className="dropdown-row-colorscheme">
-            {' '}Color Scheme:{' '}
-            <select className="dropdown-select" value={colorScheme} onChange={handleColorSchemeChange}>
-              {colorSchemeOptions.map(scheme => (
-                <option key={scheme} value={scheme}>{scheme}</option>
-              ))}
-            </select>
-        </div>
-    </div>
+//     <div className="dropdown-row-colorscheme">
+//             {' '}Color Scheme:{' '}
+//             <select className="dropdown-select" value={colorScheme} onChange={handleColorSchemeChange}>
+//               {colorSchemeOptions.map(scheme => (
+//                 <option key={scheme} value={scheme}>{scheme}</option>
+//               ))}
+//             </select>
+//         </div>
+//     </div>
     
-    <div>
-      <div className="collapsible-content" style={{ display: isCollapsed ? 'none' : 'block' }}>
-      <div className="dropdown-row">
-        {' '}Plan for {'       '}
-        <select className="dropdown-select" value={columnCount} onChange={handleColumnChange}>
-          {[6, 7, 8, 9, 10, 11, 12].map(num => (
-            <option key={num} value={num}>{num} Semesters</option>
+//     <div>
+//       <div className="collapsible-content" style={{ display: isCollapsed ? 'none' : 'block' }}>
+//       <div className="dropdown-row">
+//         {' '}Plan for {'       '}
+//         <select className="dropdown-select" value={columnCount} onChange={handleColumnChange}>
+//           {[6, 7, 8, 9, 10, 11, 12].map(num => (
+//             <option key={num} value={num}>{num} Semesters</option>
+//           ))}
+//         </select>
+//       </div>
+//       {/* global state: semester; faculty and program choice */}
+//       <div className='dropdown-list-box'> 
+//         <div className="dropdown-row">
+//           {' '}Programme:{'    '}
+//           <select className="dropdown-select" value={programs} onChange={handleProgramChange}>
+//             {programOptions.map(option => (
+//               <option key={option} value={option}>{option}</option>
+//             ))}
+//           </select>
+//         </div>
+//         <div className="dropdown-row">
+//           {' '}Home faculty:{' '}
+//           <select className="dropdown-select" value={faculty} onChange={handleFacultyChange}>
+//             {Object.keys(allPrograms).map(key => (
+//               <option key={key} value={key}>{key}</option>
+//             ))}
+//           </select>
+//         </div>
+//         <div className="dropdown-row">
+//           {' ——'} Primary Major:{' '}
+//           <select className="dropdown-select" value={major} onChange={handleMajorChange}>
+//             {allPrograms[faculty].map((name:string, index:number) => (
+//               <option key={index} value={name}>{name}</option>
+//             ))}
+//           </select>   
+//         </div>
+//     {/* Second Row: Second Faculty, Second Major, and Minors if rendered */}
+//     {showSecondMajor && (
+//       <div className='dropdown-list-box'>
+//         <div className="dropdown-row">
+//           {' ———— '} Second Major/Degree Faculty:{' '}
+//           <select className="dropdown-select" value={secondFaculty} onChange={e => handleSecondMajorChange(e, 'faculty')}>
+//             {Object.keys(allPrograms).map(key => (
+//               <option key={key} value={key}>{key}</option>
+//             ))}
+//           </select>
+//         </div>
+//         <div className="dropdown-row">
+//           {' ———————— '} Second Major/Degree:{' '}
+//           <select className="dropdown-select" value={secondMajor} onChange={e => handleSecondMajorChange(e, 'major')}>
+//             {allPrograms[secondFaculty].map((major, index) => (
+//               <option key={index} value={major}>{major}</option>
+//             ))}
+//           </select>
+//         </div>
+//       </div>
+//     )}
+//     {/* Minors Section */}
+//     {showMinors && (
+//       <div className='dropdown-list-box'>
+//         {minors.map((minor, index) => (
+//           <div key={index} className="dropdown-row-minor">
+//             {' '}Minor {index + 1} :{' '}
+//             <select className="dropdown-select-minor" value={minor.faculty} onChange={e => handleMinorChange(index, 'faculty', e.target.value)}>
+//               {Object.keys(allPrograms).map(key => (
+//                 <option key={key} value={key}>{key}</option>
+//               ))}
+//             </select>
+//             <select className="dropdown-select-minor" value={minor.minor} onChange={e => handleMinorChange(index, 'minor', e.target.value)}>
+//               {allPrograms[minor.faculty] ? allPrograms[minor.faculty].map((minorName) => (
+//                 <option key={minorName} value={minorName}>{minorName}</option>
+//                 )) : null}
+//             </select>
+//             <button className="remove-minor-button" onClick={() => removeMinor(index)}>Remove</button>
+//           </div>
+//         ))}
+//         {minors.length < 3 && <button onClick={addMinor}>Add Minor {'(up to 3)'}</button>}
+//       </div>
+//     )}
+//   </div>
+// </div>
+//   <h1 className='headerline'>{headerTitle}</h1>
+//   <h3 className='subline'>{headerSub}</h3>
+//   <div className='mc-breakdonw-box'>
+//   <MCbreakDown cards={cards}/>
+//   </div>
+    
+//     <DndProvider backend={HTML5Backend}>
+//       <div className='table'>
+//         {cards.map((columnCards, columnIndex) => (
+//           <DroppableColumn key={columnIndex}
+//                            columnIndex={columnIndex}
+//                            columnCards={columnCards}
+//                            handleMoveCard={handleMoveCard}
+//                            getMCCount={getMCCount}
+//                            semesterCount={semesterCount}>
+//             {columnCards.map((card, index) => (
+//               <DraggableCard
+//               key={card.id}
+//               id={card.id ? card.id : Date.now()}
+//               name={card.name}
+//               courseCredit={card.courseCredit}
+//               content={card.content}
+//               columnIndex={columnIndex}
+//               index={index}
+//               handleMoveCard={handleMoveCard}
+//               handleCardClick={handleCardClick}
+//               selectedCard={selectedCard}
+//               grade={card.grade}
+//               prereqTree={card.prereqTree}
+//               prereqNotSatisfied={card.prereqNotSatisfied}
+//               colorScheme={colorScheme} // Pass the colorScheme prop
+//               classification={card.classification} />
+//             ))}
+//             {/* <button className="add-button" onClick={() => addCard(columnIndex)}>Add Course</button> */}
+//             <button className="add-button" onClick={() => showModuleSelectionBox(columnIndex)}>Add Course</button>
+
+//             <button className="to-timetable-button" onClick={() => handleToTimetable(columnIndex)}>View Timetable</button>
+//             {/* <button className="to-map-button" onClick={() => handleToMap(columnIndex)}>View Map</button> */}
+
+//           </DroppableColumn>
+//         ))}
+//       </div>
+//       <div className='info-on-select'>
+//       {selectedCard && (
+//         <div className="confirmation-dialog">
+//         <div className='selection-section'>
+//           <div className='remove-confirmation'>
+//             <p>Delete {selectedCard.name} from {semesterCount(selectedCard.columnIndex)}?</p>
+//             <button className='yes-button'onClick={removeCard}>Yes</button>
+//             <button className='no-button'onClick={() => setSelectedCard(null)}>No</button>
+//           </div>
+//           <div className='remove-confirmation'>
+//           <p>Update grade:</p>
+//           <select className="grade-dropdown-list"value={grade} onChange={updateGrade} required>
+//             <option value="">Select Grade</option>
+//             <option value="A+">A+</option>
+//             <option value="A">A</option>
+//             <option value="A-">A-</option>
+//             <option value="B+">B+</option>
+//             <option value="B">B</option>
+//             <option value="B-">B-</option>
+//             <option value="C+">C+</option>
+//             <option value="C">C</option>
+//             <option value="C-">C-</option>
+//             <option value="D+">D+</option>
+//             <option value="D">D</option>
+//             <option value="F">F</option>
+//           </select>
+//           <button className='update-grade-button'onClick={saveGrade}>Update Grade</button>
+//           </div>
+//           <div className='remove-confirmation'>
+//           <p>Classify course:</p>
+//           <select className="classification-dropdown-list"value={classification} onChange={updateClassification} required>
+//             <option value="">Classify as:</option>
+//             <option value="University level requirement">University level requirement</option>
+//             <option value="Faculty level requirement">Faculty level requirement</option>
+//             <option value="Major (towards primary degree) requirement">Major {'(towards primary degree)'} requirement</option>
+//             <option value="Major (towards 2nd degree/major) requirement">Major {'(towards 2nd degree/major)'} requirement</option>
+//             <option value="Minor requirement">Minor requirement</option>
+//             <option value="Unrestricted Elective">Unrestricted Elective</option>
+//             <option value="Specialisation Primary">Specialisation Primary</option>
+//             <option value="Specialisation Elective">Specialisation Elective</option>
+//           </select>
+//           <button className='update-classification-button'onClick={saveClassification}>Update Classification</button>
+//           </div>
+//           <button className='close-detail-button' onClick={() => setSelectedCard(null)}>Close Details</button>
+//           </div>
+//           <div className='all-info-container'>
+//             <div>
+//               <h3>Selected Course Details:</h3>
+//               <h2><strong></strong> {selectedCard.name}</h2>
+//               <p><strong>Course Name:</strong> {selectedCard.content}</p>
+//               <p><strong>Course Credit:</strong> {selectedCard.courseCredit}</p>
+//               <p><strong>Grade:</strong> {selectedCard.grade || 'Not Set'}</p>
+//               <p><strong>Exam Info:</strong> {selectedCard.examInfo? selectedCard.examInfo[0].examTime : 'No Exam'}</p>
+//               <p><strong>Prerequisites Satisfied:</strong> {selectedCard.prereqNotSatisfied ? 'No' : 'Yes'}</p>
+//               <h3>Prerequisite Tree:</h3>
+//             </div>
+//             <div>
+//               <div className='tree-container'>
+//                 {selectedCard ? renderPrereqTreeVisual(selectedCard.prereqTree) 
+//                 : <p>Prerequisite tree not available.</p>}
+//               </div>
+//             </div>
+//           </div>
+//         </div> 
+//       )}
+//       </div>
+//     </DndProvider>
+//     {isModuleSelectionVisible && (
+//             <ModuleSelectionBox 
+//               setTempCard={setTempCard} 
+//               onConfirm={handleModuleConfirm}
+//               onClose={handleModuleSelectionClose} 
+//             />
+//         )}
+//   </div>
+//   <p className='notificationsite'></p>
+//   <p className='course-query'></p>
+// </div>
+//   );
+return (
+  <div className='global-container'>
+    {notification && <div className="notification">{notification}</div>}
+    {showTour && <GuidedTour startTour={showTour} onClose={handleTourClose} />}
+    {clashNotification && <div className="clash-notification">{clashNotification}</div>}
+
+    {/* Grouping Button Area */}
+    <div className='button-area'>
+      <button className="collapse-button" onClick={toggleCollapse}>Major Setting</button>
+        <label className='color-scheme-text'>Color Scheme:</label>
+        <select className="dropdown-select-color" value={colorScheme} onChange={handleColorSchemeChange}>
+          {colorSchemeOptions.map(scheme => (
+            <option key={scheme} value={scheme}>{scheme}</option>
           ))}
         </select>
-      </div>
-      {/* global state: semester; faculty and program choice */}
-      <div className='dropdown-list-box'> 
+    </div>
+
+    {/* Grouping Settings Panel */}
+    <div className="collapsible-content" style={{ display: isCollapsed ? 'none' : 'block' }}>
+      <div className="dropdown-list-box">
         <div className="dropdown-row">
-          {' '}Programme:{'    '}
+          <label>Plan for:</label>
+          <select className="dropdown-select" value={columnCount} onChange={handleColumnChange}>
+            {[6, 7, 8, 9, 10, 11, 12].map(num => (
+              <option key={num} value={num}>{num} Semesters</option>
+            ))}
+          </select>
+        </div>
+
+        {/* Program and Major Settings */}
+        <div className="dropdown-row">
+          <label>Programme:</label>
           <select className="dropdown-select" value={programs} onChange={handleProgramChange}>
             {programOptions.map(option => (
               <option key={option} value={option}>{option}</option>
             ))}
           </select>
         </div>
+
         <div className="dropdown-row">
-          {' '}Home faculty:{' '}
+          <label>Home faculty:</label>
           <select className="dropdown-select" value={faculty} onChange={handleFacultyChange}>
             {Object.keys(allPrograms).map(key => (
               <option key={key} value={key}>{key}</option>
             ))}
           </select>
         </div>
+
         <div className="dropdown-row">
-          {' ——'} Primary Major:{' '}
+          <label>Primary Major:</label>
           <select className="dropdown-select" value={major} onChange={handleMajorChange}>
-            {allPrograms[faculty].map((name:string, index:number) => (
+            {allPrograms[faculty].map((name, index) => (
               <option key={index} value={name}>{name}</option>
             ))}
-          </select>   
-        </div>
-    {/* Second Row: Second Faculty, Second Major, and Minors if rendered */}
-    {showSecondMajor && (
-      <div className='dropdown-list-box'>
-        <div className="dropdown-row">
-          {' ———— '} Second Major/Degree Faculty:{' '}
-          <select className="dropdown-select" value={secondFaculty} onChange={e => handleSecondMajorChange(e, 'faculty')}>
-            {Object.keys(allPrograms).map(key => (
-              <option key={key} value={key}>{key}</option>
-            ))}
           </select>
         </div>
-        <div className="dropdown-row">
-          {' ———————— '} Second Major/Degree:{' '}
-          <select className="dropdown-select" value={secondMajor} onChange={e => handleSecondMajorChange(e, 'major')}>
-            {allPrograms[secondFaculty].map((major, index) => (
-              <option key={index} value={major}>{major}</option>
-            ))}
-          </select>
-        </div>
-      </div>
-    )}
-    {/* Minors Section */}
-    {showMinors && (
-      <div className='dropdown-list-box'>
-        {minors.map((minor, index) => (
-          <div key={index} className="dropdown-row-minor">
-            {' '}Minor {index + 1} :{' '}
-            <select className="dropdown-select-minor" value={minor.faculty} onChange={e => handleMinorChange(index, 'faculty', e.target.value)}>
-              {Object.keys(allPrograms).map(key => (
-                <option key={key} value={key}>{key}</option>
-              ))}
-            </select>
-            <select className="dropdown-select-minor" value={minor.minor} onChange={e => handleMinorChange(index, 'minor', e.target.value)}>
-              {allPrograms[minor.faculty] ? allPrograms[minor.faculty].map((minorName) => (
-                <option key={minorName} value={minorName}>{minorName}</option>
-                )) : null}
-            </select>
-            <button className="remove-minor-button" onClick={() => removeMinor(index)}>Remove</button>
+
+        {/* Second Major Settings */}
+        {showSecondMajor && (
+          <div className='dropdown-list-box'>
+            <div className="dropdown-row">
+              <label>Second Major/Degree Faculty:</label>
+              <select className="dropdown-select" value={secondFaculty} onChange={e => handleSecondMajorChange(e, 'faculty')}>
+                {Object.keys(allPrograms).map(key => (
+                  <option key={key} value={key}>{key}</option>
+                ))}
+              </select>
+            </div>
+            <div className="dropdown-row">
+              <label>Second Major/Degree:</label>
+              <select className="dropdown-select" value={secondMajor} onChange={e => handleSecondMajorChange(e, 'major')}>
+                {allPrograms[secondFaculty].map((major, index) => (
+                  <option key={index} value={major}>{major}</option>
+                ))}
+              </select>
+            </div>
           </div>
-        ))}
-        {minors.length < 3 && <button onClick={addMinor}>Add Minor {'(up to 3)'}</button>}
+        )}
+
+        {/* Minors Section */}
+        {showMinors && (
+          <div className='dropdown-list-box'>
+            {minors.map((minor, index) => (
+              <div key={index} className="dropdown-row">
+                <label>Minor {index + 1} :</label>
+                <select className="dropdown-select-minor" value={minor.faculty} onChange={e => handleMinorChange(index, 'faculty', e.target.value)}>
+                  {Object.keys(allPrograms).map(key => (
+                    <option key={key} value={key}>{key}</option>
+                  ))}
+                </select>
+                <select className="dropdown-select-minor" value={minor.minor} onChange={e => handleMinorChange(index, 'minor', e.target.value)}>
+                  {allPrograms[minor.faculty] ? allPrograms[minor.faculty].map(minorName => (
+                    <option key={minorName} value={minorName}>{minorName}</option>
+                  )) : null}
+                </select>
+                <button className="remove-minor-button" onClick={() => removeMinor(index)}>Remove</button>
+              </div>
+            ))}
+            {minors.length < 3 && <button className='add-minor-button'onClick={addMinor}>Add Minor (up to 3)</button>}
+          </div>
+        )}
       </div>
-    )}
-  </div>
-</div>
-  <h1 className='headerline'>{headerTitle}</h1>
-  <h3 className='subline'>{headerSub}</h3>
-  <div className='mc-breakdonw-box'>
-  <MCbreakDown cards={cards}/>
-  </div>
-    
+    </div>
+
+    <h1 className='headerline'>{headerTitle}</h1>
+    <h3 className='subline'>{headerSub}</h3>
+    <div className='mc-breakdown-box'>
+      <MCbreakDown cards={cards} />
+    </div>
+
+    {/* DnD Table */}
     <DndProvider backend={HTML5Backend}>
       <div className='table'>
         {cards.map((columnCards, columnIndex) => (
-          <DroppableColumn key={columnIndex}
-                           columnIndex={columnIndex}
-                           columnCards={columnCards}
-                           handleMoveCard={handleMoveCard}
-                           getMCCount={getMCCount}
-                           semesterCount={semesterCount}>
+          <DroppableColumn
+            key={columnIndex}
+            columnIndex={columnIndex}
+            columnCards={columnCards}
+            handleMoveCard={handleMoveCard}
+            getMCCount={getMCCount}
+            semesterCount={semesterCount}
+          >
             {columnCards.map((card, index) => (
               <DraggableCard
-              key={card.id}
-              id={card.id ? card.id : Date.now()}
-              name={card.name}
-              courseCredit={card.courseCredit}
-              content={card.content}
-              columnIndex={columnIndex}
-              index={index}
-              handleMoveCard={handleMoveCard}
-              handleCardClick={handleCardClick}
-              selectedCard={selectedCard}
-              grade={card.grade}
-              prereqTree={card.prereqTree}
-              prereqNotSatisfied={card.prereqNotSatisfied}
-              colorScheme={colorScheme} // Pass the colorScheme prop
-              classification={card.classification} />
+                key={card.id}
+                id={card.id}
+                name={card.name}
+                courseCredit={card.courseCredit}
+                content={card.content}
+                columnIndex={columnIndex}
+                index={index}
+                handleMoveCard={handleMoveCard}
+                handleCardClick={handleCardClick}
+                selectedCard={selectedCard}
+                grade={card.grade}
+                prereqTree={card.prereqTree}
+                prereqNotSatisfied={card.prereqNotSatisfied}
+                colorScheme={colorScheme}
+                classification={card.classification}
+              />
             ))}
-            {/* <button className="add-button" onClick={() => addCard(columnIndex)}>Add Course</button> */}
             <button className="add-button" onClick={() => showModuleSelectionBox(columnIndex)}>Add Course</button>
-
             <button className="to-timetable-button" onClick={() => handleToTimetable(columnIndex)}>View Timetable</button>
-            {/* <button className="to-map-button" onClick={() => handleToMap(columnIndex)}>View Map</button> */}
-
           </DroppableColumn>
         ))}
       </div>
-      <div className='info-on-select'>
       {selectedCard && (
+
+      <div className='info-on-select'>
         <div className="confirmation-dialog">
         <div className='selection-section'>
           <div className='remove-confirmation'>
@@ -917,32 +1195,31 @@ const DynamicTable: React.FC = () => {
               <p><strong>Course Credit:</strong> {selectedCard.courseCredit}</p>
               <p><strong>Grade:</strong> {selectedCard.grade || 'Not Set'}</p>
               <p><strong>Exam Info:</strong> {selectedCard.examInfo? selectedCard.examInfo[0].examTime : 'No Exam'}</p>
+              <p><strong>Prerequisites Satisfied:</strong> {selectedCard.prereqNotSatisfied ? 'No' : 'Yes'}</p>
+              <h3>Prerequisite Tree:</h3>
             </div>
             <div>
-              <h3>Prerequisite Tree:</h3>
               <div className='tree-container'>
                 {selectedCard ? renderPrereqTreeVisual(selectedCard.prereqTree) 
                 : <p>Prerequisite tree not available.</p>}
               </div>
-              <p><strong>Prerequisites Satisfied:</strong> {selectedCard.prereqNotSatisfied ? 'No' : 'Yes'}</p>
             </div>
           </div>
         </div> 
-      )}
       </div>
+      )}
+
     </DndProvider>
     {isModuleSelectionVisible && (
-            <ModuleSelectionBox 
-              setTempCard={setTempCard} 
-              onConfirm={handleModuleConfirm}
-              onClose={handleModuleSelectionClose} 
-            />
-        )}
+      <ModuleSelectionBox
+        setTempCard={setTempCard}
+        onConfirm={handleModuleConfirm}
+        onClose={handleModuleSelectionClose}
+      />
+    )}
   </div>
-  <p className='notificationsite'></p>
-  <p className='course-query'></p>
-</div>
-  );
+);
+
 };
 
 export default DynamicTable;

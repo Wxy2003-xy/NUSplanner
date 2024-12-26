@@ -36,6 +36,8 @@ const fetchTimeSlotInfo = async (acadYear:string, moduleCode:string, semester:nu
 };
 
 const DynamicTimeTable = () => {
+  const daysOfWeek = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"];
+
   const location = useLocation();
   const { courseList, semester } = location.state || { courseList: [], semester: 1 };
   const currentYear = new Date().getFullYear();
@@ -43,34 +45,48 @@ const DynamicTimeTable = () => {
 
   const [timeSlots, setTimeSlots] = useState(() => {
     const data = localStorage.getItem('cachedTimeSlots');
-    return data ? JSON.parse(data) : {};
+    return data ? JSON.parse(data) : [];
   });
-  const [errors, setErrors] = useState({});
   const initialDays = JSON.parse(localStorage.getItem('selectedDays') || '["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"]');
-  const initialStartTime = localStorage.getItem('minStartTime') || '10:00';
+  const initialStartTime = localStorage.getItem('minStartTime') || '08:00';
 
   const [selectedDays, setSelectedDays] = useState(initialDays);
   const [minStartTime, setMinStartTime] = useState(initialStartTime);
 
-  const [customSlots, setCustomSlots] = useState<ClassTimeSlotTypeUnion[]>([]);
-  const [newSlot, setNewSlot] = useState<ClassTimeSlotTypeUnion>({
-    classNo: 'custom',
-    startTime: [''],
-    endTime: [''],
-    day: ['Monday'],
-    lessonType: '',
+  const [input, setInput] = useState({
     title: '',
-    weeks: [],
+    day: '',
+    startTime: '',
+    endTime: '',
+    classNo: '',
+    venue: '',
+    weeks: '',
+    lessonType: '',
   });
-  const handleCustomSlotChange = (event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+  const [slots, setSlots] = useState<ClassTimeSlotTypeUnion[]>([]);
+
+  const handleInputChange = (event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = event.target;
-    setNewSlot(prevSlot => ({
-      ...prevSlot,
-      [name]: [value]
+    setInput(prevInput => ({
+      ...prevInput,
+      [name]: value,
     }));
   };
-  const handleAddCustomSlot = () => {
-
+  const handleAddSlot = () => {
+    const newSlot: ClassTimeSlotTypeUnion = {
+      title: input.title,
+      day: [input.day],
+      startTime: [input.startTime],
+      endTime: [input.endTime],
+      classNo: input.classNo,
+      venue: input.venue,
+      weeks: input.weeks ? JSON.parse(input.weeks) : [],
+      lessonType: input.lessonType,
+    };
+  
+    setSlots([...timeSlots, newSlot]);
+    setTimeSlots([...timeSlots, newSlot]);
+    localStorage.setItem('cachedTimeSlots', JSON.stringify([...timeSlots, newSlot]));
   };
 
   const [showTour, setShowTour] = useState(() => {
@@ -100,7 +116,8 @@ const DynamicTimeTable = () => {
     const fetchData = async () => {
       setLoading(true); 
       try {
-        const slotsPromises = courseList.map(course => fetchTimeSlotInfo(acadYear, course, semester));
+        const slotsPromises = courseList
+        .map(course => fetchTimeSlotInfo(acadYear, course, semester));
         const slots = await Promise.all(slotsPromises);
         const newSlots = slots.reduce((acc, slot, idx) => ({
           ...acc,
@@ -114,7 +131,8 @@ const DynamicTimeTable = () => {
       setLoading(false); 
     };
 
-    if (courseList.length > 0 && (Object.keys(timeSlots).length === 0 || window.confirm("New course list detected. Do you want to refresh the cached data?"))) {
+    if (courseList.length > 0 && (Object.keys(timeSlots).length === 0 
+    || window.confirm("New course list detected. Do you want to refresh the cached data?"))) {
       fetchData();
     }
   }, [acadYear, courseList, semester]); 
@@ -207,35 +225,120 @@ const DynamicTimeTable = () => {
     return Array.from(grouped.values());
   }
 
+  // const filterByDays = (days: string[], slots: ClassTimeSlotTypeUnion[]): ClassTimeSlotTypeUnion[] => {
+  //   const groups = slots.reduce((acc, slot) => {
+  //     const key = getPartialKeyUnion(slot);
+  //     if (!acc[key]) {
+  //       acc[key] = [];
+  //     }
+  //     acc[key].push(slot);
+  //     return acc;
+  //   }, {} as Record<string, ClassTimeSlotTypeUnion[]>);
+  //   const filteredGroups = Object.values(groups).filter(group =>
+  //       group.every(slot => slot.day.some(day => days.includes(day)))
+  //   );
+  //   return filteredGroups.flat();
+  // };
   const filterByDays = (days: string[], slots: ClassTimeSlotTypeUnion[]): ClassTimeSlotTypeUnion[] => {
+    const lessonTypeCountBefore = countLessonTypesPerCourse(slots);
+  
     const groups = slots.reduce((acc, slot) => {
-      const key = getPartialKeyUnion(slot);
+      const key = `${slot.title}${slot.lessonType}${slot.classNo}`;
       if (!acc[key]) {
         acc[key] = [];
       }
       acc[key].push(slot);
       return acc;
     }, {} as Record<string, ClassTimeSlotTypeUnion[]>);
+  
+    // Perform the filtering
     const filteredGroups = Object.values(groups).filter(group =>
-        group.every(slot => slot.day.some(day => days.includes(day)))
+      group.every(slot => slot.day.some(day => days.includes(day)))
     );
-    return filteredGroups.flat();
+  
+    const filteredSlots = filteredGroups.flat();
+    const lessonTypeCountAfter = countLessonTypesPerCourse(filteredSlots);
+  
+    // Identify slots that should be kept to avoid reducing lesson types
+    const slotsToKeep = [];
+    for (const [course, beforeCount] of lessonTypeCountBefore) {
+      const afterCount = lessonTypeCountAfter.get(course) || 0;
+      if (beforeCount !== afterCount) {
+        // Identify the slots that belong to the affected course
+        const affectedSlots = slots.filter(slot => slot.title === course);
+        slotsToKeep.push(...affectedSlots);
+      }
+    }
+  
+    // Merge the filtered slots with those that must be kept
+    const finalSlots = [...filteredSlots, ...slotsToKeep];
+  
+    // Remove any duplicate slots that might have been added twice
+    const uniqueSlots = Array.from(new Set(finalSlots.map(slot => `${slot.title}${slot.lessonType}${slot.classNo}${slot.startTime}${slot.day}`)))
+      .map(key => finalSlots.find(slot => `${slot.title}${slot.lessonType}${slot.classNo}${slot.startTime}${slot.day}` === key));
+  
+    return uniqueSlots;
   };
+  
+  
+  // const filterByStartTime = (startTime: string, slots: ClassTimeSlotTypeUnion[]): ClassTimeSlotTypeUnion[] => {
+  //   const startTimeInMinutes = timeToMinutes(startTime);
+  //   const groups = slots.reduce((acc, slot) => {
+  //     const key = getPartialKeyUnion(slot);
+  //     if (!acc[key]) {
+  //         acc[key] = [];
+  //     }
+  //     acc[key].push(slot);
+  //     return acc;
+  //   }, {} as Record<string, ClassTimeSlotTypeUnion[]>);
+  //   const filteredGroups = Object.values(groups).filter(group =>
+  //         group.every(slot => slot.startTime.some(time => timeToMinutes(time) >= startTimeInMinutes)));
+  //   return filteredGroups.flat();
+  // };
   const filterByStartTime = (startTime: string, slots: ClassTimeSlotTypeUnion[]): ClassTimeSlotTypeUnion[] => {
+    const lessonTypeCountBefore = countLessonTypesPerCourse(slots);
     const startTimeInMinutes = timeToMinutes(startTime);
+  
     const groups = slots.reduce((acc, slot) => {
-      const key = getPartialKeyUnion(slot);
+      const key = `${slot.title}${slot.lessonType}${slot.classNo}`;
       if (!acc[key]) {
-          acc[key] = [];
+        acc[key] = [];
       }
       acc[key].push(slot);
       return acc;
     }, {} as Record<string, ClassTimeSlotTypeUnion[]>);
+  
+    // Perform the filtering
     const filteredGroups = Object.values(groups).filter(group =>
-          group.every(slot => slot.startTime.some(time => timeToMinutes(time) >= startTimeInMinutes)));
-    return filteredGroups.flat();
+      group.every(slot => slot.startTime.some(time => timeToMinutes(time) >= startTimeInMinutes))
+    );
+  
+    const filteredSlots = filteredGroups.flat();
+    const lessonTypeCountAfter = countLessonTypesPerCourse(filteredSlots);
+  
+    // Identify slots that should be kept to avoid reducing lesson types
+    const slotsToKeep = [];
+    for (const [course, beforeCount] of lessonTypeCountBefore) {
+      const afterCount = lessonTypeCountAfter.get(course) || 0;
+      if (beforeCount !== afterCount) {
+        // Identify the slots that belong to the affected course
+        const affectedSlots = slots.filter(slot => slot.title === course);
+        slotsToKeep.push(...affectedSlots);
+      }
+    }
+  
+    // Merge the filtered slots with those that must be kept
+    const finalSlots = [...filteredSlots, ...slotsToKeep];
+  
+    // Remove any duplicate slots that might have been added twice
+    const uniqueSlots = Array.from(new Set(finalSlots.map(slot => `${slot.title}${slot.lessonType}${slot.classNo}${slot.startTime}${slot.day}`)))
+      .map(key => finalSlots.find(slot => `${slot.title}${slot.lessonType}${slot.classNo}${slot.startTime}${slot.day}` === key));
+  
+    return uniqueSlots;
   };
-
+  
+  
+  
   const timeToMinutes = (time: string): number => {
     const formattedTime = time.length === 4 ? `${time.slice(0, 2)}:${time.slice(2, 4)}` : time;
     const parts = formattedTime.split(':');
@@ -249,11 +352,12 @@ const DynamicTimeTable = () => {
   };
 
   const slotsArray = Object.values(timeSlots).flat() as ClassTimeSlotType[];
-  console.log(JSON.stringify(slotsArray))
+  // console.log(JSON.stringify(slotsArray))
   const slotsArrayUnioned = transformSlots(slotsArray);
-  console.log(JSON.stringify(slotsArrayUnioned))
+  // console.log(JSON.stringify(slotsArrayUnioned))
   const filterDays = filterByDays(selectedDays, slotsArrayUnioned);
   const filterStartTime = filterByStartTime(minStartTime, filterDays);
+
   const timeTable = new TimeTable();
   const partitionSlots = (timeslots: ClassTimeSlotTypeUnion[]): ClassTimeSlotTypeUnion[][] => {
     const courses = new Map<string, ClassTimeSlotTypeUnion[]>();
@@ -273,6 +377,17 @@ const DynamicTimeTable = () => {
   const handleToMap = () => {
     navigate('/map', { state: { timeSlots: arranged } });
   };
+
+  const clearCache = () => {
+    localStorage.removeItem('cachedTimeSlots');
+    localStorage.removeItem('selectedDays');
+    localStorage.removeItem('minStartTime');
+    localStorage.removeItem('showTourState');
+    setTimeSlots({});
+    setSelectedDays(["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"]);
+    setMinStartTime('10:00');
+    alert('Cache cleared successfully!');
+  };
     return (
       <div> 
         {showTour && <GuidedTourTimetable startTour={showTour} onClose={handleTourClose} />}
@@ -284,47 +399,77 @@ const DynamicTimeTable = () => {
           <h3>No earlier than:</h3>
           <input type="time" value={minStartTime} onChange={handleStartTimeChange} />
         </div>
-        {/* <div className="custom-slot-adder">
-          <h3>Add Custom Slot</h3>
-          <form className="custom-form"onSubmit={(e) => { e.preventDefault(); handleAddCustomSlot(); }}>
-            <label>
-              Title:
-              <input type="text" name="title" value={newSlot.title} onChange={handleCustomSlotChange} required />
-            </label>
-            <label>
-              Lesson Type:
-              <input type="text" name="lessonType" value={newSlot.lessonType} onChange={handleCustomSlotChange} required />
-            </label>
-            <label>
-              Start Time:
-              <input type="time" name="startTime" value={newSlot.startTime[0]} onChange={handleCustomSlotChange} required />
-            </label>
-            <label>
-              End Time:
-              <input type="time" name="endTime" value={newSlot.endTime[0]} onChange={handleCustomSlotChange} required />
-            </label>
-            <label>
-              Day:
-              <select name="day" value={newSlot.day[0]} onChange={handleCustomSlotChange} required>
-                {daysOfWeek.map(day => (
-                  <option key={day} value={day}>{day}</option>
-                ))}
-              </select>
-            </label>
-            <button type="submit" className="add-slot-button">Add Slot</button>
-          </form>
-        </div> */}
+        <div className="timetable-form">
+        <input
+          type="text"
+          name="title"
+          placeholder="Course Title"
+          value={input.title}
+          onChange={handleInputChange}
+        />
+        <input
+          type="text"
+          name="day"
+          placeholder="Day (e.g., Monday)"
+          value={input.day}
+          onChange={handleInputChange}
+        />
+        <input
+          type="text"
+          name="startTime"
+          placeholder="Start Time (e.g., 1000)"
+          value={input.startTime}
+          onChange={handleInputChange}
+        />
+        <input
+          type="text"
+          name="endTime"
+          placeholder="End Time (e.g., 1100)"
+          value={input.endTime}
+          onChange={handleInputChange}
+        />
+        <input
+          type="text"
+          name="classNo"
+          placeholder="Class No"
+          value={input.classNo}
+          onChange={handleInputChange}
+        />
+        <input
+          type="text"
+          name="venue"
+          placeholder="Venue"
+          value={input.venue}
+          onChange={handleInputChange}
+        />
+        <input
+          type="text"
+          name="weeks"
+          placeholder="Weeks (e.g., [1,2,3])"
+          value={input.weeks}
+          onChange={handleInputChange}
+        />
+        <input
+          type="text"
+          name="lessonType"
+          placeholder="Lesson Type"
+          value={input.lessonType}
+          onChange={handleInputChange}
+        />
+        <button onClick={handleAddSlot}>Add Slot</button>
+      </div>
         <div className="timetable-container">
         {loading ? (
           <div className="loading-indicator">Loading...</div>
         ) : (
           <div>
             {arranged ? 
-            <Timetable timeSlots={arranged}></Timetable> : <p>No valid arrangement found.</p>} 
+            <Timetable timeSlots={arranged}></Timetable> : <p className="no-valid-arrangement">No valid arrangement found.</p>} 
           </div>
         )}
       </div>
         <button className="to-map-button" onClick={() => handleToMap()}>View Map</button>
+        <button className="clear-cache-button" onClick={clearCache}>Clear Table</button>
       </div>
     );
 };

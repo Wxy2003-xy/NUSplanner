@@ -102,7 +102,7 @@ const PrereqTreeVisual: React.FC<PrereqTreeProps> = ({ data }) => {
 
   return (
     <div className="svg-container">
-      <svg ref={svgRef} viewBox="0 0 600 450" preserveAspectRatio="xMidYMid meet"></svg>
+      <svg ref={svgRef} viewBox="0 0 800 450" preserveAspectRatio="xMidYMid meet"></svg>
     </div>
   );
 };

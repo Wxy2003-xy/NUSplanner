@@ -10,7 +10,7 @@
   align-items: center;
   justify-self: center;
   max-width: 18em;
-  width: 95%;
+  width: 100%;
   border-radius: 0.125em;
   overflow: hidden;
   box-shadow: 0 0.25em 0.5em rgba(0, 0, 0, 0.1);
@@ -79,7 +79,6 @@
 @media (max-width: 600px) {
   .card {
     width: 100%;
-    margin: 10px auto;
   }
   .card-image {
     height: 120px;

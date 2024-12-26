@@ -166,7 +166,7 @@ button:hover {
   .feedback-nav-right {
     padding: 1rem;
     margin-left: 0;
-
+    width: 100%;
   }
 
   .feedback-nav-right h1 {
@@ -180,22 +180,51 @@ button:hover {
   }
 
   .feedback-nav-right p,
-  .feedback-nav-right .feedback-prefix,
-  .feedback-nav-right .feedback-prefix .report-button,
+  .feedback-nav-right .feedback-prefix
   .feedback-nav-right .form-group .feedbackform,
-  textarea,
+  textarea {
+    margin-top: 8em;
+    font-size: 0.875rem;
+    margin: 0;
+  }
   .feedback-prefix button,
   .feedback-button,
   .submit-button {
-    font-size: 0.875rem;
+    font-size: 0.55rem;
+    margin: 0;
+    margin-right: 0.75em;
+    max-width: 10em;
+    margin-top: 2em;
+  }
+  .feedback-prefix {
+    padding: 0;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    flex-direction: row;
+    justify-self: center;
+    align-items: center;
+    max-width: 100%;
+    transform: translateX(-0.75em);
+  }
+;
+  .modal {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
   }
 
   .feedback-nav-right p {
     padding-left: 1rem;
-    padding-right: 1rem;
   }
 
-  textarea {
+  .feedback-title-line {
+    transform: translateY(1em);
+  }
+
+  textarea {  
+    margin-top: 1.2em;
+    justify-self: center;
     height: 10rem;
     padding: 0.5rem;
   }
@@ -203,10 +232,15 @@ button:hover {
   .modal-content {
     padding: 1rem;
     max-width: 20rem;
+    top: 25%;
   }
 
   .modal-content p {
     padding: 1rem 0;
+  }
+
+  .modal-text {
+    
   }
 
   .close {
