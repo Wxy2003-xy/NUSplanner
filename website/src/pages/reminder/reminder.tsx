@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import './reminder.css';
 import Layout from '../../components/Layout';
-import { format, startOfMonth, endOfMonth, startOfWeek, endOfWeek, addDays, addMonths, subMonths, isSameMonth, isSameDay } from 'date-fns';
-
+import { format, startOfMonth, endOfMonth, startOfWeek, endOfWeek, addDays, addMonths, subMonths } from 'date-fns';
+import { Uploader } from "uploader"; // Installed by "react-uploader".
+import { UploadButton } from "react-uploader";
 const Reminder = () => {
   const [currentDate, setCurrentDate] = useState(new Date());
   const [reminders, setReminders] = useState<{ [key: string]: string }>({});
@@ -13,11 +14,26 @@ const Reminder = () => {
       setReminders(JSON.parse(savedReminders));
     }
   }, []);
+  const [url, setUrl] =useState('');
+  const uploader = (file: File) =>{
+  const reader = new FileReader();
+  reader.addEventListener('load', ()=>{
+    localStorage.setItem('recent-image',reader.result)
+    setUrl(localStorage.getItem('recent-image'));
+  })
+        reader.readAsDataURL(file);
+  }
+  useEffect(() => {
+        setUrl(localStorage.getItem('recent-image'));
+        console.log(url);
+  }, [])
+
 
   const handleReminderChange = (date: string, reminder: string) => {
     const newReminders = { ...reminders, [date]: reminder };
     setReminders(newReminders);
     localStorage.setItem('reminders', JSON.stringify(newReminders));
+    console.log(JSON.stringify(newReminders))
   };
 
   const renderHeader = () => {

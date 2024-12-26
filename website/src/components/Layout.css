@@ -350,7 +350,6 @@ nav ul li {
 
 @media (max-width: 768px) {
   header {
-    max-width: 393px;
     position: fixed;
     justify-self: center;
     flex-direction: row;
