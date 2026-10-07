@@ -1,59 +1,195 @@
-.map-nav-right {
-  margin-top: 5.8em;
-  flex-grow: 1;
-  padding: 0.5em;
+.map-page {
+  max-width: 1480px;
+}
+
+.map-location-count {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 9px 12px;
+  border-radius: 999px;
+  background: var(--orange-100);
+  color: #c65c1d;
+  font-size: 0.73rem;
+  font-weight: 800;
+  white-space: nowrap;
+}
+
+.map-workspace {
+  overflow: hidden;
+}
+
+.map-toolbar {
+  min-height: 74px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  padding: 13px 17px;
+  border-bottom: 1px solid var(--line);
+}
+
+.map-toolbar > div:first-child {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+}
+
+.map-toolbar-icon {
+  width: 40px;
+  height: 40px;
+  display: grid;
+  place-items: center;
+  border-radius: 11px;
+  background: var(--navy-900);
+  color: white;
+}
+
+.map-toolbar > div:first-child > span:last-child {
+  display: grid;
+  gap: 2px;
+}
+
+.map-toolbar strong {
+  font-size: 0.85rem;
+}
+
+.map-toolbar small {
+  color: var(--ink-500);
+  font-size: 0.67rem;
+}
+
+.map-legend {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 14px;
+  color: var(--ink-500);
+  font-size: 0.68rem;
+  font-weight: 700;
+}
+
+.map-legend span {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.map-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+}
+
+.map-dot-lecture { background: #ef7c35; }
+.map-dot-class { background: #087f78; }
+.map-dot-seminar { background: #7053ad; }
+
+.map-canvas-wrap {
   position: relative;
-  display: flex;
-  flex-direction: column;
-  box-sizing: border-box;
-  color: #333;
-  text-shadow: 0.0625rem 0.0625rem 0.125rem rgba(0, 0, 0, 0.4);
-  margin-left: 12.5rem;
 }
 
-.credit-section {
-  font-size: 0.5rem;
-  display: flex;
+.map-canvas {
+  width: 100%;
+  height: clamp(520px, 68vh, 840px);
+  background: #dbe3df;
 }
 
-.venue-info-list {
+.map-canvas .leaflet-control-zoom a {
+  color: var(--navy-900);
+}
+
+.map-canvas .leaflet-popup-content-wrapper {
+  border-radius: 12px;
+  box-shadow: 0 15px 38px rgba(8, 24, 48, 0.2);
+}
+
+.map-popup-content {
+  display: grid;
+  gap: 4px;
+  min-width: 150px;
+}
+
+.map-popup-content strong {
+  color: var(--navy-900);
+  font-size: 0.8rem;
+}
+
+.map-popup-content span {
+  color: var(--ink-700);
   font-size: 0.75rem;
 }
 
-.credit-section {
-  font-size: 0.5rem;
-  display: flex;
+.map-popup-content small {
+  color: var(--ink-500);
+  font-size: 0.67rem;
 }
 
-.custom-popup {
-  background: white;
-  padding: 10px;
-  border-radius: 8px;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
-  z-index: 100000000;
-  white-space: nowrap;
-  pointer-events: none; /* Prevent interfering with map interactions */
-}
-
-.custom-popup-content {
+.map-empty-state {
+  position: absolute;
+  z-index: 500;
+  left: 50%;
+  bottom: 24px;
+  width: min(calc(100% - 32px), 430px);
+  display: grid;
+  place-items: center;
+  padding: 22px;
+  border: 1px solid rgba(255, 255, 255, 0.65);
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.92);
+  box-shadow: var(--shadow-md);
   text-align: center;
+  transform: translateX(-50%);
+  backdrop-filter: blur(14px);
 }
 
+.map-empty-state > span {
+  width: 43px;
+  height: 43px;
+  display: grid;
+  place-items: center;
+  border-radius: 12px;
+  background: var(--orange-100);
+  color: #c65c1d;
+}
 
+.map-empty-state h2 {
+  margin: 12px 0 5px;
+  font-size: 1.05rem;
+}
 
-@media (max-width: 768px) {
-  .map-nav-right {
-    margin-left: 0;
+.map-empty-state p {
+  margin: 0;
+  color: var(--ink-500);
+  font-size: 0.76rem;
+  line-height: 1.5;
+}
 
-    margin-top: 6.2em;
-    text-shadow: 0.03125rem 0.03125rem 0.0625rem rgba(0, 0, 0, 0.4);
+.map-credits {
+  margin-top: 13px;
+  color: var(--ink-500);
+  font-size: 0.7rem;
+}
+
+.map-credits summary {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+}
+
+.map-credits p {
+  margin: 9px 0 0;
+}
+
+@media (max-width: 690px) {
+  .map-toolbar {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 13px;
   }
 
-  .credit-section {
-    font-size: 0.375rem;
-  }
-
-  .venue-info-list {
-    font-size: 0.625rem;
+  .map-canvas {
+    height: 570px;
   }
 }

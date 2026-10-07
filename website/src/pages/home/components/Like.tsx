@@ -7,11 +7,9 @@ function Like() {
 
     const handleClick = () => {
         setCount(count + 1); 
-        console.log(count);
     }
     const handleClick2 = () => {
         setCount2(count2 + 1);
-        console.log(count2);
     }
 
     return (<>

@@ -53,9 +53,20 @@ export interface ClassTimeSlotType extends GenericTimeSlot {
     // startTime: StartTime;
     // endTime: EndTime;
     weeks?: Weeks;
-    venue?: Venue;
+    venue?: Venue | string;
     // day: Day;
     lessonType?: LessonType 
+}
+
+export interface CleanClassTimeSlot {
+    classNo: ClassNo[];
+    title: string;
+    lessonType?: LessonType;
+    startTime: StartTime[];
+    endTime: EndTime[];
+    weeks?: Weeks;
+    venue: string[];
+    day: Day[];
 }
 
 export interface ClassTimeSlotTypeUnion {
@@ -66,7 +77,7 @@ export interface ClassTimeSlotTypeUnion {
     venue?: Venue | string;
     day: Day[];
     lessonType?: LessonType;
-    title?: string;
+    title: string;
 }
 
 export type CourseSlotGroupType = {

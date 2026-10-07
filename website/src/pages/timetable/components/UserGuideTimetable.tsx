@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import Joyride, { Step } from 'react-joyride';
+import Joyride, { CallBackProps, STATUS, Step } from 'react-joyride';
 
 interface GuidedTourProps {
   startTour: boolean;
@@ -13,11 +13,8 @@ const GuidedTourTimetable: React.FC<GuidedTourProps> = ({ startTour, onClose }) 
     setRun(startTour);
   }, [startTour]);
 
-  const handleJoyrideCallback = (data: any) => {
-    const { status, type } = data;
-    const finishedStatuses = ['finished', 'skipped'];
-
-    if (finishedStatuses.includes(status)) {
+  const handleJoyrideCallback = ({ status }: CallBackProps) => {
+    if (status === STATUS.FINISHED || status === STATUS.SKIPPED) {
       onClose();
     }
   };
@@ -31,14 +28,6 @@ const GuidedTourTimetable: React.FC<GuidedTourProps> = ({ startTour, onClose }) 
       target: '.select-time',
       content: 'Set a time such that no slots earlier than it will be arranged.',
     },
-    // {
-    //   target: '.custom-slot-adder',
-    //   content: 'Add custom agenda to the timetable',
-    // },
-    // {
-    //   target: '.timetablecontainer',
-    //   content: 'Auto generated timetable based on criteria selected. Note that some slot may not be arranged if there exist no possible arrangement with given filters. Try relax them a little.',
-    // },
     {
       target: '.to-map-button',
       content: 'Click to see locations of the classes in timetable',

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import Joyride, { Step } from 'react-joyride';
+import Joyride, { CallBackProps, STATUS, Step } from 'react-joyride';
 
 interface GuidedTourProps {
   startTour: boolean;
@@ -13,11 +13,8 @@ const GuidedTour: React.FC<GuidedTourProps> = ({ startTour, onClose }) => {
     setRun(startTour);
   }, [startTour]);
 
-  const handleJoyrideCallback = (data: any) => {
-    const { status, type } = data;
-    const finishedStatuses = ['finished', 'skipped'];
-
-    if (finishedStatuses.includes(status)) {
+  const handleJoyrideCallback = ({ status }: CallBackProps) => {
+    if (status === STATUS.FINISHED || status === STATUS.SKIPPED) {
       onClose();
     }
   };
@@ -27,10 +24,6 @@ const GuidedTour: React.FC<GuidedTourProps> = ({ startTour, onClose }) => {
       target: '.collapse-button',
       content: 'Click here to expand the Major Setting section and change the number of semesters you would like to plan for.',
     },
-    // {
-    //   target: '.dropdown-select',
-    //   content: 'Use these dropdowns to select your program and major etc.',
-    // },
     {
       target: '.table',
       content: 'This is your study plan table. You can drag and drop courses here. Click on courses in the table to remove, update info or see details',
@@ -47,10 +40,6 @@ const GuidedTour: React.FC<GuidedTourProps> = ({ startTour, onClose }) => {
       target: '.to-timetable-button',
       content: 'Click here to view a recommended timetable for this semester, according to the latest information.',
     },
-    // {
-    //   target: '.headerline',
-    //   content: 'This is your study plan header.',
-    // },
     {
       target: '.notificationsite',
       content: 'Notifications and warnings will appear here.',

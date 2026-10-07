@@ -1,18 +1,13 @@
-import './Footer.css'; 
-import React from 'react'
+import './Footer.css';
+import React from 'react';
+
 function Footer() {
-    return (
-        <div className='footer-box'>
-        <footer>
-            <p className='sym'>
-                &copy; 
-                {new Date().getFullYear()}
-                NUSplanner
-            </p>
-        </footer>   
-        
-        </div>
-    );
+  return (
+    <footer className="site-footer">
+      <p>Built by NUS students, for NUS students.</p>
+      <p>© {new Date().getFullYear()} NUSPlanner</p>
+    </footer>
+  );
 }
 
-export default Footer
+export default Footer;

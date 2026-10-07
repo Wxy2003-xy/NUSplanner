@@ -1,60 +1,34 @@
-// {
-//   "compilerOptions": {
-//     "target": "ES2020",
-//     "useDefineForClassFields": true,
-//     "lib": ["ES2020", "DOM", "DOM.Iterable"],
-//     "module": "ESNext",
-//     "skipLibCheck": true,
-//     "allowImportingTsExtensions": true,
-//     "resolveJsonModule": true,
-//     "isolatedModules": true,
-//     "noEmit": true,
-//     "jsx": "react-jsx",
-//     "strict": true,
-//     "noUnusedLocals": true,
-//     "noUnusedParameters": true,
-//     "noFallthroughCasesInSwitch": true,
-//     "baseUrl": "./",
-//     "paths": {
-//       "@/*": ["website/src/*"]
-//     },
-//     "moduleResolution": "node",
-//     "types": ["jest"],
-//     "allowSyntheticDefaultImports": true
-//   },
-//   "include": ["website/src"],
-//   "references": [{ "path": "./tsconfig.node.json" }]
-// }
 {
   "compilerOptions": {
     "target": "ES2020",
+    "useDefineForClassFields": true,
+    "lib": ["ES2020", "DOM", "DOM.Iterable"],
     "module": "ESNext",
-    "lib": ["ES2020", "DOM"],
-    "jsx": "react-jsx",
-    "baseUrl": "./website/src",  // Adjusted to point directly where your source files are
-    "paths": {
-      "@/*": ["*"]  // Simplified based on the new baseUrl
-    },
-    "moduleResolution": "node",
-    "skipLibCheck": true,
+    "moduleResolution": "Bundler",
+    "allowImportingTsExtensions": true,
     "resolveJsonModule": true,
     "isolatedModules": true,
     "noEmit": true,
+    "jsx": "react-jsx",
     "strict": true,
-    "noFallthroughCasesInSwitch": true,
-    "types": ["jest"],
+    "skipLibCheck": true,
     "allowSyntheticDefaultImports": true,
-    "noUnusedLocals": false, // Set this to false to ignore local unused variables
-    "noUnusedParameters": false
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["src/*"]
+    },
+    "types": ["jest", "vite/client"]
   },
-  "include": [
-    "**/*",  // To include all files under the src directory
-    "../test/**/*"  // Assuming test directory is at the same level as src
-  ],
-  "exclude": ["node_modules", "build"],
-  "references": [
-    { "path": "./tsconfig.node.json" }
+  "include": ["src"],
+  "exclude": [
+    "src/test",
+    "src/util/unused",
+    "src/data/fetchModuleInfo.tsx",
+    "src/pages/map/components/MapComponent.tsx",
+    "src/pages/studyPlan/components/CustomToolTip.tsx",
+    "src/pages/studyPlan/components/program.tsx",
+    "src/pages/timetable/components/useFetchTimeSlotInfo.ts",
+    "src/util/parser.ts",
+    "src/util/icsParser.ts"
   ]
 }
-
- 

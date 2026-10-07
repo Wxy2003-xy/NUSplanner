@@ -56,7 +56,6 @@ const ModuleForm: React.FC<ModuleFormProps> = ({ setTempCard }) => {
                 return response.json();
             })
             .then(data => {
-                console.log(data);
                 setModuleInfo({
                     courseCode: data.moduleCode,
                     courseName: data.title,
@@ -89,13 +88,11 @@ const ModuleForm: React.FC<ModuleFormProps> = ({ setTempCard }) => {
                         }
                     })
                 };
-                console.log("Setting tempCard:", card);
                 setTempCard(card);
 
                 setError('');
             })
             .catch(error => {
-                console.error('Error fetching data:', error);
                 setError(error.message);
                 setModuleInfo(null);
             })

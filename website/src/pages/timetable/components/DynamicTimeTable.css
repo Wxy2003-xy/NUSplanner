@@ -1,181 +1,280 @@
-.time-slot {
-  display: flex;
-  flex-direction: row;
-  padding: 0.3125em;
-  margin: 0.125em;
-  background-color: #f0f0f0;
-  border-radius: 0.3125em;
-  box-shadow: 0 0.125em 0.25em rgba(0,0,0,0.1);
-}
-  
-.hrows {
-  display: flex;
-  flex-direction: column;
-  flex-wrap: wrap;
-  align-items: center;
-}
-
-.tmp {
-  font-size: 0.3125em;
-}
-
-.timetablecontainer {
-  display: flex;
-  flex-direction: row;
+.timetable-builder {
   width: 100%;
+  min-width: 0;
 }
 
-.timetablecontainer > div {
-  flex-grow: 1;
+.timetable-preferences {
+  padding: 18px;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  background: var(--surface-soft);
 }
 
-.timing {
-  max-width: 3.75em;
-  line-height: 1.42;
-  z-index: 100000;
+.timetable-preference-heading {
+  display: flex;
+  align-items: flex-start;
+  gap: 11px;
 }
 
-.to-map-button {
-  margin-left: 10%;
-  align-self: center;
+.timetable-preference-heading > span {
+  width: 29px;
+  height: 29px;
+  display: grid;
+  place-items: center;
+  flex: 0 0 auto;
+  border-radius: 8px;
+  background: var(--orange-500);
+  color: white;
+  font-size: 0.62rem;
+  font-weight: 850;
 }
 
-.select-day, .select-time, .custom-slot-adder {
+.timetable-preference-heading h2 {
+  margin: 0 0 3px;
+  color: var(--ink-900);
+  font-size: 1rem;
+  letter-spacing: -0.02em;
+}
+
+.timetable-preference-heading p {
+  margin: 0;
+  color: var(--ink-500);
+  font-size: 0.68rem;
+  line-height: 1.45;
+}
+
+.timetable-preference-heading .tour-button {
+  margin-left: auto;
+}
+
+.timetable-preference-controls {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: end;
+  gap: 24px;
+  margin-top: 18px;
+}
+
+.select-day h3,
+.select-time strong {
+  margin: 0 0 8px;
+  color: var(--ink-700);
+  font-size: 0.7rem;
+  font-weight: 800;
+}
+
+.day-chip-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.day-chip-list label {
+  min-height: 34px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 10px;
+  border: 1px solid var(--line);
+  border-radius: 9px;
+  background: white;
+  color: var(--ink-500);
+  font-size: 0.68rem;
+  font-weight: 750;
+  cursor: pointer;
+  transition: background 140ms ease, color 140ms ease, border-color 140ms ease;
+}
+
+.day-chip-list label:has(input:checked) {
+  border-color: var(--navy-900);
+  background: var(--navy-900);
+  color: white;
+}
+
+.day-chip-list input {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+}
+
+.select-time {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.select-time > span {
+  display: grid;
+}
+
+.select-time strong {
+  margin-bottom: 2px;
+}
+
+.select-time small {
+  color: var(--ink-500);
+  font-size: 0.62rem;
+}
+
+.select-time input {
+  min-height: 40px;
+  padding: 0 10px;
+  border: 1px solid var(--line);
+  border-radius: 9px;
+  background: white;
+  color: var(--ink-900);
+  font-size: 0.76rem;
+}
+
+.custom-slot-adder {
+  margin-top: 12px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: white;
+}
+
+.custom-slot-adder summary {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 0.3125em;
-  margin: 0.3125em 0;
-  background: #f4f4f4;
-  border-radius: 0.5em;
-}
-
-.select-day h3, .select-time h3, .custom-slot-adder h3 {
-  margin: 0 0.625em 0 0;
-  font-size: 1em; 
-}
-
-input[type="time"], input[type="text"], select {
-  padding: 0.125em;
-  border: 1px solid #ccc;
-  border-radius: 0.25em;
-  font-size: 1em;
-  flex: 1;
-}
-
-button {
-  padding: 0.25em 0.375em;
-  background-color: #007bff;
-  color: white;
-  border: none;
-  border-radius: 0.25em;
+  gap: 12px;
+  padding: 14px 16px;
+  color: var(--ink-700);
+  font-size: 0.74rem;
+  font-weight: 800;
   cursor: pointer;
-  transition: background-color 0.3s ease;
 }
 
-button:hover {
-  background-color: #0056b3;
+.custom-slot-adder summary span {
+  color: var(--ink-500);
+  font-size: 0.63rem;
+  font-weight: 550;
 }
 
-.custom-slot-adder form {
-  display: flex;
-  gap: 0.3125em;
-  flex-wrap: nowrap;
-  align-items: center;
-  width: 100%;
+.timetable-form {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(110px, 1fr));
+  gap: 8px;
+  padding: 0 16px 16px;
 }
 
-.custom-slot-adder label {
-  display: flex;
-  flex-direction: column;
-  margin-right: 0.3125em;
-  flex: 1;
+.timetable-form input {
+  min-width: 0;
+  min-height: 39px;
+  padding: 0 10px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--surface-soft);
+  color: var(--ink-900);
+  font-size: 0.69rem;
 }
 
 .add-slot-button {
-  height: 1.75em;
-  margin-top: 0;
-  align-self: flex-end;
-  margin-bottom: -0.0625em;
-  line-height: 0.6;
-}
-
-.weekday-header {
-  text-align: center;
-  font-weight: bold;
-  margin: 1.25em 0;
-}
-
-.timing {
-  white-space: pre-wrap;
-  font-family: monospace;
-  margin-right: 0.625em;
-}
-
-.to-map-button {
-  max-width: 8em;
-  min-height: 7.5em;
-  max-height: 8em;
-  z-index: 100000;
-  position: fixed;
-  bottom: 4em;
-  right: 2em; 
-  margin-top: 0;
-  border-radius: 4em;
-  color:#ffffff;
-  background-color: #0a756d;
+  min-height: 39px;
+  border-radius: 8px;
+  background: var(--teal-600);
+  color: white;
+  font-size: 0.7rem;
+  font-weight: 800;
+  cursor: pointer;
 }
 
 .loading-indicator {
-  font-size: 1.5em;
-  color: #0a756d;
-  text-align: center;
-  margin-top: 1.25em;
+  min-height: 380px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  color: var(--ink-500);
+  font-size: 0.78rem;
+  font-weight: 700;
+}
+
+.loading-indicator span {
+  width: 17px;
+  height: 17px;
+  border: 2px solid #d7dce3;
+  border-top-color: var(--orange-500);
+  border-radius: 50%;
+  animation: timetable-spin 700ms linear infinite;
+}
+
+@keyframes timetable-spin {
+  to { transform: rotate(360deg); }
 }
 
 .no-valid-arrangement {
-  margin: 2em;
+  padding: 48px 20px;
+  color: var(--ink-500);
+  font-size: 0.8rem;
+  text-align: center;
 }
 
-@media (max-width: 48em) {
-  .time-slot {
-    flex-direction: column;
-    padding: 0.25em;
+.timetable-result {
+  min-width: 0;
+}
+
+.timetable-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  margin-top: 14px;
+}
+
+.to-map-button,
+.clear-cache-button {
+  min-height: 40px;
+  padding: 0 14px;
+  border-radius: 10px;
+  font-size: 0.72rem;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.to-map-button {
+  background: var(--navy-900);
+  color: white;
+}
+
+.clear-cache-button {
+  border: 1px solid var(--line);
+  background: white;
+  color: var(--ink-700);
+}
+
+@media (max-width: 850px) {
+  .timetable-preference-controls {
+    grid-template-columns: 1fr;
+    align-items: start;
   }
 
-  .timetablecontainer {
-    flex-direction: column;
+  .timetable-form {
+    grid-template-columns: repeat(2, minmax(120px, 1fr));
+  }
+}
+
+@media (max-width: 520px) {
+  .timetable-preferences {
+    padding: 14px;
   }
 
-  .timing {
-    max-width: none;
-    font-size: 0.0625em;
-  }
-
-  .select-day, .select-time, .custom-slot-adder {
-    flex-direction: row;
-    font-size: 0.525em;
+  .select-time {
     align-items: flex-start;
-  }
-
-  .select-day h3, .select-time h3, .custom-slot-adder h3 {
-    margin-bottom: 0.5em;
-    font-size: small;
-
-  }
-
-  .custom-slot-adder form {
     flex-direction: column;
+  }
+
+  .custom-slot-adder summary {
     align-items: flex-start;
+    flex-direction: column;
   }
 
-  .add-slot-button {
-    align-self: flex-start; 
+  .timetable-form {
+    grid-template-columns: 1fr;
   }
 
-  .weekday-header {
-    font-size: small;
-
-    font-size: 0.125em;
+  .timetable-actions {
+    align-items: stretch;
+    flex-direction: column;
   }
 }

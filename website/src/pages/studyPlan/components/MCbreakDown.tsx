@@ -1,107 +1,64 @@
-import React, {useState} from "react";
-import { CardType } from "../../../types/studyplan";
-import { MCbreakDownProps, ShowBreakDownProps} from "../../../types/studyplan";
-import './MCbreakDown.css'
-  
-  const MCbreakDown: React.FC<MCbreakDownProps> = ({ cards }) => {
-    const [isBreakdownVisible, setIsBreakdownVisible] = useState(false);
-    const cardArray:Array<Array<CardType>> = cards;
-    const creditCounter:Array<number> = new Array(8).fill(0);
-    const toggleBreakdownVisibility = () => {
-        setIsBreakdownVisible(!isBreakdownVisible);
+import React, { useMemo, useState } from 'react';
+import { MCbreakDownProps } from '../../../types/studyplan';
+import './MCbreakDown.css';
+
+const classifications = [
+  'University level requirement',
+  'Faculty level requirement',
+  'Major (towards primary degree) requirement',
+  'Major (towards 2nd degree/major) requirement',
+  'Minor requirement',
+  'Specialisation Primary',
+  'Specialisation Elective',
+  'Unrestricted Elective',
+] as const;
+
+const MCbreakDown: React.FC<MCbreakDownProps> = ({ cards }) => {
+  const [isBreakdownVisible, setIsBreakdownVisible] = useState(false);
+  const { totalCredits, classifiedCredits, unclassifiedCredits } = useMemo(() => {
+    const counts = Object.fromEntries(classifications.map((name) => [name, 0])) as Record<(typeof classifications)[number], number>;
+    const plannedCards = cards.slice(1).flat();
+
+    plannedCards.forEach((card) => {
+      if (card.classification && card.classification in counts) {
+        counts[card.classification as keyof typeof counts] += Number(card.courseCredit);
+      }
+    });
+
+    const total = plannedCards.reduce((sum, card) => sum + Number(card.courseCredit), 0);
+    const classified = Object.values(counts).reduce((sum, credits) => sum + credits, 0);
+    return {
+      totalCredits: total,
+      classifiedCredits: counts,
+      unclassifiedCredits: total - classified,
     };
+  }, [cards]);
 
-    const getTotalMCCount = (cards: Array<Array<CardType>>): number => {
-        return cards.slice(1).reduce((total, column) => {
-            return total + column.reduce((colTotal, card) => colTotal + Number(card.courseCredit), 0);
-        }, 0);
-    };
-
-    const iterateAllCards = (cards: Array<Array<CardType>>) => {
-        cards.forEach((column, columnIndex) => {
-          column.forEach(card => {
-            console.log(`Column ${columnIndex}:`, card);
-          });
-        });
-    };
-
-    const updateClassification = (cards: Array<Array<CardType>>, counter:Array<number>) => {
-        cards.forEach((column, columnIndex) => {
-          column.forEach(card => {
-            const credit = Number(card.courseCredit)
-            switch (card.classification) {
-                case 'University level requirement':
-            creditCounter[0] += credit;
-            break;
-          case 'Faculty level requirement':
-            creditCounter[1] += credit;
-            break;
-          case 'Major (towards primary degree) requirement':
-            creditCounter[2] += credit;
-            break;
-          case 'Major (towards 2nd degree/major) requirement':
-            creditCounter[3] += credit;
-            break;
-          case 'Minor requirement':
-            creditCounter[4] += credit;
-            break;
-          case 'Specialisation Primary':
-            creditCounter[5] += credit;
-            break;
-          case 'Specialisation Elective':
-            creditCounter[6] += credit;
-            break;
-          case 'Unrestricted Elective':
-            creditCounter[7] += credit;
-            break;
-            }
-          });
-        });
-    };
-
-
-
-    const ShowBreakDown: React.FC<ShowBreakDownProps> = ({ counter }) => {
-        updateClassification(cards, creditCounter)
-        const totalClassifiedCredits = creditCounter.reduce((acc, current) => acc + current, 0);
-        const totalMC = getTotalMCCount(cardArray);
-        const unclassifiedCredits = totalMC - totalClassifiedCredits;
-        return (
-            <>
-            <ul>
-                <li>University level requirement: {creditCounter[0]}</li>
-                <li>Faculty level requirement: {creditCounter[1]}</li>
-                <li>Major (towards primary degree) requirement: {creditCounter[2]}</li>
-                <li>Major (towards 2nd degree/major) requirement: {creditCounter[3]}</li>
-                <li>Minor requirement: {creditCounter[4]}</li>
-                <li>Specialisation Primary: {creditCounter[5]}</li>
-                <li>Specialisation Elective: {creditCounter[6]}</li>
-                <li>Unrestricted Elective: {creditCounter[7]}</li>
-                <li>Unclassified: {unclassifiedCredits}</li>
-            </ul>
-            </>
-        );
-    }
-  
-    return (
-        <div className="counter-box">
-             <div className="mc-count-container">
-        <div>{' |'} Total MC count: {getTotalMCCount(cards)}</div>
+  return (
+    <div className="counter-box">
+      <div className="mc-count-container">
+        <div>Total units: {totalCredits}</div>
         <button
-          onClick={toggleBreakdownVisibility}
+          type="button"
+          onClick={() => setIsBreakdownVisible((visible) => !visible)}
           className={`toggle-button ${isBreakdownVisible ? 'collapse' : 'expand'}`}
-        >{isBreakdownVisible ? 'Collapse' : 'Expand'}
+          aria-expanded={isBreakdownVisible}
+        >
+          {isBreakdownVisible ? 'Hide breakdown' : 'View breakdown'}
         </button>
       </div>
-            {isBreakdownVisible && (
-            <div className="counter-box-breakdown">
-                <div>
-                    <ShowBreakDown counter={creditCounter}/>
-                </div>
-            </div>
-             )}
+      {isBreakdownVisible && (
+        <div className="counter-box-breakdown">
+          <ul>
+            {classifications.map((classification) => (
+              <li key={classification}>{classification}: {classifiedCredits[classification]}</li>
+            ))}
+            <li>Unclassified: {unclassifiedCredits}</li>
+          </ul>
         </div>
-    );
-  };
-  
-  export default MCbreakDown;
+      )}
+    </div>
+  );
+};
+
+export default MCbreakDown;

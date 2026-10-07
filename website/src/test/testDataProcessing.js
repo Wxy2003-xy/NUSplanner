@@ -6224,6 +6224,3 @@ const data = [
 		"title": "BSP1703"
 	}
 ]
-
-
-console.log(data.length)

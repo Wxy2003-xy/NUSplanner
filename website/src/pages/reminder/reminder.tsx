@@ -1,137 +1,127 @@
-import React, { useEffect, useState } from 'react';
-import './reminder.css';
+import React, { useEffect, useMemo, useState } from 'react';
+import {
+  addDays,
+  addMonths,
+  endOfMonth,
+  endOfWeek,
+  format,
+  isSameMonth,
+  isToday,
+  startOfMonth,
+  startOfWeek,
+  subMonths,
+} from 'date-fns';
+import { Calendar, ChevronLeft, ChevronRight, Edit3, Shield } from 'react-feather';
 import Layout from '../../components/Layout';
-import { format, startOfMonth, endOfMonth, startOfWeek, endOfWeek, addDays, addMonths, subMonths } from 'date-fns';
-import { Uploader } from "uploader"; // Installed by "react-uploader".
-import { UploadButton } from "react-uploader";
+import './reminder.css';
+
+type ReminderMap = { [key: string]: string };
+
 const Reminder = () => {
   const [currentDate, setCurrentDate] = useState(new Date());
-  const [reminders, setReminders] = useState<{ [key: string]: string }>({});
+  const [reminders, setReminders] = useState<ReminderMap>({});
 
   useEffect(() => {
     const savedReminders = localStorage.getItem('reminders');
-    if (savedReminders) {
+    if (!savedReminders) return;
+    try {
       setReminders(JSON.parse(savedReminders));
+    } catch {
+      setReminders({});
     }
   }, []);
-  const [url, setUrl] =useState('');
-  const uploader = (file: File) =>{
-  const reader = new FileReader();
-  reader.addEventListener('load', ()=>{
-    localStorage.setItem('recent-image',reader.result)
-    setUrl(localStorage.getItem('recent-image'));
-  })
-        reader.readAsDataURL(file);
-  }
-  useEffect(() => {
-        setUrl(localStorage.getItem('recent-image'));
-        console.log(url);
-  }, [])
-
 
   const handleReminderChange = (date: string, reminder: string) => {
-    const newReminders = { ...reminders, [date]: reminder };
-    setReminders(newReminders);
-    localStorage.setItem('reminders', JSON.stringify(newReminders));
-    console.log(JSON.stringify(newReminders))
+    const nextReminders = { ...reminders };
+    if (reminder) nextReminders[date] = reminder;
+    else delete nextReminders[date];
+    setReminders(nextReminders);
+    localStorage.setItem('reminders', JSON.stringify(nextReminders));
   };
 
-  const renderHeader = () => {
-    const dateFormat = "MMMM yyyy";
-
-    return (
-      <div className="reminder-header reminder-row flex-middle">
-        <div className="reminder-col reminder-col-start">
-          <div className="reminder-icon reminder-icon-left" onClick={prevMonth}></div>
-        </div>
-        <div className="reminder-col reminder-col-center">
-          <span className="reminder-date">{format(currentDate, dateFormat)}</span>
-        </div>
-        <div className="reminder-col reminder-col-end">
-          <div className="reminder-icon reminder-icon-right" onClick={nextMonth}></div>
-        </div>
-      </div>
-    );
-  };
-
-  const renderDays = () => {
-    const days: JSX.Element[] = [];
-    const dateFormat = "EEEE";
-    const startDate = startOfWeek(currentDate);
-
-    for (let i = 0; i < 7; i++) {
-      days.push(
-        <div className="reminder-col reminder-col-center" key={i}>
-          {format(addDays(startDate, i), dateFormat)}
-        </div>
-      );
-    }
-
-    return <div className="reminder-days reminder-row">{days}</div>;
-  };
-
-  const renderCells = () => {
+  const calendarDays = useMemo(() => {
     const monthStart = startOfMonth(currentDate);
-    const monthEnd = endOfMonth(monthStart);
-    const startDate = startOfWeek(monthStart);
-    const endDate = endOfWeek(monthEnd);
-
-    const dateFormat = "d";
-    const rows: JSX.Element[] = [];
-
-    let days: JSX.Element[] = [];
-    let day = startDate;
-    let formattedDate = "";
-
-    while (day <= endDate) {
-      for (let i = 0; i < 7; i++) {
-        formattedDate = format(day, dateFormat);
-        const cloneDay = day;
-        const formattedFullDate = format(day, "yyyy-MM-dd");
-
-        days.push(
-          <div
-            className="reminder-col reminder-cell"
-            key={day.toString()}
-          >
-            <span className="reminder-number">{formattedDate}</span>
-            <textarea
-              className="reminder-textarea"
-              value={reminders[formattedFullDate] || ""}
-              onChange={(e) =>
-                handleReminderChange(formattedFullDate, e.target.value)
-              }
-              placeholder=""
-            />
-          </div>
-        );
-        day = addDays(day, 1);
-      }
-      rows.push(
-        <div className="reminder-row" key={day.toString()}>
-          {days}
-        </div>
-      );
-      days = [];
+    const calendarStart = startOfWeek(monthStart);
+    const calendarEnd = endOfWeek(endOfMonth(monthStart));
+    const days: Date[] = [];
+    let day = calendarStart;
+    while (day <= calendarEnd) {
+      days.push(day);
+      day = addDays(day, 1);
     }
+    return days;
+  }, [currentDate]);
 
-    return <div className="body">{rows}</div>;
-  };
-
-  const nextMonth = () => {
-    setCurrentDate(addMonths(currentDate, 1));
-  };
-
-  const prevMonth = () => {
-    setCurrentDate(subMonths(currentDate, 1));
-  };
+  const reminderCount = useMemo(() => (
+    calendarDays.filter((day) => {
+      const key = format(day, 'yyyy-MM-dd');
+      return isSameMonth(day, currentDate) && Boolean(reminders[key]?.trim());
+    }).length
+  ), [calendarDays, currentDate, reminders]);
 
   return (
     <Layout>
-      <div className="reminder-nav-right">
-        {renderHeader()}
-        {renderDays()}
-        {renderCells()}
+      <div className="page-shell reminder-page">
+        <div className="page-heading">
+          <div>
+            <p className="page-eyebrow">Your private calendar</p>
+            <h1>Keep the semester in sight.</h1>
+            <p className="page-description">Add a note to any day. Everything is stored only on this device and saved as you type.</p>
+          </div>
+          <div className="reminder-privacy-pill"><Shield size={15} /> Local & private</div>
+        </div>
+
+        <section className="reminder-calendar surface-card" aria-label={`Calendar for ${format(currentDate, 'MMMM yyyy')}`}>
+          <div className="reminder-toolbar">
+            <div className="reminder-month-copy">
+              <span className="reminder-calendar-icon"><Calendar size={20} /></span>
+              <div>
+                <p>Monthly view</p>
+                <h2>{format(currentDate, 'MMMM yyyy')}</h2>
+              </div>
+            </div>
+            <div className="reminder-toolbar-actions">
+              <span className="reminder-note-count">{reminderCount} {reminderCount === 1 ? 'note' : 'notes'}</span>
+              <button className="secondary-button reminder-today-button" type="button" onClick={() => setCurrentDate(new Date())}>Today</button>
+              <button className="icon-button" type="button" onClick={() => setCurrentDate(subMonths(currentDate, 1))} aria-label="Previous month">
+                <ChevronLeft size={19} />
+              </button>
+              <button className="icon-button" type="button" onClick={() => setCurrentDate(addMonths(currentDate, 1))} aria-label="Next month">
+                <ChevronRight size={19} />
+              </button>
+            </div>
+          </div>
+
+          <div className="reminder-grid" role="grid">
+            {['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map((day) => (
+              <div className="reminder-weekday" role="columnheader" key={day}>{day}</div>
+            ))}
+            {calendarDays.map((day) => {
+              const dateKey = format(day, 'yyyy-MM-dd');
+              const note = reminders[dateKey] || '';
+              const outsideMonth = !isSameMonth(day, currentDate);
+              return (
+                <div
+                  className={`reminder-day${outsideMonth ? ' is-outside' : ''}${isToday(day) ? ' is-today' : ''}${note ? ' has-note' : ''}`}
+                  role="gridcell"
+                  key={dateKey}
+                >
+                  <div className="reminder-day-top">
+                    <time dateTime={dateKey}>{format(day, 'd')}</time>
+                    {note && <Edit3 size={12} aria-label="Has a reminder" />}
+                  </div>
+                  <textarea
+                    value={note}
+                    onChange={(event) => handleReminderChange(dateKey, event.target.value)}
+                    placeholder={outsideMonth ? '' : 'Add note'}
+                    aria-label={`Reminder for ${format(day, 'MMMM d, yyyy')}`}
+                    disabled={outsideMonth}
+                  />
+                </div>
+              );
+            })}
+          </div>
+        </section>
       </div>
     </Layout>
   );

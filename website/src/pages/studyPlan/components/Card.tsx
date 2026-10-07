@@ -156,10 +156,15 @@ const getBackgroundColor = (
 
 
 const Card: React.FC<CardProps> = ({
-  id, name, semester, courseCredit, content, onClick, isSelected = false, grade, prereqTree,
+  name, semester, courseCredit, content, onClick, isSelected = false, grade,
   prereqNotSatisfied, colorScheme, classification
 }) => {
-  const backgroundColor = getBackgroundColor(colorScheme, classification, isSelected, prereqNotSatisfied);
+  const backgroundColor = getBackgroundColor(
+    colorScheme || 'google',
+    classification,
+    Boolean(isSelected),
+    Boolean(prereqNotSatisfied),
+  );
 
   const cardClass = classnames('card', {
     'selected': isSelected,

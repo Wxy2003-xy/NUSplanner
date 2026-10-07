@@ -115,9 +115,7 @@ const ProgramTab: React.FC<ProgramProps> = ({ faculty, program}) => {
   
 
     const handleMajorChange = (event: ChangeEvent<HTMLSelectElement>) => {
-      console.log("Before updating selectedMajor:", selectedMajor);
       setSelectedMajor(event.target.value);
-      console.log("After updating selectedMajor:", event.target.value);
     };    
     
     const handleSecondFacultyChange = (event: ChangeEvent<HTMLSelectElement>) => {

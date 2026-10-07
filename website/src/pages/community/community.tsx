@@ -1,13 +1,14 @@
-import React, { useEffect, useState, useRef, useCallback } from 'react';
+import React, { FormEvent, useEffect, useMemo, useState } from 'react';
 import axios from 'axios';
 import emailjs from 'emailjs-com';
-import './community.css';
-import logoImage from '../../images/nusplannerLogo.png';
-import pencilIcon from '../../images/pencilicon.jpeg';
+import { Flag, MessageSquare, Plus, RefreshCw, Search, ThumbsDown, ThumbsUp, X } from 'react-feather';
 import Layout from '../../components/Layout';
-import reloadIcon from '../../images/reloadIcon.png';
+import './community.css';
 
-axios.defaults.baseURL = 'http://47.116.173.60:8080';
+const communityApi = axios.create({
+  baseURL: import.meta.env.VITE_COMMUNITY_API_URL || 'http://47.116.173.60:8080',
+  timeout: 8000,
+});
 
 interface Post {
   id: number;
@@ -18,224 +19,200 @@ interface Post {
 }
 
 const Community = () => {
-  const [currentDate, setCurrentDate] = useState('');
   const [posts, setPosts] = useState<Post[]>([]);
   const [searchInput, setSearchInput] = useState('');
-  const [filteredPosts, setFilteredPosts] = useState<Post[]>([]);
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [modalText, setModalText] = useState('');
-  const modalRef = useRef<HTMLDivElement>(null);
-  const [notice, setNotice] = useState<string | null>('');
+  const [isCreateOpen, setIsCreateOpen] = useState(false);
+  const [newTitle, setNewTitle] = useState('');
+  const [newContent, setNewContent] = useState('');
+  const [statusMessage, setStatusMessage] = useState('');
+  const [isLoading, setIsLoading] = useState(true);
+  const [isSaving, setIsSaving] = useState(false);
+  const [error, setError] = useState('');
+
+  const loadPosts = async () => {
+    setIsLoading(true);
+    setError('');
+    try {
+      const response = await communityApi.get('/v1/article/select');
+      if (response.data && Array.isArray(response.data.data)) {
+        const sortedPosts = [...response.data.data].sort((a: Post, b: Post) => b.id - a.id);
+        setPosts(sortedPosts);
+      } else {
+        setError('The community feed returned an unexpected response.');
+      }
+    } catch {
+      setError('The community feed is unavailable right now. Please try again shortly.');
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   useEffect(() => {
-    const options: Intl.DateTimeFormatOptions = { year: 'numeric', month: 'long', day: 'numeric' };
-    const today = new Date();
-    setCurrentDate(today.toLocaleDateString(undefined, options));
     loadPosts();
   }, []);
 
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (modalRef.current && event.target === modalRef.current) {
-        setIsModalOpen(false);
-      }
-    };
-    window.addEventListener('click', handleClickOutside);
-    return () => {
-      window.removeEventListener('click', handleClickOutside);
-    };
-  }, []);
+  const filteredPosts = useMemo(() => {
+    const query = searchInput.trim().toLowerCase();
+    if (!query) return posts;
+    return posts.filter((post) => (
+      post.title.toLowerCase().includes(query) || post.content.toLowerCase().includes(query)
+    ));
+  }, [posts, searchInput]);
 
-  const loadPosts = async () => {
+  const handleSubmitPost = async (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    if (!newTitle.trim() || !newContent.trim()) return;
+    setIsSaving(true);
     try {
-      const response = await axios.get('/v1/article/select');
-      if (response.data && Array.isArray(response.data.data)) {
-        // Sort the posts in descending order by id before setting the state
-        const sortedPosts = response.data.data.sort((a: Post, b: Post) => b.id - a.id);
-        setPosts(sortedPosts);
-        setFilteredPosts(sortedPosts);
-      } else {
-        console.error('Fetched data is not an array:', response.data);
-      }
-    } catch (error) {
-      console.error('Error fetching posts:', error);
+      await communityApi.post('/v1/article/save', {
+        id: 0,
+        title: newTitle.trim(),
+        content: newContent.trim(),
+        thumbsup: 0,
+        dislike: 0,
+      });
+      setNewTitle('');
+      setNewContent('');
+      setIsCreateOpen(false);
+      setStatusMessage('Your post is now live in the community.');
+      await loadPosts();
+    } catch {
+      setStatusMessage('We could not publish your post. Please try again.');
+    } finally {
+      setIsSaving(false);
     }
   };
-  
-  const savePost = async (post: Post) => {
-    try {
-      await axios.post('/v1/article/save', post);
-      loadPosts();
-    } catch (error) {
-      console.error('Error saving post:', error);
-    }
-  }; 
 
-  const handleSearch = useCallback((immediate: boolean = false) => {
-    const trimmedSearchInput = searchInput.trim().toLowerCase();
-  
-    const executeSearch = () => {
-      if (trimmedSearchInput) {
-        const filtered = posts.filter(post =>
-          post.title.toLowerCase().includes(trimmedSearchInput) ||
-          post.content.toLowerCase().includes(trimmedSearchInput)
-        );
-        setFilteredPosts(filtered);
-      } else {
-        setFilteredPosts(posts);
-      }
-  
-      if (immediate) {
-        // Only remove focus from the search input to hide the cursor when Enter is pressed
-        const searchBox = document.getElementById('search-input') as HTMLInputElement;
-        if (searchBox) {
-          searchBox.blur();
-        }
-      }
-    };
-  
-    if (immediate) {
-      executeSearch();
-    } else {
-      const delayDebounceFn = setTimeout(() => {
-        executeSearch();
-      }, 300); // Adjust debounce delay as needed
-  
-      return () => clearTimeout(delayDebounceFn);
-    }
-  }, [searchInput, posts]);
-  
-  // Handle search with debounce for regular typing
-  useEffect(() => {
-    handleSearch(false); // Call with `false` to debounce during typing
-  }, [searchInput, handleSearch]);
-  
-  const handleSubmitPost = async (id: number, title: string, content: string, thumbsup: number, dislike: number ) => {
-    const newPost = { id, title, content, thumbsup, dislike};
-    await savePost(newPost);
-    closeModal();
-    // Clear the input fields
-    (document.getElementById('postTitle') as HTMLInputElement).value = '';
-    (document.getElementById('postContent') as HTMLTextAreaElement).value = '';
-  };
-
-  const handleLikePost = async (postId: number) => {
+  const updateReaction = async (postId: number, reaction: 'like' | 'dislike') => {
+    const endpoint = reaction === 'like' ? 'updateLike' : 'updateDislike';
     try {
-      const response = await axios.post(`/v1/article/updateLike/${postId}`);
-      if (response.data) {
-        loadPosts();
-      }
-    } catch (error) {
-      console.error('Error liking post:', error);
+      const response = await communityApi.post(`/v1/article/${endpoint}/${postId}`);
+      if (response.data) await loadPosts();
+    } catch {
+      setStatusMessage('That reaction did not go through. Please try again.');
     }
   };
-  
-  const handleDislikePost = async (postId: number) => {
-    try {
-      const response = await axios.post(`/v1/article/updateDislike/${postId}`);
-      if (response.data) {
-        loadPosts();
-      }
-    } catch (error) {
-      console.error('Error disliking post:', error);
-    }
-  };  
 
   const handleReportPost = (post: Post) => {
-    const serviceID = 'service_j372can';
-    const templateID = 'template_bi1g9kb';
-    const userID = 'PtThpNOKmxSv-C1nB';
     const templateParams = {
-      message: 'Reported Post: Title {' + post.title + '}' + ', Content {' + post.content + '}',
+      message: `Reported Post: Title {${post.title}}, Content {${post.content}}`,
       to_email: 'nusplanner2024@gmail.com',
     };
-    emailjs.send(serviceID, templateID, templateParams, userID)
-      .then((response) => {
-        console.log('Report sent successfully!', response.status, response.text);
-        setModalText('Thank you for your report. Your report will be reviewed shortly.');
-        setIsModalOpen(true);
-      }, (error) => {
-        console.error('Failed to send report.', error);
+    emailjs.send('service_j372can', 'template_bi1g9kb', templateParams, 'PtThpNOKmxSv-C1nB')
+      .then(() => setStatusMessage('Thanks. The team will review this post shortly.'))
+      .catch(() => {
+        setStatusMessage('We could not send that report. Please try again.');
       });
   };
 
-  const openModal = () => {
-    (document.getElementById('postTitle') as HTMLInputElement).value = '';
-    (document.getElementById('postContent') as HTMLTextAreaElement).value = '';
-    const modal = document.getElementById('postModal');
-    if (modal) modal.style.display = 'block';
-  };
-
-  const closeModal = () => {
-    const modal = document.getElementById('postModal');
-    if (modal) modal.style.display = 'none';
-  };
-
-  const handleRefresh = () => {
-    loadPosts();
-    setSearchInput('');
-  };
-  
   return (
-    <Layout notice={notice ? <div className="notice-message">{notice}</div> : null}>
-      <div>
-        <div className="community-nav-right">
-          <div className="search-box">
-            <img src={logoImage} className="logoImage" alt="Logo" />
-            <input 
-              type="text" 
-              id="search-input" 
-              placeholder="Search..." 
-              value={searchInput} 
-              onChange={(e) => {
-                setSearchInput(e.target.value);
-                //handleSearch();
-              }} 
-              onKeyDown={(e) => { if (e.key === 'Enter') handleSearch(true) }} 
-            />
-            <img src={reloadIcon} alt="Refresh" className="reload-icon" onClick={handleRefresh} />
-            <img src={pencilIcon} alt="Create Post" className="pencil-icon" onClick={openModal} />
+    <Layout>
+      <div className="page-shell community-page">
+        <div className="page-heading community-heading">
+          <div>
+            <p className="page-eyebrow">Student to student</p>
+            <h1>Community board</h1>
+            <p className="page-description">Swap planning tips, ask for course advice, and learn from people who have been there.</p>
           </div>
-          <div id="posts-container">
-            {filteredPosts.map((post) => (
-              <div key={post.id} className="post">
-                <h3>{post.title}</h3>
+          <button className="primary-button" type="button" onClick={() => setIsCreateOpen(true)}>
+            <Plus size={17} /> New post
+          </button>
+        </div>
+
+        <div className="community-toolbar surface-card">
+          <label className="community-search">
+            <Search size={18} aria-hidden="true" />
+            <span className="sr-only">Search community posts</span>
+            <input
+              type="search"
+              placeholder="Search discussions"
+              value={searchInput}
+              onChange={(event) => setSearchInput(event.target.value)}
+            />
+          </label>
+          <span className="community-count">{filteredPosts.length} {filteredPosts.length === 1 ? 'discussion' : 'discussions'}</span>
+          <button className="icon-button" type="button" onClick={loadPosts} aria-label="Refresh community posts">
+            <RefreshCw size={17} className={isLoading ? 'is-spinning' : ''} />
+          </button>
+        </div>
+
+        {statusMessage && (
+          <div className="community-status" role="status">
+            <span>{statusMessage}</span>
+            <button type="button" onClick={() => setStatusMessage('')} aria-label="Dismiss message"><X size={16} /></button>
+          </div>
+        )}
+
+        <div className="community-feed" aria-live="polite">
+          {isLoading && posts.length === 0 ? (
+            [0, 1, 2].map((item) => <div className="community-skeleton surface-card" key={item} />)
+          ) : error ? (
+            <div className="community-empty surface-card">
+              <MessageSquare size={30} />
+              <h2>We could not load the board</h2>
+              <p>{error}</p>
+              <button className="secondary-button" type="button" onClick={loadPosts}>Try again</button>
+            </div>
+          ) : filteredPosts.length === 0 ? (
+            <div className="community-empty surface-card">
+              <Search size={30} />
+              <h2>No discussions match that search</h2>
+              <p>Try a module code, topic, or a broader phrase.</p>
+              <button className="secondary-button" type="button" onClick={() => setSearchInput('')}>Clear search</button>
+            </div>
+          ) : filteredPosts.map((post, index) => (
+            <article key={post.id} className="community-post surface-card">
+              <div className="community-post-avatar" aria-hidden="true">{String(index + 1).padStart(2, '0')}</div>
+              <div className="community-post-body">
+                <div className="community-post-meta">
+                  <span>Community post</span>
+                  <span>#{post.id}</span>
+                </div>
+                <h2>{post.title}</h2>
                 <p>{post.content}</p>
-                
-                <div className="post-actions">
-                  <button onClick={() => handleLikePost(post.id)}> 👍 {post.thumbsup}</button>
-                  <button onClick={() => handleDislikePost(post.id)}>👎 {post.dislike}</button>
-                  <button onClick={() => handleReportPost(post)}>Report</button>                   
+                <div className="community-post-actions">
+                  <button type="button" onClick={() => updateReaction(post.id, 'like')} aria-label={`Like ${post.title}`}>
+                    <ThumbsUp size={16} /> {post.thumbsup}
+                  </button>
+                  <button type="button" onClick={() => updateReaction(post.id, 'dislike')} aria-label={`Dislike ${post.title}`}>
+                    <ThumbsDown size={16} /> {post.dislike}
+                  </button>
+                  <button className="community-report" type="button" onClick={() => handleReportPost(post)}>
+                    <Flag size={15} /> Report
+                  </button>
                 </div>
               </div>
-            ))}
-          </div>
+            </article>
+          ))}
         </div>
 
-        <div id="postModal" className="modal">
-          <div className="modal-content">
-            <span className="close" onClick={closeModal}>&times;</span>
-            <h2>Create a Post</h2>
-            <input type="text" id="postTitle" placeholder="Title" />
-            <textarea id="postContent" placeholder="Content" rows={5}></textarea>
-            <button onClick={() => {
-              const title = (document.getElementById('postTitle') as HTMLInputElement).value;
-              const content = (document.getElementById('postContent') as HTMLTextAreaElement).value;
-              if (title && content) {
-                handleSubmitPost(0, title, content, 0, 0);
-              } else {
-                alert('Please enter both a title and content.');
-              }
-            }}>Submit</button>
-          </div>
-        </div>
-
-        {isModalOpen && (
-          <div id="myModal" className="modal show" ref={modalRef}>
-            <div className="modal-content">
-              <span className="close" onClick={() => setIsModalOpen(false)}>&times;</span>
-              <p id="modal-text">{modalText}</p>
-            </div>
+        {isCreateOpen && (
+          <div className="dialog-backdrop" role="presentation" onMouseDown={(event) => {
+            if (event.target === event.currentTarget) setIsCreateOpen(false);
+          }}>
+            <section className="community-dialog" role="dialog" aria-modal="true" aria-labelledby="create-post-title">
+              <div className="community-dialog-heading">
+                <div>
+                  <p className="page-eyebrow">Start a discussion</p>
+                  <h2 id="create-post-title">Share with the community</h2>
+                </div>
+                <button className="icon-button" type="button" onClick={() => setIsCreateOpen(false)} aria-label="Close dialog"><X size={18} /></button>
+              </div>
+              <form onSubmit={handleSubmitPost}>
+                <label>
+                  Title
+                  <input value={newTitle} onChange={(event) => setNewTitle(event.target.value)} placeholder="What would you like to discuss?" autoFocus maxLength={140} required />
+                </label>
+                <label>
+                  Details
+                  <textarea value={newContent} onChange={(event) => setNewContent(event.target.value)} placeholder="Add the context that will help others respond…" rows={7} required />
+                </label>
+                <div className="community-dialog-actions">
+                  <button className="secondary-button" type="button" onClick={() => setIsCreateOpen(false)}>Cancel</button>
+                  <button className="primary-button" type="submit" disabled={isSaving}>{isSaving ? 'Publishing…' : 'Publish post'}</button>
+                </div>
+              </form>
+            </section>
           </div>
         )}
       </div>
@@ -244,4 +221,3 @@ const Community = () => {
 };
 
 export default Community;
-

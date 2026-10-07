@@ -1,251 +1,229 @@
-.feedback-nav-right {
-  margin-top: 4.75em;
-  width: 85%;
-  flex-grow: 1;
-  background-color: #FFFFFF;
+.feedback-page {
+  max-width: 1240px;
+}
+
+.feedback-page .page-heading h1 {
+  max-width: 850px;
+}
+
+.feedback-layout {
+  display: grid;
+  grid-template-columns: minmax(300px, 0.8fr) minmax(420px, 1.2fr);
+  gap: 18px;
+}
+
+.feedback-type-panel,
+.feedback-form-panel {
+  padding: clamp(24px, 3vw, 36px);
+  border-radius: 20px;
+}
+
+.feedback-type-panel {
+  background: var(--navy-900);
+  color: white;
+}
+
+.feedback-section-heading {
   display: flex;
-  justify-content: center;
+  align-items: flex-start;
+  gap: 13px;
+}
+
+.feedback-section-heading > span {
+  display: grid;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  flex: 0 0 auto;
+  border-radius: 9px;
+  background: var(--orange-500);
+  color: white;
+  font-size: 0.67rem;
+  font-weight: 850;
+}
+
+.feedback-section-heading h2 {
+  margin: 1px 0 5px;
+  font-size: 1.28rem;
+  letter-spacing: -0.03em;
+}
+
+.feedback-section-heading p {
+  margin: 0;
+  color: var(--ink-500);
+  font-size: 0.77rem;
+  line-height: 1.5;
+}
+
+.feedback-type-panel .feedback-section-heading p {
+  color: #9fb0c5;
+}
+
+.feedback-options {
+  display: grid;
+  gap: 10px;
+  margin-top: 30px;
+}
+
+.feedback-option {
+  min-height: 78px;
+  display: grid;
+  grid-template-columns: auto 1fr auto;
   align-items: center;
-  padding: 1.25rem; 
-  color: #333;
-  box-sizing: border-box;
-  margin-left: 12.5rem;
-  margin-right: 2.5rem;
-
-}
-
-.feedback-nav-right > div {
-  width: 100%;
-}
-
-.feedback-nav-right h1 {
-  text-align: center;
-  color: #69707A;
-}
-
-.feedback-nav-right h2 {
+  gap: 13px;
+  padding: 13px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 13px;
+  background: rgba(255, 255, 255, 0.055);
+  color: white;
   text-align: left;
-  margin-top: 0;
-  color: #2C3E50;
-  border-bottom: 0.125rem solid #1abc9c; 
-  padding-bottom: 0.625rem; 
-  margin-bottom: 1.25rem; 
+  cursor: pointer;
+  transition: background 160ms ease, border-color 160ms ease, transform 160ms ease;
 }
 
-.feedback-nav-right p {
-  text-align: justify;
-  color: #888;
-  padding-left: 1.25rem;
-  padding-right: 1.25rem;
-  font-size: 1.25rem;
-  margin: 0; 
+.feedback-option:hover {
+  border-color: rgba(255, 255, 255, 0.23);
+  background: rgba(255, 255, 255, 0.09);
+  transform: translateX(2px);
 }
 
-.feedback-nav-right .feedback-prefix {
-  text-align: left;
-  color: #888;
-  font-size: 1.25rem;
-  margin-bottom: 0;
+.feedback-option.is-selected {
+  border-color: #efa071;
+  background: rgba(239, 124, 53, 0.14);
+  box-shadow: inset 3px 0 var(--orange-500);
 }
 
-.feedback-nav-right .feedback-prefix .report-button {
-  margin-left: 2.5rem;
+.feedback-option-icon {
+  width: 38px;
+  height: 38px;
+  display: grid;
+  place-items: center;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.09);
+  color: #dce5f1;
 }
 
-.feedback-nav-right .form-group .feedbackform {
-  padding-left: 1.25rem;
-  padding-right: 1.25rem;
-  padding-top: 0;
+.feedback-option.is-selected .feedback-option-icon {
+  background: var(--orange-500);
+  color: white;
 }
 
-.form-group {
-  margin-bottom: 1.25rem;
+.feedback-option > span:nth-child(2) {
+  display: grid;
+  gap: 4px;
+}
+
+.feedback-option strong {
+  font-size: 0.86rem;
+}
+
+.feedback-option small {
+  color: #9fb0c5;
+  font-size: 0.69rem;
+  line-height: 1.4;
+}
+
+.feedback-option > svg {
+  color: #8398b3;
+}
+
+.feedback-form-panel {
+  background: white;
+}
+
+.feedback-form-panel form {
+  display: grid;
+  gap: 9px;
+  margin-top: 30px;
+}
+
+.feedback-form-panel label {
+  color: var(--ink-700);
+  font-size: 0.76rem;
+  font-weight: 800;
+}
+
+.feedback-form-panel textarea {
   width: 100%;
-  margin-left: 0;
-  margin-right: 0;
-}
-
-textarea {
-  width: 100%;
-  height: 12.5rem;
-  padding: 0.625rem;
-  border: 0.0625rem solid #ccc;
-  border-radius: 0.25rem;
-  font-size: 1rem;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  min-height: 250px;
+  padding: 15px;
+  border: 1px solid var(--line);
+  border-radius: 13px;
+  background: #fafbfc;
+  color: var(--ink-900);
+  font-size: 0.9rem;
+  line-height: 1.6;
   resize: vertical;
-  box-sizing: border-box; 
 }
 
-.feedback-prefix button {
-  padding: 0.625rem 1.25rem;
-  font-size: 1rem;
-  cursor: pointer;
-  background-color: #1abc9c;
-  display: inline-block;
-  margin: 1.25rem;
-  border: none;
-  border-radius: 0.25rem;
-  color: #fff;
+.feedback-form-panel textarea:focus {
+  border-color: var(--teal-600);
+  outline: 3px solid rgba(8, 127, 120, 0.11);
+  background: white;
 }
 
-.feedback-button, .submit-button {
-  padding: 0.625rem 1.25rem;
-  background-color: #1abc9c;
-  color: #fff;
-  border: none;
-  border-radius: 0.25rem;
-  cursor: pointer;
-  font-size: 1rem;
-  display: block;
-  margin: 1.25rem auto;
+.feedback-form-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-top: 8px;
 }
 
-button:hover {
-  background-color: #16a085;
+.feedback-form-footer > span {
+  color: var(--ink-500);
+  font-size: 0.7rem;
 }
 
-#response-message {
-  margin-top: 1.25rem;
-  color: green;
-  text-align: center;
+.feedback-form-footer button:disabled {
+  opacity: 0.6;
+  cursor: wait;
 }
 
-.modal {
-  display: none; 
-  position: fixed;
-  z-index: 1;
-  left: 0;
-  top: 0;
-  width: 100%;
-  height: 100%;
-  overflow: auto;
-  background-color: rgba(0, 0, 0, 0.4); 
+.feedback-status {
+  display: flex;
+  align-items: flex-start;
+  gap: 9px;
+  margin-top: 18px;
+  padding: 12px 13px;
+  border-radius: 10px;
+  font-size: 0.78rem;
+  font-weight: 650;
+  line-height: 1.45;
 }
 
-.modal.show {
-  display: block;
+.feedback-status svg {
+  flex: 0 0 auto;
 }
 
-.modal-content {
-  background-color: #fefefe;
-  margin: 15% auto; 
-  padding: 1.25rem;
-  border: 0.0625rem solid #888;
-  width: 80%; 
-  max-width: 25rem;
-  text-align: center;
-  border-radius: 0.25rem;
-  position: relative;
+.feedback-status-success {
+  background: #e9f7f2;
+  color: #17685f;
 }
 
-.modal-content p {
-  margin: 0; 
-  padding: 1.25rem 0;
-  text-align: center;
+.feedback-status-error {
+  background: #fff0ec;
+  color: #a13f27;
 }
 
-.close {
-  position: absolute;  
-  right: 1.25rem;
-  top: 0.625rem;
-  color: #aaa;
-  font-size: 1.75rem;
-  font-weight: bold;
+@media (max-width: 900px) {
+  .feedback-layout {
+    grid-template-columns: 1fr;
+  }
 }
 
-.close:hover,
-.close:focus {
-  color: black;
-  text-decoration: none;
-  cursor: pointer;
-}
+@media (max-width: 520px) {
+  .feedback-type-panel,
+  .feedback-form-panel {
+    padding: 22px 17px;
+  }
 
+  .feedback-form-footer {
+    align-items: stretch;
+    flex-direction: column;
+  }
 
-@media (max-width: 768px) {
-  .feedback-nav-right {
-    padding: 1rem;
-    margin-left: 0;
+  .feedback-form-footer .primary-button {
     width: 100%;
-  }
-
-  .feedback-nav-right h1 {
-    font-size: 1.5rem;
-  }
-
-  .feedback-nav-right h2 {
-    font-size: 1.25rem;
-    padding-bottom: 0.5rem;
-    margin-bottom: 1rem;
-  }
-
-  .feedback-nav-right p,
-  .feedback-nav-right .feedback-prefix
-  .feedback-nav-right .form-group .feedbackform,
-  textarea {
-    margin-top: 8em;
-    font-size: 0.875rem;
-    margin: 0;
-  }
-  .feedback-prefix button,
-  .feedback-button,
-  .submit-button {
-    font-size: 0.55rem;
-    margin: 0;
-    margin-right: 0.75em;
-    max-width: 10em;
-    margin-top: 2em;
-  }
-  .feedback-prefix {
-    padding: 0;
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-    flex-direction: row;
-    justify-self: center;
-    align-items: center;
-    max-width: 100%;
-    transform: translateX(-0.75em);
-  }
-;
-  .modal {
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-  }
-
-  .feedback-nav-right p {
-    padding-left: 1rem;
-  }
-
-  .feedback-title-line {
-    transform: translateY(1em);
-  }
-
-  textarea {  
-    margin-top: 1.2em;
-    justify-self: center;
-    height: 10rem;
-    padding: 0.5rem;
-  }
-
-  .modal-content {
-    padding: 1rem;
-    max-width: 20rem;
-    top: 25%;
-  }
-
-  .modal-content p {
-    padding: 1rem 0;
-  }
-
-  .modal-text {
-    
-  }
-
-  .close {
-    right: 1rem;
-    top: 0.5rem;
-    font-size: 1.5rem;
   }
 }

@@ -1,141 +1,149 @@
-import React, { useEffect, useState } from 'react';
-import { NavLink, useNavigate } from 'react-router-dom';
+import React, { ReactNode, useEffect, useMemo, useState } from 'react';
+import { NavLink, useLocation } from 'react-router-dom';
+import {
+  Bell,
+  BookOpen,
+  Calendar,
+  ExternalLink,
+  Home,
+  Info,
+  MapPin,
+  Menu,
+  MessageCircle,
+  Users,
+  X,
+} from 'react-feather';
 import logoImage from '../images/nusplannerLogo.png';
 import './Layout.css';
 import Footer from './Footer';
-import teleLogo from '../images/teleLogo.jpg';
-import timetableImg from '../assets/timetable.png';
-import homeImg from '../assets/home.png';
-import plannerImg from '../assets/planner.png';
-import calendarImg from '../assets/calendar.png';
-import mapImg from '../assets/map.png';
-import communityImg from '../assets/community.png';
-import feedbackImg from '../assets/feedback.png';
-import aboutImg from '../assets/about.png';
 
-const Layout = ({ children }) => {
-  const [currentDate, setCurrentDate] = useState('');
-  const [currentSentenceIndex, setCurrentSentenceIndex] = useState(0);
-  const [isLoginPopupVisible, setLoginPopupVisible] = useState(false);
-  const navigate = useNavigate();
+type LayoutProps = {
+  children: ReactNode;
+  notice?: ReactNode;
+};
 
-  const buttons = [
-    { path: '/', label: 'Home', className: 'home', bgImage: `url(${homeImg})` },
-    { path: '/studyplan', label: 'Study Plan', bgImage: `url(${plannerImg})` },
-    { path: '/timetable', label: 'Timetable', bgImage: `url(${timetableImg})` },
-    { path: '/community', label: 'Community', bgImage: `url(${communityImg})` },
-    { path: '/reminder', label: 'Reminder', bgImage: `url(${calendarImg})` },
-    { path: '/map', label: 'Map', bgImage: `url(${mapImg})` },
-    { path: '/feedback', label: 'Feedback', bgImage: `url(${feedbackImg})` },
-    { path: '/about', label: 'About us', bgImage: `url(${aboutImg})` }
-  ];
+const primaryNavigation = [
+  { path: '/', label: 'Home', icon: Home, end: true },
+  { path: '/studyplan', label: 'Study plan', icon: BookOpen },
+  { path: '/timetable', label: 'Timetable', icon: Calendar },
+  { path: '/reminder', label: 'Reminders', icon: Bell },
+  { path: '/map', label: 'Campus map', icon: MapPin },
+];
 
-  const sentences = [
-    <>Any upcoming deadlines on <a href="https://canvas.nus.edu.sg" target="_blank" rel="noopener noreferrer">Canvas</a>?</>,
-    <>Have you checked your <a href="https://exchange.nus.edu.sg" target="_blank" rel="noopener noreferrer">email</a> today?</>,
-    <>Anything pressing on <a href="https://myedurec.nus.edu.sg" target="_blank" rel="noopener noreferrer">EduRec</a>?</>,
-    <>Don't forget to check your Reminder!</>
-  ];
+const secondaryNavigation = [
+  { path: '/community', label: 'Community', icon: Users },
+  { path: '/feedback', label: 'Feedback', icon: MessageCircle },
+  { path: '/about', label: 'About', icon: Info },
+];
+
+const Layout: React.FC<LayoutProps> = ({ children, notice }) => {
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const location = useLocation();
+  const currentDate = useMemo(
+    () => new Intl.DateTimeFormat('en-SG', { weekday: 'short', day: 'numeric', month: 'short' }).format(new Date()),
+    [],
+  );
 
   useEffect(() => {
-    const options = { year: 'numeric', month: 'long', day: 'numeric' };
-    const today = new Date();
-    setCurrentDate(today.toLocaleDateString(undefined, options));
-  }, []);
+    setIsMenuOpen(false);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }, [location.pathname]);
 
   useEffect(() => {
-    const intervalId = setInterval(() => {
-      setCurrentSentenceIndex((prevIndex) => (prevIndex + 1) % sentences.length);
-    }, 5000);
-    return () => clearInterval(intervalId);
-  }, [sentences.length]);
+    document.body.style.overflow = isMenuOpen ? 'hidden' : '';
+    return () => {
+      document.body.style.overflow = '';
+    };
+  }, [isMenuOpen]);
 
-  const toggleLoginPopup = () => {
-    setLoginPopupVisible(!isLoginPopupVisible);
-  };
+  const renderNavigation = (items: typeof primaryNavigation) => items.map(({ path, label, icon: Icon, end }) => (
+    <NavLink
+      key={path}
+      to={path}
+      end={end}
+      className={({ isActive }) => `app-nav-link${isActive ? ' is-active' : ''}`}
+    >
+      <Icon size={19} aria-hidden="true" />
+      <span>{label}</span>
+    </NavLink>
+  ));
 
   return (
-    <div className="layout">
-      <header>
-        <div className="header-left">
-          <NavLink to="/" className="logo-link">
-            <div className="logo-container">
-              <img src={logoImage} alt="Logo" />
-              <span>NUSPlanner</span>
-            </div>
-          </NavLink>
-          <div className="title-container">
-            <p></p>
-          </div>
-        </div>
-        <div className="home-scroll-container">
-          <div className="home-scroll-content">
-            {sentences[currentSentenceIndex]}
-          </div>
-        </div>
-        <a href="https://t.me/+c2TQvkafNAIzYmY9" className="join-us-container" target="_blank" rel="noopener noreferrer">
-          <img src={teleLogo} alt="Join Us" className="join-us-icon" />
-          <span className="join-us-text">Join us</span>
-        </a>
-        <div className="about-us-container">
-          <NavLink to="/about" className="about-us-link">
-            <span>About Us</span>
-          </NavLink>
-        </div>
-        <div className="login-container">
-          <button className="login-link" onClick={toggleLoginPopup}>
-            <span className='login-text'>Login</span>
+    <div className="app-shell">
+      <header className="app-header">
+        <NavLink to="/" className="app-brand" aria-label="NUSPlanner home">
+          <span className="app-brand-mark">
+            <img src={logoImage} alt="" />
+          </span>
+          <span className="app-brand-copy">
+            <strong>NUSPlanner</strong>
+            <small>Plan with confidence</small>
+          </span>
+        </NavLink>
+
+        <div className="app-header-actions">
+          <span className="app-date">{currentDate}</span>
+          <a
+            className="app-campus-link"
+            href="https://canvas.nus.edu.sg"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Canvas <ExternalLink size={14} aria-hidden="true" />
+          </a>
+          <button
+            className="app-menu-button"
+            type="button"
+            onClick={() => setIsMenuOpen((open) => !open)}
+            aria-expanded={isMenuOpen}
+            aria-controls="app-navigation"
+            aria-label={isMenuOpen ? 'Close navigation' : 'Open navigation'}
+          >
+            {isMenuOpen ? <X aria-hidden="true" /> : <Menu aria-hidden="true" />}
           </button>
         </div>
-        <div className="date-container">
-          <span>{currentDate}</span>
-        </div>
       </header>
-      <div className="content">
-        <nav>
-          <div className="nav-left">
-            <ul className='nav-left-buttonlist'>
-              {buttons.map((button, index) => (
-                <li key={index} className={button.className}>
-                  <button 
-                    onClick={() => navigate(button.path)} 
-                    className="nav-button" 
-                    style={{ backgroundImage: button.bgImage }}>
-                    <span>{button.label}</span>
-                  </button>
-                </li>
-              ))}
-            </ul>
-          </div>
-        </nav>
-        <div className="page-content">
-          {children}
-        </div>
-      </div>
-      <div className='footer-container'>
-        <Footer />
-      </div>
-      {isLoginPopupVisible && (
-        <div className="login-popup">
-          <div className="login-popup-content">
-            <button className="close-popup" onClick={toggleLoginPopup}>&times;</button>
-            <h2>Login</h2>
-            <form>
-              <label>
-                Email:
-                <input type="email" name="email" placeholder="Please enter your NUS email"/>
-              </label>
-              <label>
-                Password:
-                <input type="password" name="password" placeholder="Please enter your password" />
-              </label>
-              <button type="submit">Login</button>
-            </form>
-            <p>Don't have an account? <a href="#">Sign up</a></p>
-          </div>
-        </div>
-      )}
 
+      <div className="app-body">
+        <button
+          type="button"
+          aria-label="Close navigation"
+          className={`app-nav-backdrop${isMenuOpen ? ' is-visible' : ''}`}
+          onClick={() => setIsMenuOpen(false)}
+        />
+        <aside id="app-navigation" className={`app-sidebar${isMenuOpen ? ' is-open' : ''}`}>
+          <nav className="app-navigation" aria-label="Main navigation">
+            <div className="app-nav-group">
+              <p className="app-nav-label">Plan</p>
+              {renderNavigation(primaryNavigation)}
+            </div>
+            <div className="app-nav-group app-nav-group-secondary">
+              <p className="app-nav-label">Connect</p>
+              {renderNavigation(secondaryNavigation)}
+            </div>
+          </nav>
+
+          <a
+            className="app-community-card"
+            href="https://t.me/+c2TQvkafNAIzYmY9"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <span className="app-community-icon"><MessageCircle size={18} aria-hidden="true" /></span>
+            <span>
+              <strong>Join the student chat</strong>
+              <small>Ideas, help and updates</small>
+            </span>
+            <ExternalLink size={15} aria-hidden="true" />
+          </a>
+        </aside>
+
+        <main className="app-main" id="main-content">
+          {notice}
+          {children}
+          <Footer />
+        </main>
+      </div>
     </div>
   );
 };

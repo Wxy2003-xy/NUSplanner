@@ -30,15 +30,8 @@ export interface ModuleFormProps {
 }
 
 export interface ModuleSelectionBoxProps {
-    setTempCard: (card: { 
-        id: number; 
-        name: string; 
-        semester: number[];
-        content: string; 
-        courseCredit: number; 
-        preclusionRule: string[];
-        prereqTree?: PrereqTreeNode}) => void;
-        examInfo?: ExamInfo[];
+    setTempCard: (card: CardType) => void;
     onConfirm: (card: CardType) => void;
-    onClose: () => void
+    onClose: () => void;
+    destinationLabel?: string;
 }

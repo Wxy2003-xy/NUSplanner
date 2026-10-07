@@ -1,126 +1,143 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { FormEvent, useState } from 'react';
 import emailjs from 'emailjs-com';
-import './feedback.css';
+import { AlertCircle, ArrowRight, CheckCircle, MessageCircle, Send, Zap } from 'react-feather';
 import Layout from '../../components/Layout';
+import './feedback.css';
+
+const feedbackOptions = [
+  {
+    type: 'Report',
+    title: 'Report an issue',
+    description: 'Something did not work the way you expected.',
+    icon: AlertCircle,
+  },
+  {
+    type: 'Suggestion',
+    title: 'Suggest an improvement',
+    description: 'You have an idea that could make planning better.',
+    icon: Zap,
+  },
+  {
+    type: 'Other',
+    title: 'Share something else',
+    description: 'Questions, encouragement, or anything in between.',
+    icon: MessageCircle,
+  },
+];
 
 const Feedback = () => {
   const [message, setMessage] = useState('');
-  const [modalText, setModalText] = useState('');
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [currentDate, setCurrentDate] = useState('');
-  const [formVisible, setFormVisible] = useState(false);
-  const [feedbackType, setFeedbackType] = useState(''); 
+  const [feedbackType, setFeedbackType] = useState('Suggestion');
+  const [status, setStatus] = useState<{ tone: 'success' | 'error'; message: string } | null>(null);
+  const [isSending, setIsSending] = useState(false);
 
-  const modalRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    const options: Intl.DateTimeFormatOptions = { year: 'numeric', month: 'long', day: 'numeric' };
-    const today = new Date();
-    setCurrentDate(today.toLocaleDateString(undefined, options));
-  }, []);
-
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (modalRef.current && event.target === modalRef.current) {
-        setIsModalOpen(false);
-      }
-    };
-    window.addEventListener('click', handleClickOutside);
-    return () => {
-      window.removeEventListener('click', handleClickOutside);
-    };
-  }, []);
-
-  const sendFeedback = (feedbackContent: string, feedbacktype: string) => {
-    const serviceID = 'service_j372can';
-    const templateID = 'template_apwji5m';
-    const userID = 'PtThpNOKmxSv-C1nB';
-    const templateParams = {
-      message: feedbackContent,
-      type: feedbacktype, 
-      to_email: 'nusplanner2024@gmail.com',
-    };
-    emailjs.send(serviceID, templateID, templateParams, userID)
-      .then((response) => {
-        console.log('Feedback sent successfully!', response.status, response.text);
-      }, (error) => {
-        console.error('Failed to send feedback.', error);
-      });
+  const getPlaceholder = () => {
+    if (feedbackType === 'Report') return 'What happened? Include the page and the steps that led to the issue.';
+    if (feedbackType === 'Suggestion') return 'What would you change, and how would it help your planning?';
+    return 'Tell us what is on your mind.';
   };
 
-  const handleSubmit = (event: React.FormEvent) => {
+  const handleSubmit = async (event: FormEvent) => {
     event.preventDefault();
     const trimmedMessage = message.trim();
     if (!trimmedMessage) {
-      setModalText('Please provide your feedback before submitting.');
-    } else {
-      setModalText('Thank you for your feedback!');
-      sendFeedback(trimmedMessage, feedbackType); 
-      setMessage(''); 
+      setStatus({ tone: 'error', message: 'Add a little detail before sending your feedback.' });
+      return;
     }
-    setIsModalOpen(true);
-  };
 
-  const closeModal = () => {
-    setIsModalOpen(false);
-  };
-
-  const showForm = (type: string) => {
-    setFeedbackType(type); 
-    setFormVisible(true);
-  };
-
-  const getPlaceholder = () => {
-    switch (feedbackType) {
-      case 'Report':
-        return 'Please describe the issue you encountered...';
-      case 'Suggestion':
-        return 'Please share your suggestions for improvement...';
-      case 'Other':
-        return 'Please write your feedback here...';
-      default:
-        return 'Write your feedback here...';
+    setIsSending(true);
+    setStatus(null);
+    try {
+      await emailjs.send(
+        'service_j372can',
+        'template_apwji5m',
+        { message: trimmedMessage, type: feedbackType, to_email: 'nusplanner2024@gmail.com' },
+        'PtThpNOKmxSv-C1nB',
+      );
+      setMessage('');
+      setStatus({ tone: 'success', message: 'Thank you — your feedback has reached the NUSPlanner team.' });
+    } catch {
+      setStatus({ tone: 'error', message: 'Your message could not be sent. Please try again in a moment.' });
+    } finally {
+      setIsSending(false);
     }
   };
 
   return (
     <Layout>
-      <div className="feedback-nav-right">
-        <div className="form-group">
-          <h1>Your Support Lights Our Way—Thank You!</h1>
-          <p>
-            NUSPlanner is a wholly student-run, non-profit initiative that thrives on the ongoing support from the NUS student community. We deeply value your involvement, whether it is through sharing your experiences, reporting issues, or suggesting enhancements. Your feedback and contributions are immensely appreciated and will be carefully considered as we strive to improve. Thank you for being an integral part of our journey!
-          </p>
-          
-          <p className="feedback-prefix">    
-            <button className="report-button" onClick={() => showForm('Report')}>Report Issues</button>
-            <button className="suggest-button" onClick={() => showForm('Suggestion')}>Suggest Improvements</button>
-            <button className="other-button" onClick={() => showForm('Other')}>Give Other Feedback</button> 
-          </p>
-          
-          {formVisible && (
-            <form id="feedback-form" className="feedbackform" onSubmit={handleSubmit}>
-              <h2 className='feedback-title-line'>Feedback Form</h2>
-              <textarea
-                id="message"
-                name="message"
-                placeholder={getPlaceholder()} 
-                value={message}
-                onChange={(e) => setMessage(e.target.value)}
-              />
-              <button className="submit-button" type="submit">Submit</button>
-            </form>
-          )}
+      <div className="page-shell feedback-page">
+        <div className="page-heading">
+          <div>
+            <p className="page-eyebrow">Help shape NUSPlanner</p>
+            <h1>Tell us what would make planning better.</h1>
+            <p className="page-description">
+              NUSPlanner is student-run. Clear reports and thoughtful ideas directly influence what gets improved next.
+            </p>
+          </div>
         </div>
 
-        {isModalOpen && (
-          <div id="myModal" className="modal show" ref={modalRef}>
-            <div className="modal-content">
-              <span className="close" onClick={closeModal}>&times;</span>
-              <p id="modal-text">{modalText}</p>
+        <div className="feedback-layout">
+          <section className="feedback-type-panel" aria-labelledby="feedback-type-title">
+            <div className="feedback-section-heading">
+              <span>01</span>
+              <div>
+                <h2 id="feedback-type-title">What are you sharing?</h2>
+                <p>Choose the closest match so it reaches the right context.</p>
+              </div>
             </div>
-          </div>
-        )}
+            <div className="feedback-options" role="radiogroup" aria-label="Feedback type">
+              {feedbackOptions.map(({ type, title, description, icon: Icon }) => (
+                <button
+                  key={type}
+                  type="button"
+                  className={`feedback-option${feedbackType === type ? ' is-selected' : ''}`}
+                  role="radio"
+                  aria-checked={feedbackType === type}
+                  onClick={() => setFeedbackType(type)}
+                >
+                  <span className="feedback-option-icon"><Icon size={19} /></span>
+                  <span>
+                    <strong>{title}</strong>
+                    <small>{description}</small>
+                  </span>
+                  <ArrowRight size={17} aria-hidden="true" />
+                </button>
+              ))}
+            </div>
+          </section>
+
+          <section className="feedback-form-panel surface-card" aria-labelledby="feedback-message-title">
+            <div className="feedback-section-heading">
+              <span>02</span>
+              <div>
+                <h2 id="feedback-message-title">Add the details</h2>
+                <p>The more specific you are, the easier it is for us to act.</p>
+              </div>
+            </div>
+            <form onSubmit={handleSubmit}>
+              <label htmlFor="feedback-message">Your message</label>
+              <textarea
+                id="feedback-message"
+                value={message}
+                onChange={(event) => setMessage(event.target.value)}
+                placeholder={getPlaceholder()}
+                rows={9}
+              />
+              <div className="feedback-form-footer">
+                <span>{message.length} characters</span>
+                <button className="primary-button" type="submit" disabled={isSending}>
+                  {isSending ? 'Sending…' : <>Send feedback <Send size={16} /></>}
+                </button>
+              </div>
+            </form>
+            {status && (
+              <div className={`feedback-status feedback-status-${status.tone}`} role="status">
+                {status.tone === 'success' ? <CheckCircle size={18} /> : <AlertCircle size={18} />}
+                <span>{status.message}</span>
+              </div>
+            )}
+          </section>
+        </div>
       </div>
     </Layout>
   );

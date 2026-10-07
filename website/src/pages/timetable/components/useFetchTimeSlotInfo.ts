@@ -38,7 +38,6 @@ function useFetchTimeSlotInfo(acadYear: string, moduleCode: string, semesterArg:
         setTimeInfo(slots);
       })
       .catch(err => {
-        console.error('Error fetching data:', err);
         setError(err.message);
         setTimeInfo(null);
       });

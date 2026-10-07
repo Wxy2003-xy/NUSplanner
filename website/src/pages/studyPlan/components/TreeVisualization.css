@@ -1,83 +1,118 @@
-.link {
-  fill: none;
-  stroke: white;
-  stroke-width: 0.1rem;
-  stroke-opacity: 0.9;
-}
-
-.node rect {
-  fill: #ffffff;
-  stroke: steelblue;
-  stroke-width: 0.1rem;
-}
-
-.node text {
-  font: 0.625rem sans-serif;
-  fill: #333;
-}
-
 .svg-container {
+  width: 100%;
+  overflow-x: auto;
+  border-radius: 12px;
+  background:
+    radial-gradient(circle at 1px 1px, rgba(12, 58, 91, 0.09) 1px, transparent 0) 0 0 / 16px 16px,
+    #f8fafc;
+  scrollbar-color: #b8c4d2 transparent;
+  scrollbar-width: thin;
+}
+
+.prereq-tree-svg {
+  display: block;
+  width: 100%;
+  height: auto;
+  min-height: 126px;
+}
+
+.prereq-links path {
+  fill: none;
+  stroke: #bac7d5;
+  stroke-linecap: round;
+  stroke-width: 2;
+}
+
+.prereq-node rect {
+  stroke-width: 1.5;
+  filter: drop-shadow(0 4px 6px rgba(7, 29, 53, 0.1));
+}
+
+.prereq-node text {
+  font-family: inherit;
+  font-size: 11px;
+  font-weight: 850;
+  pointer-events: none;
+}
+
+.prereq-node--course rect {
+  fill: #e8f7f5;
+  stroke: #139087;
+}
+
+.prereq-node--course text {
+  fill: #086c66;
+  letter-spacing: 0.025em;
+}
+
+.prereq-node--all rect {
+  fill: #092d52;
+  stroke: #092d52;
+}
+
+.prereq-node--all text {
+  fill: white;
+}
+
+.prereq-node--any rect {
+  fill: #fff0db;
+  stroke: #e79431;
+}
+
+.prereq-node--any text {
+  fill: #8a5618;
+}
+
+.prereq-node--count rect {
+  fill: #f1ecfb;
+  stroke: #8c6bc0;
+}
+
+.prereq-node--count text {
+  fill: #654694;
+}
+
+.prereq-empty-state {
   display: flex;
-  justify-content: center;
+  min-height: 118px;
   align-items: center;
-  width: 100%;
-  height: 100%;
+  justify-content: center;
+  gap: 12px;
+  padding: 22px;
+  border-radius: 12px;
+  background: #f3faf8;
+  text-align: left;
 }
 
-.svg-container svg {
-  width: 100%;
-  height: 100%;
+.prereq-empty-state > span {
+  display: grid;
+  flex: 0 0 auto;
+  width: 35px;
+  height: 35px;
+  place-items: center;
+  border-radius: 999px;
+  background: var(--teal-600);
+  box-shadow: 0 7px 16px rgba(10, 145, 139, 0.18);
+  color: white;
+  font-size: 0.85rem;
+  font-weight: 900;
 }
 
-.graph {
-  margin: auto;
+.prereq-empty-state strong {
+  color: var(--navy-900);
+  font-size: 0.75rem;
 }
 
-.tree-card {
-  position: relative;
-  width: 80%;
-  background-color: #88f7c5;
-  border-radius: 0.3125rem;
-  overflow: hidden;
-  box-shadow: 0 0.25rem 0.5rem rgba(0, 0, 0, 0.1);
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-  box-sizing: border-box;
-  transform: translateX(0.1875rem);
-  padding: 0.625rem;
+.prereq-empty-state p {
+  max-width: 300px;
+  margin: 3px 0 0;
+  color: var(--ink-500);
+  font-size: 0.63rem;
+  line-height: 1.45;
 }
 
-.tree-card:hover {
-  transform: translateY(-0.3125rem);
-  box-shadow: 0 0.375rem 1rem rgba(0, 0, 0, 0.2);
-}
-
-.tree-card-title {
-  font-size: 0.7rem;
-  font-weight: bold;
-  color: #333;
-  margin: 0.625rem 0;
-}
-
-.tree-card-text {
-  font-size: 0.5rem;
-  line-height: 1;
-  color: #666;
-  margin: 0.25rem 0;
-  flex-grow: 1;
-}
-
-.card-grade {
-  font-size: 0.625rem;
-  color: #333;
-  margin: 0.625rem 0;
-}
-
-@media (max-width: 600px) {
-  .tree-card {
-    width: 80%;
-    margin: 0.625rem auto;
-  }
-  .tree-card-image {
-    height: 3.75rem;
+@media (max-width: 620px) {
+  .prereq-tree-svg {
+    min-height: 118px;
   }
 }

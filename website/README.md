@@ -1,30 +1,36 @@
-# React + TypeScript + Vite
+# NUSPlanner web app
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+The production NUSPlanner client is a React, TypeScript, and Vite application. It uses the existing NUSMods, community, and EmailJS integrations.
 
-Currently, two official plugins are available:
+## Local development
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+Requirements: Node.js 20 and npm.
 
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
-
-- Configure the top-level `parserOptions` property like this:
-
-```js
-export default {
-  // other rules...
-  parserOptions: {
-    ecmaVersion: 'latest',
-    sourceType: 'module',
-    project: ['./tsconfig.json', './tsconfig.node.json'],
-    tsconfigRootDir: __dirname,
-  },
-}
+```bash
+npm ci
+npm run dev
 ```
 
-- Replace `plugin:@typescript-eslint/recommended` to `plugin:@typescript-eslint/recommended-type-checked` or `plugin:@typescript-eslint/strict-type-checked`
-- Optionally add `plugin:@typescript-eslint/stylistic-type-checked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and add `plugin:react/recommended` & `plugin:react/jsx-runtime` to the `extends` list
+Vite serves the app with hot reload. Copy `.env.example` to `.env.local` only when you need to override optional configuration.
+
+## Quality checks
+
+Run the complete release gate before merging:
+
+```bash
+npm run check
+```
+
+This runs TypeScript validation, ESLint, the Jest suite, and the optimized Vite build. Build output is written to `dist/`.
+
+## Configuration
+
+`VITE_COMMUNITY_API_URL` overrides the existing community service origin. The current API remains the local fallback. HTTPS deployments should set this variable to an HTTPS endpoint that exposes the same routes, otherwise browsers can block community requests as mixed content.
+
+NUSMods requests continue to use `https://api.nusmods.com/v2/` directly.
+
+## Deployment
+
+Pushing `main` runs `.github/workflows/deploy-pages.yml`. The workflow installs locked dependencies, runs every quality gate, builds `website/dist`, and publishes that artifact to GitHub Pages.
+
+The Vite base path is `/NUSplanner/`, matching the current repository Pages URL. For another repository name or a root-domain deployment, update `base` in `vite.config.ts`.

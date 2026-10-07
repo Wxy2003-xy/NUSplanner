@@ -99,7 +99,7 @@ function Timetable({ timeSlots }: TimetableProps) {
           ))}
         </div>
         <div className="timetable-body">
-          {timeSlotsArray.map((time, index) => (
+          {timeSlotsArray.map((time) => (
             <div key={time} className="timetable-time-slot">
               {time}
             </div>
@@ -112,7 +112,7 @@ function Timetable({ timeSlots }: TimetableProps) {
   );
 }
 
-const colorPalettes = {
+const colorPalettes: Record<string, string[]> = {
   ashes: ['#B0B6AB', '#D0D3CD', '#A9B9A3', '#A3B9C1', '#A8C3D5', '#C1B6C7', '#D7B9C2'],
   chalk: ['#F0B6AC', '#E8C9A4', '#D9E3B4', '#B3CFA9', '#92CEBE', '#A3AFCF', '#C4B4C7'],
   eighties: ['#F0999A', '#F5CB7C', '#A6CC8C', '#78BCC9', '#9B9BCB', '#A58879', '#E8A77A'],

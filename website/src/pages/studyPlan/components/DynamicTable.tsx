@@ -2,7 +2,7 @@ import React, { useState, useEffect, ChangeEvent } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './DynamicTable.css';
 import PrereqTreeVisual from '../../../pages/studyPlan/components/TreeVisualization';
-import { MinorDetails, CardType, DynamicTableProps, SelectedCard, PrereqTreeNode } from '../../../types/studyplan';
+import { MinorDetails, CardType, SelectedCard, PrereqTreeNode } from '../../../types/studyplan';
 import MCbreakDown from './MCbreakDown';
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
@@ -10,7 +10,7 @@ import DraggableCard from './DraggableCard';
 import DroppableColumn from './DropColumn';
 import GuidedTour from './UserGuide';
 import ModuleSelectionBox from './ModuleSelection';
-const allPrograms = {
+const allPrograms: Record<string, string[]> = {
   'School of Computing': [
     "Computer Science", 
     "Business Analytics", 
@@ -122,14 +122,11 @@ const DynamicTable: React.FC = () => {
   });
   const [notification, setNotification] = useState<string | null>(null);
   const [clashNotification, setClashNotification] = useState<string | null>(null);
-  const [showTour, setShowTour] = useState(() => {
-    const storedShowTour = localStorage.getItem('showTourState');
-    return storedShowTour === null ? true : storedShowTour === 'true';
-  });
+  const [showTour, setShowTour] = useState(false);
   const [colorScheme, setColorScheme] = useState<string>(() => localStorage.getItem('colorScheme') || 'google');
   const handleTourClose = () => {
-    setShowTour(true);
-    localStorage.setItem('showTourState', 'true');
+    setShowTour(false);
+    localStorage.setItem('showTourState', 'false');
   };
   const handleColorSchemeChange = (event: ChangeEvent<HTMLSelectElement>) => {
     const newColorScheme = event.target.value;
@@ -138,7 +135,7 @@ const DynamicTable: React.FC = () => {
     staticUpdateAllPrerequisites(cards); // Update all cards to reflect the new color scheme
   };
   useEffect(() => { 
-    let timer;
+    let timer: ReturnType<typeof setTimeout> | undefined;
     if (notification) { 
       timer = setTimeout(() => {
         setNotification(null);
@@ -147,14 +144,14 @@ const DynamicTable: React.FC = () => {
     return () => clearTimeout(timer);
   }, [notification]); 
   useEffect(() => { 
-    let timer;
+    let timer: ReturnType<typeof setTimeout> | undefined;
     if (clashNotification) {
       timer = setTimeout(() => {
         setClashNotification(null);
       }, 5000); 
     }
     return () => clearTimeout(timer);
-  }, [notification]);
+  }, [clashNotification]);
   const [selectedCard, setSelectedCard] = useState<SelectedCard | null>(null);
   const [grade, setGrade] = useState<string>('');
   const [classification, setClassification] = useState<string>('');
@@ -216,93 +213,41 @@ const DynamicTable: React.FC = () => {
   };
   
   const handleMinorChange = (index: number, type: 'faculty' | 'minor', value: string) => {
-    let newMinors = [...minors];
+    const newMinors = [...minors];
     newMinors[index][type] = value;
     setMinors(newMinors);
     localStorage.setItem('minors', JSON.stringify(newMinors));
-    console.log('minor info set');
   } 
 
-
-  // Add event listener for keydown to listen for Escape key
-  const [highlightedIndex, setHighlightedIndex] = useState<number | null>(null);
-
-  // Example state for suggestions (this would normally come from props or fetched data)
-  const [suggestions, setSuggestions] = useState<string[]>([
-    'Suggestion 1',
-    'Suggestion 2',
-    'Suggestion 3',
-    'Suggestion 4'
-  ]);
-
-  // Function to handle keyboard navigation
-  const handleKeyDown = (event: KeyboardEvent) => {
-    if (event.key === 'Escape') {
-      // Close selected card details if open
-      if (selectedCard) {
-        setSelectedCard(null);
-      }
-      // Close module selection box if open
-      if (isModuleSelectionVisible) {
-        handleModuleSelectionClose();
-      }
-    } else if (event.key === 'ArrowDown') {
-      // Move down in the suggestion list
-      setHighlightedIndex((prevIndex) => {
-        if (prevIndex === null || prevIndex === suggestions.length - 1) {
-          return 0; // Loop to the top
-        }
-        return prevIndex + 1;
-      });
-    } else if (event.key === 'ArrowUp') {
-      // Move up in the suggestion list
-      setHighlightedIndex((prevIndex) => {
-        if (prevIndex === null || prevIndex === 0) {
-          return suggestions.length - 1; // Loop to the bottom
-        }
-        return prevIndex - 1;
-      });
-    }
-  };
-
-  // Add event listener for keydown to listen for Escape, ArrowDown, and ArrowUp keys
   useEffect(() => {
-    window.addEventListener('keydown', handleKeyDown);
-
-    // Cleanup the event listener on component unmount
-    return () => {
-      window.removeEventListener('keydown', handleKeyDown);
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') setSelectedCard(null);
     };
-  }, [selectedCard, isModuleSelectionVisible, suggestions]); // Re-run effect if these dependencies change
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, []);
 
-  const handleMoveCard = (fromColumn: number, fromIndex: number, toColumn: number, toIndex = null) => {
+  const handleMoveCard = (fromColumn: number, fromIndex: number, toColumn: number, toIndex?: number) => {
     if (fromColumn === undefined || fromIndex === undefined || toColumn === undefined || toIndex === undefined) {
-      console.error("Invalid move parameters", {fromColumn, fromIndex, toColumn, toIndex});
       return;
     }
-    console.log(`Moving card from Column: ${fromColumn}, Index: ${fromIndex} to Column: ${toColumn}, Index: ${toIndex}`);
 
-    if (fromColumn === toColumn && toIndex !== null) {
+    if (fromColumn === toColumn && toIndex !== undefined) {
       const updatedCards = Array.from(cards[fromColumn]);
-      const [removed] = updatedCards.splice(fromIndex, 1);
-      updatedCards.splice(toIndex, 0, removed);
+      const [movedCard] = updatedCards.splice(fromIndex, 1);
+      updatedCards.splice(toIndex, 0, movedCard);
       const newCards = [...cards];
       newCards[fromColumn] = updatedCards;
       setCards(newCards);
-      // updateCardPrerequisites(removed, toColumn); // Update prerequisites for the moved card
       staticUpdateAllPrerequisites(cards);
-      console.log(`Card moved within the same column to a new position Index: ${toIndex}`);
     } else {
       const card = cards[fromColumn][fromIndex];
       if (card === undefined) { return; }
-      console.log("Moving card ID: " + card.id)
       const newCards = [...cards];
       newCards[fromColumn] = newCards[fromColumn].filter((_, index) => index !== fromIndex);
-      newCards[toColumn].push(card); // Add card to the new column
-      // updateCardPrerequisites(card, toColumn); // Update prerequisites for the moved card
+      newCards[toColumn].push(card);
       setCards(newCards);
       staticUpdateAllPrerequisites(cards);
-      console.log(`Card moved to new Column: ${toColumn} at Index: ${newCards[toColumn].length - 1}`);
     }
 };
   const navigate = useNavigate();
@@ -317,6 +262,8 @@ const DynamicTable: React.FC = () => {
     if (JSON.stringify(newCards) !== JSON.stringify(cards)) {
       setCards(newCards);
     }
+    // This pass intentionally reacts only to persisted planner changes.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [cards]); 
 
   useEffect(() => {
@@ -366,7 +313,6 @@ const DynamicTable: React.FC = () => {
   */
   const examsOverlap = (card1: CardType, card2: CardType): boolean => {
     if (!card1.examInfo?.length || !card2.examInfo?.length) {
-      console.log("Exam info missing for one or both cards:", card1.name, card2.name);
       return false;
     }
   
@@ -374,7 +320,6 @@ const DynamicTable: React.FC = () => {
     const exam2 = card2.examInfo[0];
   
     if (!exam1.examTime || !exam1.examDuration || !exam2.examTime || !exam2.examDuration) {
-      console.log("Exam time or duration is undefined for", card1.name, exam1, card2.name, exam2);
       return false;
     }
   
@@ -383,19 +328,14 @@ const DynamicTable: React.FC = () => {
     const startTime2 = new Date(exam2.examTime);
     const endTime2 = new Date(startTime2.getTime() + exam2.examDuration * 60000); // converting duration to milliseconds
   
-    const overlap = startTime1 < endTime2 && startTime2 < endTime1;
-    console.log(`Checking overlap between ${card1.name} and ${card2.name}: ${overlap}`);
-
-    return overlap;
+    return startTime1 < endTime2 && startTime2 < endTime1;
   }
   
   const showModuleSelectionBox = (columnIndex: number) => {
     if (isModuleSelectionVisible) {
-      console.log('close')
         setIsModuleSelectionVisible(false);
         setCurrentColumnIndex(null);
     } else {
-      console.log('on')
         setCurrentColumnIndex(columnIndex);
         setIsModuleSelectionVisible(true);
     }
@@ -406,7 +346,7 @@ const DynamicTable: React.FC = () => {
     setCurrentColumnIndex(null);
   };
 
-  const handleModuleConfirm = (moduleInfo: CardType) => {
+  const handleModuleConfirm = () => {
     if (currentColumnIndex !== null) {
       addCard(currentColumnIndex);
     }
@@ -416,42 +356,35 @@ const DynamicTable: React.FC = () => {
   const addCard = (columnIndex: number) => {
     if (tempCard) {
       let prereqNotSatisfied = false;
-      let examOverlapDetected = false;
       const sem = columnIndex % 2 === 1 ? 1 : 2;
       if (!tempCard.semester.includes(sem)) {
         setNotification(`${tempCard.name} is not offered in current semester`);
         setTempCard(null);
         return;
       }
-      // Assuming tempCard.preclusion is an array of course codes that preclude the tempCard
       if (tempCard.preclusionRule && checkPreclusion(tempCard.preclusionRule, columnIndex)) {
         const existingCourse = findPreclusion(tempCard.preclusionRule, columnIndex);
         setNotification(`Course: ${tempCard.name} is precluded by ${existingCourse} in your plan.`);
 
         setTempCard(null);
-        return; // Stop adding the course if it's precluded
+        return;
       }
 
       if (tempCard.prereqTree) {
         try {
           const prereqTree:PrereqTreeNode | string = tempCard.prereqTree;
-          console.log(JSON.stringify(prereqTree)) 
           if (!checkPrerequisites(prereqTree, columnIndex)) {
             prereqNotSatisfied = true;
-            console.log("not satisfied, labelled");
           }
-        } catch (error) {
+        } catch {
           setNotification(`Error parsing prerequisites for course: ${tempCard.name}`);
           return;
         }
       }
       const newCard = { ...tempCard, prereqNotSatisfied };
       
-      // Check for exam overlaps with other cards in the same column
       cards[columnIndex].forEach(card => {
       if (card.examInfo && tempCard.examInfo && examsOverlap(card, tempCard)) {
-        examOverlapDetected = true;
-        console.log('clash')    
         setClashNotification(`Exam time overlap detected between ${tempCard.name} and ${card.name}`);
       }
       });
@@ -493,15 +426,11 @@ const DynamicTable: React.FC = () => {
   
   const removeCard = () => {
     if (selectedCard) {
-      console.log('Removing card:', selectedCard);
       const { columnIndex, id } = selectedCard;
       const newCards = [...cards];
       const filteredCards = newCards[columnIndex].filter(card => card.id !== id);
 
-      if (newCards[columnIndex].length === filteredCards.length) {
-        console.log('No card found to remove with id:', id);
-      } else {
-        console.log('Card removed, updating state.');
+      if (newCards[columnIndex].length !== filteredCards.length) {
         newCards[columnIndex] = filteredCards;
         setCards(newCards);
         setSelectedCard(null);
@@ -514,22 +443,17 @@ const DynamicTable: React.FC = () => {
         }
           setCards(newCards);
         }
-    } else {
-      console.log('No selected card to remove.');
     }
   };
 
   const handleCardClick = (columnIndex: number, cardId: number) => {
-    console.log("ID: " + cardId + " in Column Index: " + columnIndex);
     const cardIndex = cards[columnIndex].findIndex(card => card.id === cardId);
     const card = cards[columnIndex][cardIndex];
 
     const isSelected = selectedCard && selectedCard.id === cardId;
     if (isSelected) {
-      console.log("Deselecting card at Column: " + columnIndex + ", Row: " + cardIndex);
       setSelectedCard(null);
     } else if (card) {
-      console.log("Selecting card at Column: " + columnIndex + ", Row: " + cardIndex);
       setSelectedCard({
         ...card,
         columnIndex
@@ -588,9 +512,7 @@ const DynamicTable: React.FC = () => {
     return semesterDescriptions[idx] || '';
   };
 
-  // Save the cards state to localStorage whenever it changes
   useEffect(() => {
-    console.log('getting table cache')
     localStorage.setItem('cards', JSON.stringify(cards));
   }, [cards]);
   
@@ -601,13 +523,7 @@ const DynamicTable: React.FC = () => {
   * @returns {boolean} - True if the course is precluded, false otherwise.
   */
   const checkPreclusion = (preclusionList:string[], columnIdx:number):boolean => {
-    // Flatten all courses up to the current semester into a single array of course names
-    console.log('check preclusion')
-    console.log(preclusionList)
     const takenCourses = cards.slice(0, columnIdx + 1).flat().map(card => card.name);
-    console.log(takenCourses);
-    // Check if any course in the taken courses list is in the preclusion list
-    console.log(takenCourses.some(course => preclusionList.includes(course)))
     return takenCourses.some(course => preclusionList.includes(course));
   };
 
@@ -664,8 +580,6 @@ const DynamicTable: React.FC = () => {
         return countSatisfied >= n;
       }
     }
-    // Unrecognized structure, log and return false
-    console.error('Invalid prerequisite structure:', prereqTree);
     return false;
   };
 
@@ -698,22 +612,6 @@ const DynamicTable: React.FC = () => {
     card.prereqNotSatisfied = !isSatisfied;
     card.color = isSatisfied ? '#88f7c5' : '#ff9999';
 };
-  /**
-  * Find a card by ID
-  * @param {number} id - card ID
-  * @returns {CardType} - Card if found
-  */
-  const getCardById = (id: number): CardType | undefined => {
-    for (let column of cards) {
-      for (let card of column) {
-        if (card.id === id) {
-          return card;
-        }
-      }
-    }
-    return undefined;
-  };
-
   const iterateCardByCourseCodeLeft = (courseCode: string, columnIdx: number): boolean => {
     const hasWildcard = courseCode.includes('%');
     let cleanCourseCode = courseCode.split(':')[0].trim(); // Strip the ":D" suffix if present
@@ -721,17 +619,13 @@ const DynamicTable: React.FC = () => {
     if (hasWildcard) {
         cleanCourseCode = cleanCourseCode.split('%')[0].trim();
     }
-    console.log('Checking course:', cleanCourseCode);
-    // Check for exact matches or prefix matches based on wildcard presence
     for (let i = 0; i < columnIdx; i++) {
         if (hasWildcard) {
             if (cards[i].some(card => card.name.startsWith(cleanCourseCode))) {
-                console.log('Found match with wildcard:', cleanCourseCode);
                 return true;  
             }
         } else {
             if (cards[i].some(card => card.name === cleanCourseCode)) {
-                console.log('Found exact match:', cleanCourseCode);
                 return true;
             }
         }
@@ -751,27 +645,25 @@ const DynamicTable: React.FC = () => {
     return count;
   }
 
-  function isPrereqTreeNode(tree: PrereqTreeNode | string | undefined): tree is PrereqTreeNode {
-    return (typeof tree !== 'string') && (tree !== undefined);
+  function isPrereqTreeNode(tree: unknown): tree is PrereqTreeNode {
+    return typeof tree === 'object' && tree !== null;
   }
 
   const renderPrereqTreeVisual = (prereqData: PrereqTreeNode | string | undefined) => {
     if (typeof prereqData === 'string') {
       try {
-        const treeData = JSON.parse(prereqData);
+        const treeData: unknown = JSON.parse(prereqData);
         if (isPrereqTreeNode(treeData)) {
           return <PrereqTreeVisual data={treeData} />;
         }
-      } catch (error) {
-        return <p>The only prerequisite is {prereqData}</p>
-      } finally {
-        console.log('parsing error')
-        return <h3 style={{ textAlign: 'center' }}>{prereqData}</h3>
+      } catch {
+        return <PrereqTreeVisual data={prereqData} />;
       }
+      return <PrereqTreeVisual data={prereqData} />;
     } else if (isPrereqTreeNode(prereqData)) {
       return <PrereqTreeVisual data={prereqData} />;
     }
-    return <p>No prerequisite</p>;
+    return <PrereqTreeVisual />;
   };
   
   
@@ -1003,9 +895,10 @@ return (
 
     {/* Grouping Button Area */}
     <div className='button-area'>
-      <button className="collapse-button" onClick={toggleCollapse}>Major Setting</button>
-        <label className='color-scheme-text'>Color Scheme:</label>
-        <select className="dropdown-select-color" value={colorScheme} onChange={handleColorSchemeChange}>
+      <button className="collapse-button" onClick={toggleCollapse} aria-expanded={!isCollapsed}>Plan settings</button>
+        <button className="tour-button" type="button" onClick={() => setShowTour(true)}>Quick tour</button>
+        <label className='color-scheme-text' htmlFor="planner-color-scheme">Course colours</label>
+        <select id="planner-color-scheme" className="dropdown-select-color" value={colorScheme} onChange={handleColorSchemeChange}>
           {colorSchemeOptions.map(scheme => (
             <option key={scheme} value={scheme}>{scheme}</option>
           ))}
@@ -1016,8 +909,8 @@ return (
     <div className="collapsible-content" style={{ display: isCollapsed ? 'none' : 'block' }}>
       <div className="dropdown-list-box">
         <div className="dropdown-row">
-          <label>Plan for:</label>
-          <select className="dropdown-select" value={columnCount} onChange={handleColumnChange}>
+          <label htmlFor="planner-semesters">Plan for:</label>
+          <select id="planner-semesters" className="dropdown-select" value={columnCount} onChange={handleColumnChange}>
             {[6, 7, 8, 9, 10, 11, 12].map(num => (
               <option key={num} value={num}>{num} Semesters</option>
             ))}
@@ -1026,8 +919,8 @@ return (
 
         {/* Program and Major Settings */}
         <div className="dropdown-row">
-          <label>Programme:</label>
-          <select className="dropdown-select" value={programs} onChange={handleProgramChange}>
+          <label htmlFor="planner-programme">Programme:</label>
+          <select id="planner-programme" className="dropdown-select" value={programs} onChange={handleProgramChange}>
             {programOptions.map(option => (
               <option key={option} value={option}>{option}</option>
             ))}
@@ -1035,8 +928,8 @@ return (
         </div>
 
         <div className="dropdown-row">
-          <label>Home faculty:</label>
-          <select className="dropdown-select" value={faculty} onChange={handleFacultyChange}>
+          <label htmlFor="planner-faculty">Home faculty:</label>
+          <select id="planner-faculty" className="dropdown-select" value={faculty} onChange={handleFacultyChange}>
             {Object.keys(allPrograms).map(key => (
               <option key={key} value={key}>{key}</option>
             ))}
@@ -1044,8 +937,8 @@ return (
         </div>
 
         <div className="dropdown-row">
-          <label>Primary Major:</label>
-          <select className="dropdown-select" value={major} onChange={handleMajorChange}>
+          <label htmlFor="planner-major">Primary Major:</label>
+          <select id="planner-major" className="dropdown-select" value={major} onChange={handleMajorChange}>
             {allPrograms[faculty].map((name, index) => (
               <option key={index} value={name}>{name}</option>
             ))}
@@ -1056,16 +949,16 @@ return (
         {showSecondMajor && (
           <div className='dropdown-list-box'>
             <div className="dropdown-row">
-              <label>Second Major/Degree Faculty:</label>
-              <select className="dropdown-select" value={secondFaculty} onChange={e => handleSecondMajorChange(e, 'faculty')}>
+              <label htmlFor="planner-second-faculty">Second Major/Degree Faculty:</label>
+              <select id="planner-second-faculty" className="dropdown-select" value={secondFaculty} onChange={e => handleSecondMajorChange(e, 'faculty')}>
                 {Object.keys(allPrograms).map(key => (
                   <option key={key} value={key}>{key}</option>
                 ))}
               </select>
             </div>
             <div className="dropdown-row">
-              <label>Second Major/Degree:</label>
-              <select className="dropdown-select" value={secondMajor} onChange={e => handleSecondMajorChange(e, 'major')}>
+              <label htmlFor="planner-second-major">Second Major/Degree:</label>
+              <select id="planner-second-major" className="dropdown-select" value={secondMajor} onChange={e => handleSecondMajorChange(e, 'major')}>
                 {allPrograms[secondFaculty].map((major, index) => (
                   <option key={index} value={major}>{major}</option>
                 ))}
@@ -1079,13 +972,13 @@ return (
           <div className='dropdown-list-box'>
             {minors.map((minor, index) => (
               <div key={index} className="dropdown-row">
-                <label>Minor {index + 1} :</label>
-                <select className="dropdown-select-minor" value={minor.faculty} onChange={e => handleMinorChange(index, 'faculty', e.target.value)}>
+                <label htmlFor={`planner-minor-faculty-${index}`}>Minor {index + 1} :</label>
+                <select id={`planner-minor-faculty-${index}`} className="dropdown-select-minor" value={minor.faculty} onChange={e => handleMinorChange(index, 'faculty', e.target.value)}>
                   {Object.keys(allPrograms).map(key => (
                     <option key={key} value={key}>{key}</option>
                   ))}
                 </select>
-                <select className="dropdown-select-minor" value={minor.minor} onChange={e => handleMinorChange(index, 'minor', e.target.value)}>
+                <select aria-label={`Minor ${index + 1} subject`} className="dropdown-select-minor" value={minor.minor} onChange={e => handleMinorChange(index, 'minor', e.target.value)}>
                   {allPrograms[minor.faculty] ? allPrograms[minor.faculty].map(minorName => (
                     <option key={minorName} value={minorName}>{minorName}</option>
                   )) : null}
@@ -1099,8 +992,8 @@ return (
       </div>
     </div>
 
-    <h1 className='headerline'>{headerTitle}</h1>
-    <h3 className='subline'>{headerSub}</h3>
+    <h2 className='headerline'>{headerTitle}</h2>
+    {headerSub && <p className='subline'>{headerSub}</p>}
     <div className='mc-breakdown-box'>
       <MCbreakDown cards={cards} />
     </div>
@@ -1122,6 +1015,7 @@ return (
                 key={card.id}
                 id={card.id}
                 name={card.name}
+                semester={card.semester}
                 courseCredit={card.courseCredit}
                 content={card.content}
                 columnIndex={columnIndex}
@@ -1136,8 +1030,8 @@ return (
                 classification={card.classification}
               />
             ))}
-            <button className="add-button" onClick={() => showModuleSelectionBox(columnIndex)}>Add Course</button>
-            <button className="to-timetable-button" onClick={() => handleToTimetable(columnIndex)}>View Timetable</button>
+            <button className="add-button" onClick={() => showModuleSelectionBox(columnIndex)}>+ Add course</button>
+            <button className="to-timetable-button" onClick={() => handleToTimetable(columnIndex)}>Build timetable</button>
           </DroppableColumn>
         ))}
       </div>
@@ -1215,6 +1109,7 @@ return (
         setTempCard={setTempCard}
         onConfirm={handleModuleConfirm}
         onClose={handleModuleSelectionClose}
+        destinationLabel={currentColumnIndex === null ? undefined : semesterCount(currentColumnIndex)}
       />
     )}
   </div>

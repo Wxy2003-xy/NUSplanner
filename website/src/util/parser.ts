@@ -83,7 +83,6 @@ export function parseTokens(tokens: Token[]): PrereqTree {
 // const inputText = "If undertaking an Undergraduate Degree THEN ( must have completed 1 of CS2040/CS2040C/CS2040S/YSC2229 at a grade of at least D AND must have completed 1 of CS1231/CS1231S/MA1100/MA1100T at a grade of at least D AND ( must have completed all of MA1511/MA1512 at a grade of at least D OR must have completed 1 of MA1102R/MA1312/MA1505/MA1507/MA1521/MA2002 at a grade of at least D))";
 // const tokens = tokenize(inputText);
 // const prereqTree = parseTokens(tokens);
-// console.log(prereqTree);
 
 
 /*

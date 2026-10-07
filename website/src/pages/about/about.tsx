@@ -1,73 +1,116 @@
-import React, { useEffect, useState } from 'react';
-import './about.css';
+import React from 'react';
+import { ArrowUpRight, BookOpen, Calendar, Compass, Heart, Users } from 'react-feather';
 import Layout from '../../components/Layout';
-import UnderConstruction from '../../components/UnderConstruction';
+import './about.css';
 
-const About = () => {
-  const [currentDate, setCurrentDate] = useState('');
+const milestones = [
+  { date: 'May 2024', title: 'A home for the idea', detail: 'The first NUSPlanner experience went live.' },
+  { date: 'June 2024', title: 'Planning became practical', detail: 'Study planning and feedback tools joined the project.' },
+  { date: 'July 2024', title: 'The campus toolkit grew', detail: 'Timetable, community, reminders and the map arrived.' },
+];
 
-  useEffect(() => {
-    const options: Intl.DateTimeFormatOptions = { year: 'numeric', month: 'long', day: 'numeric' };
-    const today = new Date();
-    setCurrentDate(today.toLocaleDateString(undefined, options));
-  }, []);
+const credits = [
+  ['Home icon', 'https://www.flaticon.com/free-icons/home-button', 'Freepik'],
+  ['Timetable icon', 'https://www.flaticon.com/free-icons/timetable', 'Prosymbols Premium'],
+  ['Planner icon', 'https://www.flaticon.com/free-icons/files-and-folders', 'Arkinasi'],
+  ['Reminder icon', 'https://www.flaticon.com/free-icons/planner', 'Nsu Rabo Elijah'],
+  ['Map icon', 'https://www.flaticon.com/free-icons/map', 'Pixel perfect'],
+  ['Community icon', 'https://www.flaticon.com/free-icons/community', 'KP Arts'],
+  ['Feedback icon', 'https://www.flaticon.com/free-icons/feedback', 'Freepik'],
+  ['About icon', 'https://www.flaticon.com/free-icons/about', 'Elite Art'],
+];
 
-  return (
-    <Layout>
-      <div className="about-container">
-        <div className="about-header">
-          <h1>About Us</h1>
+const About = () => (
+  <Layout>
+    <div className="page-shell about-page">
+      <section className="about-hero">
+        <div>
+          <p className="page-eyebrow">Our story</p>
+          <h1>Planning should open doors, not create detours.</h1>
         </div>
-        <div className="about-content">
-          <section className="about-company-overview">
-            <h2>Website Overview</h2>
-            <p>Founded in 2024, NUSPlanner has emerged as a premier provider of Course Schedules and Timetables.</p>
-          </section>
-          <section className="about-motivation">
-            <h2>Motivation</h2>
-            <p>Transitioning from high school to college brings a myriad of course options, making it challenging for freshmen to plan their academic journey. Despite adapting to college life, scheduling courses that align with aspirations can be daunting. We thus aim to offer guidance to NUS students and incoming freshmen on course scheduling and timetable planning each semester.</p>
-          </section>
-          <section className="about-aim">
-            <h2>Aim</h2>
-            <p>We aim to introduce a cutting-edge recommendation system to guide NUS students in crafting their ideal course schedules and timetables tailored to their preferences and academic requirements. This system will offer comprehensive course schedules and insights into optimal timing for each course every semester.</p>
-          </section>
-          <section className="about-extension">
-            <h2>Extension</h2>
-            <p>NUSPlanner boasts a vibrant "Community" section for user engagement and interaction. It also includes essential QoL features such as a "Reminder" for daily notes and a "Map" for viewing the locations of class venues. Additionally, NUSPlanner offers a "Feedback" section where users can provide suggestions and report issues, ensuring continuous improvement.</p>
-          </section>
-          <section className="about-history">
-            <h2>Our History</h2>
-            <ul>
-              <li>Home —— 2024/05</li>
-              <li>StudyPlan, Feedback —— 2024/06</li>
-              <li>TimeTable, Community, Reminder, Map —— 2024/07</li>
-            </ul>
-          </section>
-          <section className="about-development-team">
-            <h2>Development Team</h2>
-            <div className="about-team-member">
-              <h3>Zhang YuHao</h3>
-              <h3>Wang XiYu</h3>
-            </div>
-          </section>
+        <p>
+          NUSPlanner is a student-built workspace for making sense of course choices, prerequisites,
+          timetables, and the everyday logistics around them.
+        </p>
+      </section>
+
+      <section className="about-principles" aria-label="What NUSPlanner stands for">
+        <article>
+          <span><BookOpen size={20} /></span>
+          <h2>Clarity first</h2>
+          <p>Turn years of course choices into a plan you can scan, test, and change.</p>
+        </article>
+        <article>
+          <span><Compass size={20} /></span>
+          <h2>Made for real campus life</h2>
+          <p>Connect the academic plan to time, place, deadlines, and daily routines.</p>
+        </article>
+        <article>
+          <span><Users size={20} /></span>
+          <h2>Built with students</h2>
+          <p>Shape the product through shared knowledge, feedback, and lived experience.</p>
+        </article>
+      </section>
+
+      <section className="about-story-grid">
+        <article className="about-story-card surface-card">
+          <p className="page-eyebrow">Why it exists</p>
+          <h2>A better starting point for every student.</h2>
+          <p>
+            The leap from school to university comes with hundreds of possible modules and a maze of
+            dependencies. One missed foundation course can disrupt plans several semesters later.
+            NUSPlanner was created to surface those relationships earlier, while choices are still easy to change.
+          </p>
+          <p>
+            Our aim is simple: help students make informed course and timetable decisions that reflect
+            both academic requirements and the way they want to live and learn.
+          </p>
+        </article>
+
+        <aside className="about-team-card">
+          <span className="about-heart"><Heart size={21} /></span>
+          <p className="page-eyebrow">The student team</p>
+          <h2>Small team.<br />Long horizon.</h2>
+          <div className="about-team-list">
+            <div><strong>Zhang YuHao</strong><span>Co-creator</span></div>
+            <div><strong>Wang XiYu</strong><span>Co-creator</span></div>
+          </div>
+        </aside>
+      </section>
+
+      <section className="about-timeline-section">
+        <div className="about-section-title">
+          <div>
+            <p className="page-eyebrow">The journey so far</p>
+            <h2>Built one useful step at a time.</h2>
+          </div>
+          <Calendar size={26} />
         </div>
-        <div className='credit-section'>
-            <h3>credit: </h3>
-            home icon <a href="https://www.flaticon.com/free-icons/home-button" title="home button icons">Freepik - Flaticon</a>
-            timetable icon<a href="https://www.flaticon.com/free-icons/timetable" title="timetable icons">Prosymbols Premium - Flaticon</a>
-            planner icon<a href="https://www.flaticon.com/free-icons/files-and-folders" title="files and folders icons">Arkinasi - Flaticon</a>
-            reminder icon<a href="https://www.flaticon.com/free-icons/planner" title="planner icons">Nsu Rabo Elijah - Flaticon</a>
-            map icon<a href="https://www.flaticon.com/free-icons/map" title="map icons">Pixel perfect - Flaticon</a>
-            community icon<a href="https://www.flaticon.com/free-icons/community" title="community icons">KP Arts - Flaticon</a>
-            feedback icon<a href="https://www.flaticon.com/free-icons/feedback" title="feedback icons">Freepik - Flaticon</a>
-            about icon<a href="https://www.flaticon.com/free-icons/about" title="about icons">Elite Art - Flaticon</a>
+        <div className="about-timeline">
+          {milestones.map((milestone, index) => (
+            <article key={milestone.date}>
+              <span className="about-timeline-index">0{index + 1}</span>
+              <time>{milestone.date}</time>
+              <h3>{milestone.title}</h3>
+              <p>{milestone.detail}</p>
+            </article>
+          ))}
         </div>
-      </div>
-      
-    </Layout>
-  );
-}
+      </section>
+
+      <details className="about-credits surface-card">
+        <summary>Image and icon credits</summary>
+        <div className="about-credit-grid">
+          {credits.map(([label, href, creator]) => (
+            <a key={label} href={href} target="_blank" rel="noopener noreferrer">
+              <span><strong>{label}</strong><small>{creator} · Flaticon</small></span>
+              <ArrowUpRight size={15} />
+            </a>
+          ))}
+        </div>
+      </details>
+    </div>
+  </Layout>
+);
 
 export default About;
-
-

@@ -1,108 +1,153 @@
-import React, { useRef, useEffect } from 'react';
+import React, { useEffect, useMemo, useRef } from 'react';
 import * as d3 from 'd3';
+import { PrereqTreeNode } from '../../../types/studyplan';
 import './TreeVisualization.css';
 
-interface PrereqTreeNode {
-  and?: (PrereqTreeNode | string)[];
-  or?: (PrereqTreeNode | string)[];
-  nOf?: [number, (PrereqTreeNode | string)[]];
-}
-
 interface PrereqTreeProps {
-  data?: PrereqTreeNode | string | undefined;
+  data?: PrereqTreeNode | string;
 }
 
-const parsePrereqTree = (data: PrereqTreeNode | string | undefined): any => {
-  if (typeof data === 'undefined') {
-    return { name: 'NA' };
-  }
+type VisualNodeKind = 'all' | 'any' | 'count' | 'course' | 'empty';
 
-  if (typeof data === 'string') {
-    return { name: data };
-  }
+interface VisualNode {
+  name: string;
+  kind: VisualNodeKind;
+  children?: VisualNode[];
+}
 
-  if (data.and) {
+const normalizeCourseCode = (value: string) => value.replace(/:[A-Z]$/, '');
+
+const parsePrereqTree = (data?: PrereqTreeNode | string): VisualNode => {
+  if (!data) return { name: 'No prerequisites', kind: 'empty' };
+  if (typeof data === 'string') return { name: normalizeCourseCode(data), kind: 'course' };
+
+  if (data.and?.length) {
     return {
-      name: 'AND',
+      name: 'All required',
+      kind: 'all',
       children: data.and.map(parsePrereqTree),
     };
   }
 
-  if (data.or) {
+  if (data.or?.length) {
     return {
-      name: 'OR',
+      name: 'Choose one',
+      kind: 'any',
       children: data.or.map(parsePrereqTree),
     };
   }
 
-  if (data.nOf) {
+  if (data.nOf?.[1]?.length) {
     return {
-      name: `At least ${data.nOf[0]} of`,
+      name: `Choose ${data.nOf[0]} of ${data.nOf[1].length}`,
+      kind: 'count',
       children: data.nOf[1].map(parsePrereqTree),
     };
   }
 
-  return { name: 'Unknown' };
+  return { name: 'No prerequisites', kind: 'empty' };
+};
+
+const getTreeStats = (node: VisualNode): { leafCount: number; depth: number } => {
+  if (!node.children?.length) return { leafCount: 1, depth: 0 };
+
+  const childStats = node.children.map(getTreeStats);
+  return {
+    leafCount: childStats.reduce((total, stats) => total + stats.leafCount, 0),
+    depth: Math.max(...childStats.map((stats) => stats.depth)) + 1,
+  };
 };
 
 const PrereqTreeVisual: React.FC<PrereqTreeProps> = ({ data }) => {
   const svgRef = useRef<SVGSVGElement | null>(null);
+  const treeData = useMemo(() => parsePrereqTree(data), [data]);
+  const { leafCount, depth } = useMemo(() => getTreeStats(treeData), [treeData]);
+  const width = Math.max(400, 150 + depth * 178);
+  const height = Math.max(126, 42 + leafCount * 66);
 
   useEffect(() => {
-    if (!svgRef.current) return;
+    if (!svgRef.current || treeData.kind === 'empty') return;
 
     const svg = d3.select(svgRef.current);
-    const margin = { top: 20, right: 30, bottom: 20, left: 30 };
-    const width = 600 - margin.left - margin.right;
-    const height = 450 - margin.top - margin.bottom;
-
-    const treeLayout = d3.tree().size([height, width]);
-    const root = d3.hierarchy(parsePrereqTree(data), d => d.children);
-    treeLayout(root);
-
     svg.selectAll('*').remove();
 
-    const g = svg.append('g').attr('transform', `translate(${margin.left},${margin.top})`);
+    const root = d3.hierarchy<VisualNode>(treeData);
+    const treeLayout = d3
+      .tree<VisualNode>()
+      .size([height - 42, Math.max(depth * 178, 1)]);
+    treeLayout(root);
 
-    const link = g.append('g')
-      .attr('class', 'link')
+    const canvas = svg
+      .append('g')
+      .attr('class', 'prereq-tree-canvas')
+      .attr('transform', 'translate(72,21)');
+
+    canvas
+      .append('g')
+      .attr('class', 'prereq-links')
       .selectAll('path')
       .data(root.links())
-      .enter().append('path')
-      .attr('d', d3.linkHorizontal()
-        .x(d => d.y)
-        .y(d => d.x));
+      .join('path')
+      .attr('d', ({ source, target }) => {
+        const sourceY = source.y ?? 0;
+        const targetY = target.y ?? 0;
+        const midpoint = (sourceY + targetY) / 2;
+        return `M${sourceY},${source.x}C${midpoint},${source.x} ${midpoint},${target.x} ${targetY},${target.x}`;
+      });
 
-    const node = g.append('g')
-      .attr('class', 'node')
+    const nodes = canvas
+      .append('g')
+      .attr('class', 'prereq-nodes')
       .selectAll('g')
       .data(root.descendants())
-      .enter().append('g')
-      .attr('class', d => `node ${d.children ? 'node--internal' : 'node--leaf'}`)
-      .attr('transform', d => `translate(${d.y},${d.x})`);
+      .join('g')
+      .attr('class', ({ data: node }) => `prereq-node prereq-node--${node.kind}`)
+      .attr('transform', ({ x, y }) => `translate(${y},${x})`);
 
-    const rectWidth = 70;
-    const rectHeight = 20;
-    const rectRadius = 5;
+    nodes
+      .append('rect')
+      .attr('x', ({ data: node }) => (node.kind === 'course' ? -55 : -62))
+      .attr('y', -19)
+      .attr('width', ({ data: node }) => (node.kind === 'course' ? 110 : 124))
+      .attr('height', 38)
+      .attr('rx', 10);
 
-    node.append('rect')
-      .attr('width', rectWidth)
-      .attr('height', rectHeight)
-      .attr('x', -rectWidth / 2)
-      .attr('y', -rectHeight / 2)
-      .attr('rx', rectRadius)
-      .attr('ry', rectRadius);
+    nodes
+      .append('text')
+      .attr('dy', '0.34em')
+      .attr('text-anchor', 'middle')
+      .text(({ data: node }) => node.name);
 
-    node.append('text')
-      .attr('dy', 5)
-      .attr('x', 0)
-      .style('text-anchor', 'middle')
-      .text(d => d.data.name);
-  }, [data]);
+    nodes
+      .append('title')
+      .text(({ data: node }) => {
+        if (node.kind === 'all') return 'Complete every branch';
+        if (node.kind === 'any') return 'Complete any one branch';
+        if (node.kind === 'count') return node.name;
+        return node.name;
+      });
+  }, [depth, height, treeData]);
+
+  if (treeData.kind === 'empty') {
+    return (
+      <div className="prereq-empty-state">
+        <span aria-hidden="true">✓</span>
+        <div><strong>No prerequisites</strong><p>This course can be taken without completing another course first.</p></div>
+      </div>
+    );
+  }
 
   return (
     <div className="svg-container">
-      <svg ref={svgRef} viewBox="0 0 800 450" preserveAspectRatio="xMidYMid meet"></svg>
+      <svg
+        ref={svgRef}
+        className="prereq-tree-svg"
+        viewBox={`0 0 ${width} ${height}`}
+        style={{ minWidth: `${width}px` }}
+        preserveAspectRatio="xMidYMid meet"
+        role="img"
+        aria-label="Course prerequisite relationship tree"
+      />
     </div>
   );
 };

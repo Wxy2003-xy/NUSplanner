@@ -1,104 +1,310 @@
-.about-container {
-  margin-top: 5.75em;
-  max-width: 80.56rem;
-  padding: 1.25rem;
-  font-family: 'Arial', sans-serif;
-  background-color: #f9f9f9;
-  border-radius: 0.625rem;
-  box-shadow: 0 0 1.25rem rgba(0, 0, 0, 0.1);
-  margin-bottom: 2%;
-  margin-left: 12.5rem;
+.about-page {
+  max-width: 1260px;
 }
 
-.about-header {
-  text-align: left;
-  margin-bottom: 1.25rem;
+.about-hero {
+  min-height: 380px;
+  display: grid;
+  grid-template-columns: minmax(0, 1.25fr) minmax(280px, 0.75fr);
+  align-items: end;
+  gap: 60px;
+  padding: clamp(36px, 6vw, 72px);
+  overflow: hidden;
+  border-radius: 24px;
+  background: var(--navy-950);
+  color: white;
 }
 
-.about-header h1 {
-  font-size: 2.25rem;
-  color: #333;
-  margin: 0px;
+.about-hero h1 {
+  max-width: 780px;
+  margin: 0;
+  font-size: clamp(3rem, 6vw, 5.9rem);
+  line-height: 0.96;
+  letter-spacing: -0.065em;
 }
 
-.about-header p {
-  font-size: 0.875rem;
-  color: #777;
+.about-hero .page-eyebrow {
+  color: #f4a16c;
 }
 
-.about-content section h2 {
-  margin-bottom: 1.25rem;
-  transition: all 0.3s ease;
+.about-hero > p {
+  margin: 0;
+  padding-left: 22px;
+  border-left: 2px solid var(--orange-500);
+  color: #b8c5d7;
+  font-size: 0.92rem;
+  line-height: 1.7;
 }
 
-.about-content section h2:hover {
-  color: black;
-  transform: scale(1.01);
+.about-principles {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+  margin-top: 14px;
 }
 
-.about-content h2 {
-  font-size: 1.75rem;
-  color: #444;
-  border-bottom: 0.125rem solid #ddd;
-  padding-bottom: 0.3125rem;
-  margin-bottom: 0.625rem;
+.about-principles article {
+  padding: 25px;
+  border: 1px solid rgba(13, 38, 70, 0.09);
+  border-radius: 16px;
+  background: white;
+  box-shadow: var(--shadow-sm);
 }
 
-.about-content p {
-  font-size: 1rem;
-  color: #555;
+.about-principles article > span {
+  width: 42px;
+  height: 42px;
+  display: grid;
+  place-items: center;
+  margin-bottom: 27px;
+  border-radius: 12px;
+  background: var(--orange-100);
+  color: #d65f16;
+}
+
+.about-principles article:nth-child(2) > span { background: var(--teal-100); color: var(--teal-600); }
+.about-principles article:nth-child(3) > span { background: #e5eefb; color: #2f67ae; }
+
+.about-principles h2 {
+  margin: 0 0 8px;
+  font-size: 1.05rem;
+  letter-spacing: -0.025em;
+}
+
+.about-principles p {
+  margin: 0;
+  color: var(--ink-500);
+  font-size: 0.8rem;
   line-height: 1.6;
 }
 
-.about-content ul {
-  list-style-type: none;
-  padding-left: 0;
+.about-story-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.4fr) minmax(300px, 0.6fr);
+  gap: 14px;
+  margin-top: 56px;
 }
 
-.about-content ul li {
-  font-size: 1rem;
-  color: #555;
-  line-height: 1.6;
-  padding: 0.3125rem 0;
+.about-story-card,
+.about-team-card {
+  padding: clamp(28px, 4vw, 48px);
 }
 
-.about-development-team .about-team-member {
+.about-story-card h2,
+.about-team-card h2,
+.about-section-title h2 {
+  margin: 0;
+  letter-spacing: -0.045em;
+}
+
+.about-story-card h2 {
+  max-width: 650px;
+  margin-bottom: 24px;
+  font-size: clamp(2rem, 4vw, 3.4rem);
+  line-height: 1.02;
+}
+
+.about-story-card > p:not(.page-eyebrow) {
+  max-width: 760px;
+  margin: 0 0 14px;
+  color: var(--ink-700);
+  font-size: 0.9rem;
+  line-height: 1.75;
+}
+
+.about-team-card {
+  border-radius: 18px;
+  background: var(--teal-600);
+  color: white;
+}
+
+.about-team-card .page-eyebrow {
+  color: #b8e8e0;
+}
+
+.about-heart {
+  width: 45px;
+  height: 45px;
+  display: grid;
+  place-items: center;
+  margin-bottom: 38px;
+  border-radius: 13px;
+  background: rgba(255, 255, 255, 0.14);
+}
+
+.about-team-card h2 {
+  font-size: 2.2rem;
+  line-height: 1.05;
+}
+
+.about-team-list {
+  display: grid;
+  gap: 13px;
+  margin-top: 45px;
+}
+
+.about-team-list div {
   display: flex;
-  flex-direction: column;
-  align-items: left;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding-top: 13px;
+  border-top: 1px solid rgba(255, 255, 255, 0.18);
 }
 
-.about-development-team .about-team-member h3 {
-  font-size: 1.25rem;
-  color: black;
-  margin: 0.3125rem 0;
+.about-team-list strong {
+  font-size: 0.87rem;
 }
 
-@media (max-width: 768px) {
-  .about-container {
-  margin-top: 5.75em; 
-    padding: 1rem;
-    margin-left: 0;
+.about-team-list span {
+  color: #bce9e3;
+  font-size: 0.7rem;
+}
+
+.about-timeline-section {
+  margin-top: 64px;
+}
+
+.about-section-title {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 24px;
+  margin-bottom: 20px;
+}
+
+.about-section-title h2 {
+  font-size: clamp(1.8rem, 3vw, 2.7rem);
+}
+
+.about-section-title > svg {
+  color: var(--orange-500);
+}
+
+.about-timeline {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1px;
+  overflow: hidden;
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  background: var(--line);
+}
+
+.about-timeline article {
+  min-height: 210px;
+  padding: 25px;
+  background: white;
+}
+
+.about-timeline-index {
+  display: block;
+  margin-bottom: 42px;
+  color: #bcc4cf;
+  font-family: Georgia, serif;
+  font-size: 1.5rem;
+  font-style: italic;
+}
+
+.about-timeline time {
+  color: var(--teal-600);
+  font-size: 0.67rem;
+  font-weight: 850;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.about-timeline h3 {
+  margin: 7px 0;
+  font-size: 1rem;
+}
+
+.about-timeline p {
+  margin: 0;
+  color: var(--ink-500);
+  font-size: 0.76rem;
+  line-height: 1.55;
+}
+
+.about-credits {
+  margin-top: 40px;
+  overflow: hidden;
+}
+
+.about-credits summary {
+  padding: 17px 20px;
+  color: var(--ink-700);
+  font-size: 0.8rem;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.about-credit-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1px;
+  padding: 1px;
+  background: var(--line);
+}
+
+.about-credit-grid a {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  padding: 14px 18px;
+  background: white;
+  text-decoration: none;
+}
+
+.about-credit-grid a:hover {
+  background: var(--surface-soft);
+}
+
+.about-credit-grid a > span {
+  display: grid;
+  gap: 2px;
+}
+
+.about-credit-grid strong { font-size: 0.74rem; }
+.about-credit-grid small { color: var(--ink-500); font-size: 0.66rem; }
+
+@media (max-width: 900px) {
+  .about-hero,
+  .about-story-grid {
+    grid-template-columns: 1fr;
   }
 
-  .about-header h1 {
-    font-size: 1.75rem;
+  .about-hero {
+    align-items: start;
+    gap: 36px;
   }
 
-  .about-header p {
-    font-size: 0.75rem;
+  .about-principles,
+  .about-timeline {
+    grid-template-columns: 1fr;
   }
 
-  .about-content h2 {
-    font-size: 1.25rem;
+  .about-timeline article {
+    min-height: 0;
   }
 
-  .about-content p,
-  .about-content ul li {
-    font-size: 0.875rem;
+  .about-timeline-index {
+    margin-bottom: 24px;
+  }
+}
+
+@media (max-width: 580px) {
+  .about-hero {
+    min-height: 0;
+    padding: 38px 26px;
   }
 
-  .about-development-team .about-team-member h3 {
-    font-size: 1rem;
+  .about-hero h1 {
+    font-size: 3.15rem;
+  }
+
+  .about-credit-grid {
+    grid-template-columns: 1fr;
   }
 }

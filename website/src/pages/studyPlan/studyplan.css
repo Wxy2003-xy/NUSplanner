@@ -1,44 +1,77 @@
-.studyplan-nav-right {
-  width: 98%;
-  margin-top: 5.79em;
-  margin-left: 13rem;
-  flex-grow: 1;
-  position: relative;
+.studyplan-page {
+  width: min(100%, 1700px);
+  min-height: calc(100vh - 76px);
+  margin: 0 auto;
+  padding: 38px clamp(18px, 2.5vw, 42px) 48px;
+}
+
+.studyplan-heading h1 {
+  max-width: 850px;
+}
+
+.studyplan-flow {
   display: flex;
-  flex-direction: column;
-  padding: 0;
-  box-sizing: border-box;
-  color: black; 
- 
-  height: 100%;
+  align-items: center;
+  gap: 8px;
+  flex: 0 0 auto;
+  padding: 10px 13px;
+  border: 1px solid var(--line);
+  border-radius: 13px;
+  background: white;
+  box-shadow: var(--shadow-sm);
 }
 
-.dynamic-table-container {
-  max-width: 80%;
-  width: 100%;
-  margin-top: 1.25em;
-  margin-bottom: 1.25em;
-  padding: 0;
-  box-sizing: border-box;
-  height: 100%;
-  overflow: visible;
+.studyplan-flow span {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  color: var(--ink-700);
+  font-size: 0.69rem;
+  font-weight: 750;
 }
 
-@media (max-width: 48em) {
-   
-  .studyplan-nav-right {
-    
-    width: 98%;
-    margin-top: 4.75em;
-    margin-left: 1em;
-    flex-grow: 1;
-    position: relative;
-    display: flex;
-    flex-direction: column;
-    padding: 0;
-    box-sizing: border-box;
-    color: black; 
-   
-    height: 100%;
+.studyplan-flow i {
+  width: 18px;
+  height: 18px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: var(--navy-900);
+  color: white;
+  font-size: 0.58rem;
+  font-style: normal;
+}
+
+.studyplan-flow b {
+  width: 14px;
+  height: 1px;
+  background: var(--line);
+}
+
+.studyplan-workspace {
+  padding: 20px;
+  overflow: hidden;
+}
+
+@media (max-width: 920px) {
+  .studyplan-page {
+    min-height: calc(100vh - 68px);
+    padding-top: 28px;
+  }
+}
+
+@media (max-width: 680px) {
+  .studyplan-page {
+    padding: 24px 12px 34px;
+  }
+
+  .studyplan-flow {
+    align-self: flex-start;
+    overflow-x: auto;
+  }
+
+  .studyplan-workspace {
+    padding: 12px;
+    border-radius: 14px;
   }
 }

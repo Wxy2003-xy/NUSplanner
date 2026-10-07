@@ -1,4 +1,3 @@
-import { Dispatch, SetStateAction } from 'react';
 import { ExamInfo } from './general';
 
 export interface MinorDetails {

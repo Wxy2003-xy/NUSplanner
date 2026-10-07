@@ -3515,14 +3515,6 @@ export const venueData = {
       "y": 1.3057714
     }
   },
-  "ERC-SR11": {
-    "roomName": "Seminar Room 10",
-    "floor": 2,
-    "location": {
-      "x": 103.7726803,
-      "y": 1.3060104
-    }
-  },
   "YI-PAR-TYO": {
     "roomName": "Paris Tokyo Room",
     "floor": 3,
