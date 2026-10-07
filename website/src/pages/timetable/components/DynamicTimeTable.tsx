@@ -1,11 +1,12 @@
 import React, { useEffect, useMemo, useState } from "react";
 import { useNavigate } from 'react-router-dom';
 import { useLocation } from 'react-router-dom';
-import { ClassTimeSlotType, ClassTimeSlotTypeUnion, Day } from '../../../types/timetable';
+import { AlertTriangle } from 'react-feather';
+import { ClassTimeSlotType, ClassTimeSlotTypeUnion, Day, DaysOfWeek } from '../../../types/timetable';
 import './DynamicTimeTable.css'
 import Timetable from "./table";
 import GuidedTourTimetable from "./UserGuideTimetable";
-import { TimeTable } from "../../../util/Timetable";
+import { evaluateTimetableFeasibility, TimetableSlot } from '../../../util/timetableFeasibility';
 
 interface NusModsTimetableSlot {
   classNo: string;
@@ -24,7 +25,7 @@ interface NusModsModuleResponse {
   }>;
 }
 
-type TimeSlotCache = Record<string, ClassTimeSlotType[]> | ClassTimeSlotTypeUnion[];
+type TimeSlotCache = Record<string, ClassTimeSlotType[]> | TimetableSlot[];
 
 const fetchTimeSlotInfo = async (acadYear:string, moduleCode:string, semester:number) => {
   const apiUrl = `https://api.nusmods.com/v2/${acadYear}/modules/${moduleCode}.json`;
@@ -93,10 +94,10 @@ const DynamicTimeTable = () => {
         endTime: [input.endTime],
         classNo: input.classNo,
         venue: input.venue,
-        weeks: input.weeks ? JSON.parse(input.weeks) : [],
+        weeks: input.weeks ? JSON.parse(input.weeks) : undefined,
         lessonType: input.lessonType,
       };
-      const existingSlots = Object.values(timeSlots).flat() as ClassTimeSlotTypeUnion[];
+      const existingSlots = Object.values(timeSlots).flat() as TimetableSlot[];
       const nextSlots = [...existingSlots, newSlot];
       setTimeSlots(nextSlots);
       localStorage.setItem('cachedTimeSlots', JSON.stringify(nextSlots));
@@ -156,7 +157,7 @@ const DynamicTimeTable = () => {
   };
 
   const renderDayCheckboxes = () => (
-    (["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"] as Day[]).map(day => (
+    DaysOfWeek.map(day => (
       <label key={day}>
         <input
           type="checkbox"
@@ -171,204 +172,16 @@ const DynamicTimeTable = () => {
     setMinStartTime(event.target.value);
   };
 
-  const countLessonTypesPerCourse = (slots: Array<ClassTimeSlotType | ClassTimeSlotTypeUnion>): Map<string, number> => {
-    const courseLessonTypeCounts = new Map<string, Map<string, number>>();
-    slots.forEach(slot => {
-      const course = slot.title;
-      const lessonType = slot.lessonType || 'undefined';  
-      if (!courseLessonTypeCounts.has(course)) {
-        courseLessonTypeCounts.set(course, new Map<string, number>());
-      }
-      const lessonCounts = courseLessonTypeCounts.get(course);
-      if (lessonCounts) {
-        if (!lessonCounts.has(lessonType)) {
-          lessonCounts.set(lessonType, 1);
-        } else {
-          lessonCounts.set(lessonType, lessonCounts.get(lessonType)as number + 1);
-        }
-      }
-    });
-    const lessonTypeCountPerCourse = new Map<string, number>();
-    courseLessonTypeCounts.forEach((types, course) => {
-        lessonTypeCountPerCourse.set(course, types.size);
-    });
-    return lessonTypeCountPerCourse;
-  };
-  const transformSlots = (slots: ClassTimeSlotType[]): ClassTimeSlotTypeUnion[] => {
-    const grouped = new Map<string, ClassTimeSlotTypeUnion>();
-    slots.forEach(slot => {
-        const partialKey = `${slot.title}${slot.lessonType}${slot.classNo}`;
-        const existing = grouped.get(partialKey);
-        if (existing) {
-            existing.startTime.push(slot.startTime as string);
-            existing.endTime.push(slot.endTime as string);
-            existing.day.push(slot.day as Day);
-        } else {
-            grouped.set(partialKey, {
-                classNo: slot.classNo,
-                title: slot.title,
-                lessonType: slot.lessonType,
-                startTime: [slot.startTime as string],
-                endTime: [slot.endTime as string],
-                weeks: slot.weeks,
-                venue: slot.venue,
-                day: [slot.day as Day],
-            });
-        }
-    });
-    return Array.from(grouped.values());
-  }
-
-  // const filterByDays = (days: string[], slots: ClassTimeSlotTypeUnion[]): ClassTimeSlotTypeUnion[] => {
-  //   const groups = slots.reduce((acc, slot) => {
-  //     const key = getPartialKeyUnion(slot);
-  //     if (!acc[key]) {
-  //       acc[key] = [];
-  //     }
-  //     acc[key].push(slot);
-  //     return acc;
-  //   }, {} as Record<string, ClassTimeSlotTypeUnion[]>);
-  //   const filteredGroups = Object.values(groups).filter(group =>
-  //       group.every(slot => slot.day.some(day => days.includes(day)))
-  //   );
-  //   return filteredGroups.flat();
-  // };
-  const filterByDays = (days: Day[], slots: ClassTimeSlotTypeUnion[]): ClassTimeSlotTypeUnion[] => {
-    const lessonTypeCountBefore = countLessonTypesPerCourse(slots);
-  
-    const groups = slots.reduce((acc, slot) => {
-      const key = `${slot.title}${slot.lessonType}${slot.classNo}`;
-      if (!acc[key]) {
-        acc[key] = [];
-      }
-      acc[key].push(slot);
-      return acc;
-    }, {} as Record<string, ClassTimeSlotTypeUnion[]>);
-  
-    // Perform the filtering
-    const filteredGroups = Object.values(groups).filter(group =>
-      group.every(slot => slot.day.some(day => days.includes(day)))
-    );
-  
-    const filteredSlots = filteredGroups.flat();
-    const lessonTypeCountAfter = countLessonTypesPerCourse(filteredSlots);
-  
-    // Identify slots that should be kept to avoid reducing lesson types
-    const slotsToKeep: ClassTimeSlotTypeUnion[] = [];
-    for (const [course, beforeCount] of lessonTypeCountBefore) {
-      const afterCount = lessonTypeCountAfter.get(course) || 0;
-      if (beforeCount !== afterCount) {
-        // Identify the slots that belong to the affected course
-        const affectedSlots = slots.filter(slot => slot.title === course);
-        slotsToKeep.push(...affectedSlots);
-      }
-    }
-  
-    // Merge the filtered slots with those that must be kept
-    const finalSlots = [...filteredSlots, ...slotsToKeep];
-  
-    // Remove any duplicate slots that might have been added twice
-    const uniqueSlots = Array.from(new Set(finalSlots.map(slot => `${slot.title}${slot.lessonType}${slot.classNo}${slot.startTime}${slot.day}`)))
-      .map(key => finalSlots.find(slot => `${slot.title}${slot.lessonType}${slot.classNo}${slot.startTime}${slot.day}` === key))
-      .filter((slot): slot is ClassTimeSlotTypeUnion => slot !== undefined);
-  
-    return uniqueSlots;
-  };
-  
-  
-  // const filterByStartTime = (startTime: string, slots: ClassTimeSlotTypeUnion[]): ClassTimeSlotTypeUnion[] => {
-  //   const startTimeInMinutes = timeToMinutes(startTime);
-  //   const groups = slots.reduce((acc, slot) => {
-  //     const key = getPartialKeyUnion(slot);
-  //     if (!acc[key]) {
-  //         acc[key] = [];
-  //     }
-  //     acc[key].push(slot);
-  //     return acc;
-  //   }, {} as Record<string, ClassTimeSlotTypeUnion[]>);
-  //   const filteredGroups = Object.values(groups).filter(group =>
-  //         group.every(slot => slot.startTime.some(time => timeToMinutes(time) >= startTimeInMinutes)));
-  //   return filteredGroups.flat();
-  // };
-  const filterByStartTime = (startTime: string, slots: ClassTimeSlotTypeUnion[]): ClassTimeSlotTypeUnion[] => {
-    const lessonTypeCountBefore = countLessonTypesPerCourse(slots);
-    const startTimeInMinutes = timeToMinutes(startTime);
-  
-    const groups = slots.reduce((acc, slot) => {
-      const key = `${slot.title}${slot.lessonType}${slot.classNo}`;
-      if (!acc[key]) {
-        acc[key] = [];
-      }
-      acc[key].push(slot);
-      return acc;
-    }, {} as Record<string, ClassTimeSlotTypeUnion[]>);
-  
-    // Perform the filtering
-    const filteredGroups = Object.values(groups).filter(group =>
-      group.every(slot => slot.startTime.some(time => timeToMinutes(time) >= startTimeInMinutes))
-    );
-  
-    const filteredSlots = filteredGroups.flat();
-    const lessonTypeCountAfter = countLessonTypesPerCourse(filteredSlots);
-  
-    // Identify slots that should be kept to avoid reducing lesson types
-    const slotsToKeep: ClassTimeSlotTypeUnion[] = [];
-    for (const [course, beforeCount] of lessonTypeCountBefore) {
-      const afterCount = lessonTypeCountAfter.get(course) || 0;
-      if (beforeCount !== afterCount) {
-        // Identify the slots that belong to the affected course
-        const affectedSlots = slots.filter(slot => slot.title === course);
-        slotsToKeep.push(...affectedSlots);
-      }
-    }
-  
-    // Merge the filtered slots with those that must be kept
-    const finalSlots = [...filteredSlots, ...slotsToKeep];
-  
-    // Remove any duplicate slots that might have been added twice
-    const uniqueSlots = Array.from(new Set(finalSlots.map(slot => `${slot.title}${slot.lessonType}${slot.classNo}${slot.startTime}${slot.day}`)))
-      .map(key => finalSlots.find(slot => `${slot.title}${slot.lessonType}${slot.classNo}${slot.startTime}${slot.day}` === key))
-      .filter((slot): slot is ClassTimeSlotTypeUnion => slot !== undefined);
-  
-    return uniqueSlots;
-  };
-  
-  
-  
-  const timeToMinutes = (time: string): number => {
-    const formattedTime = time.length === 4 ? `${time.slice(0, 2)}:${time.slice(2, 4)}` : time;
-    const parts = formattedTime.split(':');
-    if (parts.length !== 2) {
-        return 0; 
-    }
-    const [hours, minutes] = parts.map(Number);
-    const totalMinutes = hours * 60 + minutes;
-    return totalMinutes;
-  };
-
-  const slotsArray = Object.values(timeSlots).flat() as ClassTimeSlotType[];
-  const slotsArrayUnioned = transformSlots(slotsArray);
-  const filterDays = filterByDays(selectedDays, slotsArrayUnioned);
-  const filterStartTime = filterByStartTime(minStartTime, filterDays);
-
-  const timeTable = new TimeTable();
-  const partitionSlots = (timeslots: ClassTimeSlotTypeUnion[]): ClassTimeSlotTypeUnion[][] => {
-    const courses = new Map<string, ClassTimeSlotTypeUnion[]>();
-    timeslots.forEach(slot => {
-        const title = `${slot.title} ${slot.lessonType || 'undefined'}`;
-        if (!courses.has(title)) {
-            courses.set(title, []);
-        }
-        courses.get(title)?.push(slot);
-    });
-    const partitions: ClassTimeSlotTypeUnion[][] = Array.from(courses.values());
-    return partitions;
-  }
-  const partitions = partitionSlots(filterStartTime);
-  const arranged = timeTable.findValidArrangement(partitions);
+  const feasibility = useMemo(() => evaluateTimetableFeasibility(
+    Object.values(timeSlots).flat() as TimetableSlot[],
+    { days: selectedDays, earliestStartTime: minStartTime },
+  ), [timeSlots, selectedDays, minStartTime]);
+  const arranged = feasibility.arrangement;
   const navigate = useNavigate();
   const handleToMap = () => {
-    navigate('/map', { state: { timeSlots: arranged } });
+    if (!loading && arranged) {
+      navigate('/map', { state: { timeSlots: arranged } });
+    }
   };
 
   const clearCache = () => {
@@ -387,12 +200,12 @@ const DynamicTimeTable = () => {
         <section className="timetable-preferences" aria-labelledby="timetable-preferences-title">
           <div className="timetable-preference-heading">
             <span>01</span>
-            <div><h2 id="timetable-preferences-title">Set your preferences</h2><p>We will keep every required lesson type while finding the best fit.</p></div>
+            <div><h2 id="timetable-preferences-title">Set your constraints</h2><p>Every required lesson must fit your allowed days and earliest start time.</p></div>
             <button className="tour-button" type="button" onClick={() => setShowTour(true)}>Quick tour</button>
           </div>
           <div className="timetable-preference-controls">
             <div className="select-day">
-              <h3>Preferred days</h3>
+              <h3>Allowed days</h3>
               <div className="day-chip-list">{renderDayCheckboxes()}</div>
             </div>
             <label className="select-time">
@@ -421,15 +234,32 @@ const DynamicTimeTable = () => {
         {fetchError && <p className="no-valid-arrangement" role="alert">{fetchError}</p>}
         {loading ? (
           <div className="loading-indicator"><span /> Finding a timetable that fits…</div>
-        ) : (
-          <div>
-            {arranged ? 
-            <Timetable timeSlots={arranged}></Timetable> : <p className="no-valid-arrangement">No valid arrangement found.</p>} 
+        ) : feasibility.status === 'infeasible' ? (
+          <div className="timetable-feasibility-warning" role="alert">
+            <AlertTriangle size={22} aria-hidden="true" />
+            <div>
+              <h3>No feasible timetable arrangement is possible under the current constraints.</h3>
+              <p>All required lessons cannot fit into a clash-free timetable with these settings.</p>
+              <dl className="timetable-constraint-summary">
+                <div><dt>Allowed days</dt><dd>{DaysOfWeek.filter(day => selectedDays.includes(day)).join(', ') || 'None selected'}</dd></div>
+                <div><dt>Earliest class</dt><dd>{minStartTime || 'Any time'}</dd></div>
+              </dl>
+              {feasibility.blockedLessons.length > 0 ? (
+                <p>No allowed class options remain for: <strong>{feasibility.blockedLessons.join(', ')}.</strong></p>
+              ) : (
+                <p>The remaining class options clash with one another.</p>
+              )}
+              <p className="timetable-warning-guidance">Allow more days, choose an earlier start time, or change your selected courses, then check again. The timetable updates automatically.</p>
+            </div>
           </div>
+        ) : arranged ? (
+          <Timetable timeSlots={arranged} />
+        ) : (
+          <p className="no-valid-arrangement" role="status">No timetable data yet. Build a timetable from your study plan or add a custom time slot to check feasibility.</p>
         )}
         </div>
         <div className="timetable-actions">
-          <button className="to-map-button" onClick={() => handleToMap()}>View venues on map</button>
+          <button className="to-map-button" disabled={loading || feasibility.status !== 'feasible'} onClick={handleToMap}>View venues on map</button>
           <button className="clear-cache-button" onClick={clearCache}>Clear timetable data</button>
         </div>
       </div>

@@ -1,10 +1,12 @@
 import { ClassTimeSlotTypeUnion } from "../types/timetable";
+import { overlap } from './arrangeWithUnionedSlots';
   /**
    * TimeTable class is responsible for managing the arrangement of class time slots.
    * It maintains a grid to track the availability of time slots for each day of the week.
    */
   export class TimeTable {
     private grid: Map<string, boolean[]>;
+    private occupiedSlots: ClassTimeSlotTypeUnion[] = [];
     constructor() {
       this.grid = new Map();
       ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'].forEach(day => {
@@ -29,7 +31,7 @@ import { ClassTimeSlotTypeUnion } from "../types/timetable";
      */
     private generateTokens(startTime: string, endTime: string): number[] {
       const start = this.timeToIntervalIndex(startTime);
-      const end = this.timeToIntervalIndex(endTime);
+      const end = this.timeToIntervalIndex(endTime) + (parseInt(endTime.substring(2, 4)) % 30 === 0 ? 0 : 1);
       const tokens: number[] = [];
       for (let i = start; i < end; i++) {
         tokens.push(i);
@@ -42,20 +44,22 @@ import { ClassTimeSlotTypeUnion } from "../types/timetable";
      * @returns True if the slot can be added, false otherwise.
      */
     public canAddSlot(slot: ClassTimeSlotTypeUnion): boolean {
-      for (let i = 0; i < slot.startTime.length; i++) {
-        const day = slot.day[i];
-        const tokens = this.generateTokens(slot.startTime[i], slot.endTime[i]);
-        if (tokens.some(token => this.grid.get(day)?.[token])) {
-          return false; 
-        }
-      }
-      return true;
+      const candidate = { ...slot, classNo: [slot.classNo || ''], venue: [] };
+      return this.occupiedSlots.every((occupied) => !overlap(
+        candidate,
+        { ...occupied, classNo: [occupied.classNo || ''], venue: [] },
+      ));
     }
     /**
      * Adds a given slot to the timetable.
      * @param slot - The class time slot to be added.
      */
     public addSlot(slot: ClassTimeSlotTypeUnion): void {
+      this.occupiedSlots.push(slot);
+      this.markSlot(slot);
+    }
+
+    private markSlot(slot: ClassTimeSlotTypeUnion): void {
       for (let i = 0; i < slot.startTime.length; i++) {
         const day = slot.day[i];
         const tokens = this.generateTokens(slot.startTime[i], slot.endTime[i]);
@@ -69,12 +73,11 @@ import { ClassTimeSlotTypeUnion } from "../types/timetable";
      * @param slot - The class time slot to be removed.
      */
     public removeSlot(slot: ClassTimeSlotTypeUnion): void {
-      for (let i = 0; i < slot.startTime.length; i++) {
-        const day = slot.day[i];
-        const tokens = this.generateTokens(slot.startTime[i], slot.endTime[i]);
-        tokens.forEach(token => {
-          this.grid.get(day)![token] = false;
-        });
+      const index = this.occupiedSlots.lastIndexOf(slot);
+      if (index !== -1) {
+        this.occupiedSlots.splice(index, 1);
+        this.grid.forEach((intervals) => intervals.fill(false));
+        this.occupiedSlots.forEach((occupied) => this.markSlot(occupied));
       }
     }
     /**

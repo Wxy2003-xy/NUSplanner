@@ -215,6 +215,67 @@
   min-width: 0;
 }
 
+.timetable-feasibility-warning {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  margin-top: 20px;
+  padding: 22px;
+  border: 1px solid #efbf80;
+  border-left: 4px solid #b65e0b;
+  border-radius: 12px;
+  background: #fff8ee;
+  color: #75410e;
+}
+
+.timetable-feasibility-warning > svg {
+  flex: 0 0 auto;
+  margin-top: 2px;
+}
+
+.timetable-feasibility-warning h3 {
+  margin: 0 0 8px;
+  color: #663608;
+  font-size: 0.95rem;
+  line-height: 1.5;
+}
+
+.timetable-feasibility-warning p {
+  margin: 8px 0 0;
+  font-size: 0.78rem;
+  line-height: 1.65;
+}
+
+.timetable-constraint-summary {
+  display: grid;
+  gap: 8px;
+  margin: 16px 0;
+  padding: 12px 14px;
+  border-radius: 8px;
+  background: #fff0db;
+  font-size: 0.75rem;
+  line-height: 1.5;
+}
+
+.timetable-constraint-summary div {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 12px;
+}
+
+.timetable-constraint-summary dt {
+  min-width: 100px;
+  font-weight: 800;
+}
+
+.timetable-constraint-summary dd {
+  margin: 0;
+}
+
+.timetable-feasibility-warning .timetable-warning-guidance {
+  font-weight: 650;
+}
+
 .timetable-actions {
   display: flex;
   justify-content: flex-end;
@@ -235,6 +296,11 @@
 .to-map-button {
   background: var(--navy-900);
   color: white;
+}
+
+.to-map-button:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
 }
 
 .clear-cache-button {

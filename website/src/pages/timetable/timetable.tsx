@@ -11,7 +11,7 @@ const Timetable = () => (
         <div>
           <p className="page-eyebrow">Weekly schedule</p>
           <h1>A timetable that works around you.</h1>
-          <p className="page-description">Choose the days and earliest start you prefer. We will find a clash-free arrangement from your selected courses.</p>
+          <p className="page-description">Choose your allowed days and earliest start time. Check whether every required lesson can fit into a clash-free timetable.</p>
         </div>
         <div className="timetable-context">
           <span><Filter size={14} /> Set preferences</span>
