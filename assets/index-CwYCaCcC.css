@@ -1,0 +1,1 @@
+.route-loader{min-height:100vh;display:flex;align-items:center;justify-content:center;gap:12px;background:#071528;color:#fff;font-size:.9rem;font-weight:700}.route-loader-mark{width:18px;height:18px;border:2px solid rgba(255,255,255,.28);border-top-color:#ef7c35;border-radius:999px;animation:route-spin .7s linear infinite}@keyframes route-spin{to{transform:rotate(360deg)}}
